@@ -1,3 +1,5 @@
 .mypy_cache
 environment.yml
 lwsspy.egg-info
+__pycache__
+*.pyc
