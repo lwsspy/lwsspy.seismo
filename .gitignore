@@ -3,3 +3,5 @@ environment.yml
 lwsspy.egg-info
 __pycache__
 *.pyc
+.DS_Store
+*.pdf
