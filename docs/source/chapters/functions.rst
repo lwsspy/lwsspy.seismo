@@ -19,3 +19,19 @@ Statistics
 .. autofunction:: lwsspy.statistics.fitgaussian2d.fitgaussian2d
 
 .. image:: figures/gaussian2d.svg
+
+
+Plotting Utilities
+==================
+
+.. autofunction:: lwsspy.plot_util.figcolorbar.figcolorbar
+
+.. autofunction:: lwsspy.plot_util.remove_ticklabels.remove_ticklabels
+
+.. autofunction:: lwsspy.plot_util.updaterc.updaterc
+
+
+Math
+====
+
+.. autofunction:: lwsspy.math.eigsort.eigsort
