@@ -11,6 +11,7 @@ Welcome to lwsspy's documentation!
    :caption: Contents:
 
    chapters/matplotlibtips.rst
+   chapters/functions.rst
 
    
 
