@@ -35,6 +35,6 @@ Plotting Utilities
 
 
 Math
-====
+++++
 
 .. autofunction:: lwsspy.math.eigsort.eigsort
