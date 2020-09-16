@@ -1,8 +1,9 @@
 Aaaalll the functions!
+======================
 
 
 Statistics
-==========
+++++++++++
 
 .. autofunction:: lwsspy.statistics.fakerelation.fakerelation
 
@@ -14,15 +15,15 @@ Statistics
 
 .. autofunction:: lwsspy.statistics.gaussian2d.gaussian2d
 
-.. image:: figures/fitgaussian2d.svg
+.. image:: figures/gaussian2d.svg
 
 .. autofunction:: lwsspy.statistics.fitgaussian2d.fitgaussian2d
 
-.. image:: figures/gaussian2d.svg
+.. image:: figures/fitgaussian2d.svg
 
 
 Plotting Utilities
-==================
+++++++++++++++++++
 
 .. autofunction:: lwsspy.plot_util.figcolorbar.figcolorbar
 
