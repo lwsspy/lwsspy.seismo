@@ -16,7 +16,7 @@ python shell. If following line
 export PYTHONSTARTUP=path/to/repo/startup.py
 ```
 
-is added to tthe `~/.bashrc` file, Python will use the environment variable 
+is added to the `~/.bashrc` file, Python will use the environment variable 
 to load up the script. The script right now is set to load all of `pyplot`'s and
 `numpy`'s functions without prefix as well as all of `lwsspy`'s functions.
 
