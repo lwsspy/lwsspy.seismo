@@ -1,0 +1,23 @@
+name: lwsspy
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7
+  - ipython
+  - flake
+  - pytest
+  - matplotlib==3.2.1
+  - numpy
+  - mypy
+  - scipy
+  - cartopy
+  - mpi4py
+  - h5py
+  - obspy
+  - pyasdf
+  - pip
+  - pip:
+    - pyyaml
+    - sphinx
+    - sphinx_rtd_theme
