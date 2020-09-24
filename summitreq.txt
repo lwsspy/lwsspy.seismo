@@ -1,0 +1,4 @@
+obspy==1.2.1
+pyasdf
+pyyaml
+flake8

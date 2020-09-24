@@ -1,0 +1,14 @@
+name: lwsspy
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7
+  - ipython
+  - matplotlib
+  - numpy<1.19.0
+  - scipy
+  - mpi4py
+  - h5py
+  - cartopy
+  - pip
