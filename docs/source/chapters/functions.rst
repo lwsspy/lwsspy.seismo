@@ -21,6 +21,13 @@ Statistics
 
 .. image:: figures/fitgaussian2d.svg
 
+.. autofunction:: lwsspy.statistics.distlist.distlist
+
+.. image:: figures/distlist.svg
+
+.. autofunction:: lwsspy.statistics.clm.clm
+
+.. image:: figures/clm.svg
 
 Plotting Utilities
 ++++++++++++++++++

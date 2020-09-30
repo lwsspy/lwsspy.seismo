@@ -10,16 +10,19 @@ Last modified: Lucas Sawade, 2020.09.15 01.00 (lsawade@princeton.edu)
 
 """
 
-# External imports
-from numpy import *
-from matplotlib.pyplot import *
-from glob import glob
+import os
+if os.environ["CONDA_DEFAULT_ENV"] == "lwsspy":
 
-# LWSSPY import
-from lwsspy import *
+    # External imports
+    from numpy import *
+    from matplotlib.pyplot import *
+    from glob import glob
 
-# Updates plotting parameters
-updaterc()  # in lwsspy
+    # LWSSPY import
+    from lwsspy import *
 
-# Set matplotlib tot interactivate mode
-ion()
+    # Updates plotting parameters
+    updaterc()  # in lwsspy
+
+    # Set matplotlib tot interactivate mode
+    ion()
