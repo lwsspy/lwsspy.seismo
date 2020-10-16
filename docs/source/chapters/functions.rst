@@ -1,45 +1,10 @@
 Aaaalll the functions!
 ======================
 
+Inversion
++++++++++
 
-Statistics
-++++++++++
-
-.. autofunction:: lwsspy.statistics.fakerelation.fakerelation
-
-.. image:: figures/modelled_covarying_dataset.svg
-
-.. autofunction:: lwsspy.statistics.errorellipse.errorellipse
-
-.. image:: figures/error_ellipse.svg
-
-.. autofunction:: lwsspy.statistics.gaussian2d.gaussian2d
-
-.. image:: figures/gaussian2d.svg
-
-.. autofunction:: lwsspy.statistics.fitgaussian2d.fitgaussian2d
-
-.. image:: figures/fitgaussian2d.svg
-
-.. autofunction:: lwsspy.statistics.distlist.distlist
-
-.. image:: figures/distlist.svg
-
-.. autofunction:: lwsspy.statistics.clm.clm
-
-.. image:: figures/clm.svg
-
-Plotting Utilities
-++++++++++++++++++
-
-.. autofunction:: lwsspy.plot_util.figcolorbar.figcolorbar
-
-.. autofunction:: lwsspy.plot_util.remove_ticklabels.remove_xticklabels
-
-.. autofunction:: lwsspy.plot_util.remove_ticklabels.remove_yticklabels
-
-.. autofunction:: lwsspy.plot_util.updaterc.updaterc
-
+.. autoclass:: lwsspy.inversion.optimization.Optimizer
 
 Math
 ++++
@@ -51,6 +16,18 @@ Math
 .. autofunction:: lwsspy.math.magnitude.magnitude
 
 .. autoclass:: lwsspy.math.SphericalNN
+
+
+Plotting Utilities
+++++++++++++++++++
+
+.. autofunction:: lwsspy.plot_util.figcolorbar.figcolorbar
+
+.. autofunction:: lwsspy.plot_util.remove_ticklabels.remove_xticklabels
+
+.. autofunction:: lwsspy.plot_util.remove_ticklabels.remove_yticklabels
+
+.. autofunction:: lwsspy.plot_util.updaterc.updaterc
 
 
 Seismology
@@ -96,6 +73,33 @@ SPECFEM handling
 
 .. autofunction:: lwsspy.seismo.specfem.stationxmldir2STATIONSdir.stationxmldir2STATIONSdir
 
+
+Statistics
+++++++++++
+
+.. autofunction:: lwsspy.statistics.fakerelation.fakerelation
+
+.. image:: figures/modelled_covarying_dataset.svg
+
+.. autofunction:: lwsspy.statistics.errorellipse.errorellipse
+
+.. image:: figures/error_ellipse.svg
+
+.. autofunction:: lwsspy.statistics.gaussian2d.gaussian2d
+
+.. image:: figures/gaussian2d.svg
+
+.. autofunction:: lwsspy.statistics.fitgaussian2d.fitgaussian2d
+
+.. image:: figures/fitgaussian2d.svg
+
+.. autofunction:: lwsspy.statistics.distlist.distlist
+
+.. image:: figures/distlist.svg
+
+.. autofunction:: lwsspy.statistics.clm.clm
+
+.. image:: figures/clm.svg
 
 Weather
 +++++++
