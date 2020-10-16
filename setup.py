@@ -56,7 +56,7 @@ setup(
     # },
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
-                      'pyasdf', 'flake8',
+                      'pyasdf', 'autopep8'
                       ],
     tests_require=['pytest'],
     cmdclass={'tests': PyTest},
@@ -67,7 +67,7 @@ setup(
         ("License :: OSI Approved "
          ":: GNU General Public License v3 or later (GPLv3+)"),
     ],
-    #install_requires=parse_requirements("requirements.txt"),
+    # install_requires=parse_requirements("requirements.txt"),
     extras_require={
         "docs": ["sphinx", "sphinx_rtd_theme"],
         "tests": ["pytest", "py"]
