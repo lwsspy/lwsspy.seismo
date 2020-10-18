@@ -4,7 +4,17 @@ Aaaalll the functions!
 Inversion
 +++++++++
 
-.. autoclass:: lwsspy.inversion.optimization.Optimizer
+.. autoclass:: lwsspy.inversion.optimizer.Optimization
+    :members: __init__
+
+.. figure:: figures/optimization.svg
+
+    Simple test of optimizing the Rosenbrock function.
+
+.. figure:: figures/optimization_x4.svg
+
+    Simple test of optimizing a 1D function. Note that we have 2 local
+    minima which of course is a problem for local minimization schemes.
 
 Math
 ++++
@@ -79,27 +89,39 @@ Statistics
 
 .. autofunction:: lwsspy.statistics.fakerelation.fakerelation
 
-.. image:: figures/modelled_covarying_dataset.svg
+.. figure:: figures/modelled_covarying_dataset.svg
+
+    Modeled covarying data sets.
 
 .. autofunction:: lwsspy.statistics.errorellipse.errorellipse
 
-.. image:: figures/error_ellipse.svg
+.. figure:: figures/error_ellipse.svg
+
+    Generating the error ellipse for a covarying dataset.
 
 .. autofunction:: lwsspy.statistics.gaussian2d.gaussian2d
 
-.. image:: figures/gaussian2d.svg
+.. figure:: figures/gaussian2d.svg
+
+    Forward modelling a 2D Gaussian distribution.
 
 .. autofunction:: lwsspy.statistics.fitgaussian2d.fitgaussian2d
 
-.. image:: figures/fitgaussian2d.svg
+.. figure:: figures/fitgaussian2d.svg
 
 .. autofunction:: lwsspy.statistics.distlist.distlist
 
-.. image:: figures/distlist.svg
+.. figure:: figures/distlist.svg
+
+    Creating a list of distributions.
 
 .. autofunction:: lwsspy.statistics.clm.clm
 
-.. image:: figures/clm.svg
+.. figure:: figures/clm.svg
+
+    Showing that the central limit theorem holds. Note that the convolution
+    limits are not actually correct, and this plot is solely for illustration.
+
 
 Weather
 +++++++
