@@ -2,3 +2,4 @@ obspy==1.2.1
 pyasdf
 pyyaml
 flake8
+git+git://github.com/wjlei1990/pyflex.git@merge
