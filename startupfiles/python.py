@@ -11,7 +11,7 @@ Last modified: Lucas Sawade, 2020.09.15 01.00 (lsawade@princeton.edu)
 """
 
 import os
-if os.environ["CONDA_DEFAULT_ENV"] == "lwsspy":
+if os.getenv("CONDA_DEFAULT_ENV", None) == "lwsspy":
 
     # External imports
     from numpy import *
@@ -26,3 +26,4 @@ if os.environ["CONDA_DEFAULT_ENV"] == "lwsspy":
 
     # Set matplotlib tot interactivate mode
     ion()
+

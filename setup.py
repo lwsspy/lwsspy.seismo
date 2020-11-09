@@ -54,7 +54,7 @@ setup(
     },
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
-                      'pyasdf', 'autopep8', 'netCDF4'
+                      'pyasdf', 'autopep8', 'xarray', 'pooch'
                       ],
     tests_require=['pytest'],
     cmdclass={'tests': PyTest},

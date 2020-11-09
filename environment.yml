@@ -16,6 +16,8 @@ dependencies:
   - h5py
   - obspy
   - pyasdf
+  - pooch
+  - xarray
   - pip
   - pip:
     - pyyaml
