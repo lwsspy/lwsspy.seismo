@@ -50,13 +50,11 @@ setup(
     package_dir={"": "."},
     include_package_data=True,
     exclude_package_data={'': ['notebooks']},
-    # package_data={'gcmt3d': ['data/download/resources/Fetchdata',
-    #                          'data/download/resources/stations.txt',
-    #                          'data/management/STATIONS'],
-    # },
+    package_data={'lwsspy': ['data/topography/etopo1/*.grd'],
+    },
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
-                      'pyasdf', 'autopep8'
+                      'pyasdf', 'autopep8', 'netCDF4'
                       ],
     tests_require=['pytest'],
     cmdclass={'tests': PyTest},
