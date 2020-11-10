@@ -20,15 +20,15 @@ Inversion
 Maps
 ++++
 
-.. autofunction:: lwsspy.maps.plot_map.plot_topography
+.. autofunction:: lwsspy.maps.plot_map.plot_map
 
 .. autofunction:: lwsspy.maps.plot_topography.plot_topography
 
 .. figure:: figures/topography_europe.svg
 
-    Shows the topography of Europe using Etopo1
+    Shows the topography of Europe using Etopo1.
 
-.. figure:: figures/topography_europe.svg
+.. figure:: figures/topography_earth.svg
 
     Shows the topography of the Earth using Etopo1. Note: Ice Sheets
     have not been implemented yet.
@@ -96,7 +96,7 @@ SPECFEM handling
 
 .. autofunction:: lwsspy.seismo.specfem.inv2STATIONS.inv2STATIONS
 
-.. autofunction:: lwsspy.seismo.specfem.readParfile.readParfile
+.. autofunction:: lwsspy.seismo.specfem.read_parfile.read_parfile
 
 .. autofunction:: lwsspy.seismo.specfem.stationxml2STATIONS.stationxml2STATIONS
 
