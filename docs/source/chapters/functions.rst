@@ -16,6 +16,25 @@ Inversion
     Simple test of optimizing a 1D function. Note that we have 2 local
     minima which of course is a problem for local minimization schemes.
 
+
+Maps
+++++
+
+.. autofunction:: lwsspy.maps.plot_map.plot_topography
+
+.. autofunction:: lwsspy.maps.plot_topography.plot_topography
+
+.. figure:: figures/topography_europe.svg
+
+    Shows the topography of Europe using Etopo1
+
+.. figure:: figures/topography_europe.svg
+
+    Shows the topography of the Earth using Etopo1. Note: Ice Sheets
+    have not been implemented yet.
+
+
+
 Math
 ++++
 
