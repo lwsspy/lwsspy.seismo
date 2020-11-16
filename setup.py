@@ -49,12 +49,12 @@ setup(
                                     'notebooks.*', 'notebooks']),
     package_dir={"": "."},
     include_package_data=True,
-    exclude_package_data={'': ['notebooks']},
-    package_data={'lwsspy': ['data/topography/etopo1/*.grd'],
-    },
+    # exclude_package_data={'lwsspy': ['download_cache']},
+    package_data={'lwsspy': ['download_cache/*']},
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
-                      'pyasdf', 'autopep8', 'xarray', 'beautifulsoup4'
+                      'pyasdf', 'autopep8', 'xarray', 'beautifulsoup4',
+                      'pyvista'
                       ],
     tests_require=['pytest'],
     cmdclass={'tests': PyTest},
