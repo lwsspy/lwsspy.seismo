@@ -50,7 +50,11 @@ setup(
     package_dir={"": "."},
     include_package_data=True,
     # exclude_package_data={'lwsspy': ['download_cache']},
-    package_data={'lwsspy': ['download_cache/*']},
+    package_data={'lwsspy': [
+        'download_cache/*',
+        'plot_util/fonts/*.ttc',
+        'plot_util/fonts/*.ttf'
+    ]},
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
                       'pyasdf', 'autopep8', 'xarray', 'beautifulsoup4',
