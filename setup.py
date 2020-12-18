@@ -74,34 +74,9 @@ setup(
         "docs": ["sphinx", "sphinx_rtd_theme"],
         "tests": ["pytest", "py"]
     },
-    # entry_points={
-    #     'console_scripts': [
-    #         'catalog = gcmt3d.bins.catalog:main',
-    #         'convert2asdf = gcmt3d.bins.convert_to_asdf:main',
-    #         'convert2sac = gcmt3d.bins.convert_to_sac:main',
-    #         'count-windows = gcmt3d.bins.count_overall_windows:main',
-    #         'compute-stats = gcmt3d.bins.compute_stats:main',
-    #         'copy-data-to-database = gcmt3d.bins.copy_data_to_database:main',
-    #         'create-entry = gcmt3d.bins.create_entry:main',
-    #         'create-entry-wj = gcmt3d.bins.create_entry_wenjie:main',
-    #         'create-inversion-dicts = gcmt3d.bins.write_inversion_dicts:main',
-    #         'create-gridsearch-dicts = gcmt3d.bins.write_grid_search_dicts:main',
-    #         'create-path-files = gcmt3d.bins.create_path_files:main',
-    #         'extract-station-info = gcmt3d.bins.extract_station_info:main',
-    #         'filter-windows = gcmt3d.bins.filter_windows:main',
-    #         'generate-stations-asdf = gcmt3d.bins.generate_stations_asdf:main',
-    #         'get-cmt-id = gcmt3d.bins.get_cmt_id:main',
-    #         'get-cmt-in-db = gcmt3d.bins.get_cmt_in_db:main',
-    #         'inversion = gcmt3d.bins.inversion:main',
-    #         'gridsearch = gcmt3d.bins.gridsearch:main',
-    #         'process-asdf = gcmt3d.bins.process_asdf:main',
-    #         'plot-section = gcmt3d.bins.plot_section:main',
-    #         'plot-catalog-stats = gcmt3d.bins.plot_catalog:main',
-    #         'plot-event = gcmt3d.bins.plot_event:main',
-    #         'plot-event-summary = gcmt3d.bins.plot_event_summary:main',
-    #         'plot-stats = gcmt3d.bins.plot_stats:main',
-    #         'request-data = gcmt3d.bins.request_data:main',
-    #         'select-windows = gcmt3d.bins.window_selection_asdf:main',
-    #         'write-sources = gcmt3d.bins.write_sources:main',
-    # ]}
+    entry_points={
+        'console_scripts': [
+            'plot_csv_depth_slice = lwsspy.maps.plot_csv_depth_slice.binary',
+        ]
+    }
 )

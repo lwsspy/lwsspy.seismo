@@ -18,6 +18,8 @@ dependencies:
   - pyasdf
   - pooch
   - xarray
+  - jupyterlab
+  - pyvista
   - pip
   - pip:
     - pyyaml
