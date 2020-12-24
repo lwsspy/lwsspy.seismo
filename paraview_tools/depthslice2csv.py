@@ -9,13 +9,13 @@ from paraview.simple import AssignViewToLayout
 from paraview.simple import ExportView
 
 
-def depthslice2csv(infile, outfile, depth):
+def depthslice2csv(infile, outfile, param, depth):
     """Takes in a Spherical Earth Mesh and gets out a depth slice.
 
     Parameters
     ----------
     infile : str
-        Mesh to slice
+        Meshfile
     outfile : str
         filename witthout ending to write the slice values to ``.csv`` file
     depth: float
@@ -42,10 +42,12 @@ def depthslice2csv(infile, outfile, depth):
 
     # create a new 'XML Unstructured Grid Reader'
     rho = XMLUnstructuredGridReader(FileName=[infile])
-    rho.PointArrayStatus = ['rho']
+    rho.PointArrayStatus = [param]
 
     # create a new 'Slice'
-    slice1 = Slice(Input=rho)
+    slice1 = Slice(Input=rho,
+                   Triangulatetheslice=False,
+                   Mergeduplicatedpointsintheslice=False)
 
     # Properties modified on slice1
     slice1.SliceType = 'Sphere'
@@ -92,10 +94,13 @@ if __name__ == "__main__":
     parser.add_argument('-o', dest='outfile',
                         help='Output filename without file ending to save CSV.',
                         required=True, type=str)
+    parser.add_argument('-p', dest='param',
+                        help='Parameter to grab',
+                        required=True, type=str)
     parser.add_argument('-d', dest='depth',
                         help='Depth in kilometers [km]',
                         required=True, type=float)
     args = parser.parse_args()
 
     # Run
-    depthslice2csv(args.infile, args.outfile, args.depth)
+    depthslice2csv(args.infile, args.outfile, args.param, args.depth)

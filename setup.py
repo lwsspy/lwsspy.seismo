@@ -46,7 +46,8 @@ setup(
     keywords="collection, functions",
     url='https://github.com/lsawade/GCMT3D',
     packages=find_packages(exclude=['*.Notebooks', '*.notebooks.*',
-                                    'notebooks.*', 'notebooks']),
+                                    'notebooks.*', 'notebooks',
+                                    'paraview_tools']),
     package_dir={"": "."},
     include_package_data=True,
     # exclude_package_data={'lwsspy': ['download_cache']},
@@ -76,7 +77,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'plot_csv_depth_slice = lwsspy.maps.plot_csv_depth_slice.binary',
+            'plot_csv_depth_slice = lwsspy.seismo.specfem.plot_csv_depth_slice:bin',
+            'plot_specfem_xsec_depth = lwsspy.seismo.specfem.plot_specfem_xsec_depth:bin',
         ]
     }
 )
