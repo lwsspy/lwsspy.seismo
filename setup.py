@@ -72,7 +72,7 @@ setup(
     ],
     # install_requires=parse_requirements("requirements.txt"),
     extras_require={
-        "docs": ["sphinx", "sphinx_rtd_theme"],
+        "docs": ["sphinx", "sphinx_rtd_theme", "numpydoc"],
         "tests": ["pytest", "py"]
     },
     entry_points={

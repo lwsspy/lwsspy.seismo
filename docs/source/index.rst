@@ -11,10 +11,9 @@ Welcome to lwsspy's documentation!
    :caption: Contents:
 
    chapters/matplotlibtips.rst
+   chapters/numpydoctips.rst
+   chapters/paraview.rst
    chapters/functions.rst
-
-   
-
 
 
 Indices and tables

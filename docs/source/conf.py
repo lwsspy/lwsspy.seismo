@@ -32,9 +32,17 @@ release = '0.0.1alpha'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    "sphinx.ext.autosummary",
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'numpydoc',
 ]
+
+numpydoc_show_class_members = False
+
+# generate autosummary even if no references
+autosummary_generate = True
+autosummary_imported_members = True
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
