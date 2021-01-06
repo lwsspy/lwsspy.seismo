@@ -58,6 +58,8 @@ Plotting Utilities
 
 .. autofunction:: lwsspy.plot_util.updaterc.updaterc
 
+.. autofunction:: lwsspy.plot_util.pick_data_from_image.pick_data_from_image
+
 
 Seismology
 ++++++++++
