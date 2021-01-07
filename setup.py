@@ -35,8 +35,6 @@ class PyTest(testcommand):
         sys.exit(errno)
 
 
-
-
 setup(
     name="lwsspy",
     description="LWSS Collection of Python Function",
@@ -56,7 +54,8 @@ setup(
     package_data={'lwsspy': [
         'download_cache/*',
         'plot_util/fonts/*.ttc',
-        'plot_util/fonts/*.ttf'
+        'plot_util/fonts/*.ttf',
+        'constant_data/gcmt/*.csv'
     ]},
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
