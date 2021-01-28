@@ -13,6 +13,7 @@ Welcome to lwsspy's documentation!
    chapters/matplotlibtips.rst
    chapters/numpydoctips.rst
    chapters/seismology.rst
+   chapters/hpc-installations.rst
    chapters/paraview.rst
    chapters/functions.rst
 

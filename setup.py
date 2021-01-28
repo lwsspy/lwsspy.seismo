@@ -55,7 +55,8 @@ setup(
         'download_cache/*',
         'plot_util/fonts/*.ttc',
         'plot_util/fonts/*.ttf',
-        'constant_data/gcmt/*.csv'
+        'constant_data/gcmt/*.csv',
+        'constant_data/ttc.mat'
     ]},
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
