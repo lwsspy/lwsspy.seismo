@@ -14,14 +14,14 @@ dependencies:
   - cartopy
   - mpi4py
   - h5py
-  - obspy
-  - pyasdf
-  - pooch
-  - xarray
   - jupyterlab
   - pyvista
   - pip
   - pip:
+    - obspy
+    - xarray
+    - beautifulsoup4
+    - pyasdf
     - pyyaml
     - sphinx
     - sphinx_rtd_theme

@@ -1,5 +1,6 @@
-obspy==1.2.1
+obspy==1.2.2
 pyasdf
 pyyaml
+beautifulsoup4
 flake8
 git+git://github.com/wjlei1990/pyflex.git@merge
