@@ -79,6 +79,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'download-data = lwsspy.seismo.download_waveforms_to_storage:bin',
             'plot_csv_depth_slice = lwsspy.seismo.specfem.plot_csv_depth_slice:bin',
             'plot_specfem_xsec_depth = lwsspy.seismo.specfem.plot_specfem_xsec_depth:bin',
             'pick_data_from_image = lwsspy.plot_util.pick_data_from_image:bin'
