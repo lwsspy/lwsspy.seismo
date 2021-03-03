@@ -113,6 +113,10 @@ Seismology
 
 .. autofunction:: lwsspy.seismo.cmtdir2stationxmldir.cmtdir2stationxmldir
 
+.. autofunction:: lwsspy.seismo.gaussiant.gaussiant
+
+.. autofunction:: lwsspy.seismo.gaussiant.dgaussiant
+
 .. autofunction:: lwsspy.seismo.inv2stationxml.inv2stationxml
 
 .. autofunction:: lwsspy.seismo.perturb_cmt.perturb_cmt

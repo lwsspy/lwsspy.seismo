@@ -22,3 +22,38 @@ a matplotlib colormap. A full script for writing the figure is shown below.
 With the output:
 
 .. image:: figures/station_map.svg
+
+
+.. _ideal-stf:
+
+Ideal Source Time Functions
+++++++++++++++++++++++++++++++++
+
+Just to be on the safe side and to not have to redo it all the time, I created
+some functions that compute sourcetime functions with certain dominant
+frequencies. 
+
+**A Gaussian pulse**:
+
+.. math::
+    
+    s(t) = e^{-{\left(4f_0  (t-t_0)\right)}^2}
+
+**and its derivative**:
+
+.. math::
+    
+    s(t) = -(8f_0) (t-t_0) e^{-{\left(4f_0  (t-t_0)\right)}^2}
+
+A script to plot the functions and their spectra below:
+
+.. literalinclude:: figures/scripts/gaussians.py
+  :language: python
+
+With the output:
+
+.. image:: figures/gaussians.svg
+
+The functions are documented here :py:func:`lwsspy.seismo.gaussiant.gaussiant` 
+and :py:func:`lwsspy.seismo.gaussiant.dgaussiant` 
+
