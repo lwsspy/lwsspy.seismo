@@ -11,3 +11,4 @@ docs/build
 ._.DS_Store
 *.npz
 
+_build
