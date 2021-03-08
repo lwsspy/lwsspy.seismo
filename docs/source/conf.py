@@ -35,6 +35,7 @@ extensions = [
     "sphinx.ext.autosummary",
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'scipyoptdoc',
     'numpydoc',
 ]
 
