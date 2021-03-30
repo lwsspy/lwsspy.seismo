@@ -16,7 +16,7 @@ Welcome to lwsspy's documentation!
    chapters/hpc-installations.rst
    chapters/paraview.rst
    chapters/functions.rst
-
+   chapters/one-liners-to-remember.rst
 
 Indices and tables
 ==================
