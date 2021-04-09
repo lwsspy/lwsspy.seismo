@@ -21,9 +21,11 @@ if os.getenv("CONDA_DEFAULT_ENV", None) == "lwsspy":
     # LWSSPY import
     from lwsspy import *
 
+    # meshslice import
+    from meshslice import *
+
     # Updates plotting parameters
     updaterc()  # in lwsspy
 
     # Set matplotlib tot interactivate mode
     ion()
-
