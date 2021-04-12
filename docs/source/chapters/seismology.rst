@@ -61,7 +61,7 @@ and :py:func:`lwsspy.seismo.gaussiant.dgaussiant`
 Simple station-wise MPI processing using ``mpi4py``
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-I though it was ridiculous how there is not a single simple example doing this.
+I thought it was ridiculous how there is not a single simple example doing this.
 
 
 .. code:: python
