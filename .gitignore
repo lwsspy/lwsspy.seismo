@@ -12,3 +12,4 @@ docs/build
 *.npz
 
 _build
+rivers
