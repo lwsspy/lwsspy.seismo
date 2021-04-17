@@ -44,6 +44,8 @@ numpydoc_show_class_members = False
 autosummary_generate = True
 autosummary_imported_members = True
 
+html_static_path = ['_static']
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
