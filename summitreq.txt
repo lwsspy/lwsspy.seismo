@@ -1,4 +1,4 @@
-obspy==1.2.2
+obspy
 pyasdf
 pyyaml
 beautifulsoup4

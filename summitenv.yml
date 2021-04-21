@@ -9,4 +9,8 @@ dependencies:
   - numpy<1.19.0
   - scipy
   - cartopy
+  - lxml
+  - h5py
+  - xarray
+  - mpi4py
   - pip
