@@ -13,4 +13,6 @@ dependencies:
   - h5py
   - xarray
   - mpi4py
+  - GDAL
   - pip
+
