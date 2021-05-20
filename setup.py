@@ -80,6 +80,7 @@ setup(
     entry_points={
         'console_scripts': [
             'compare-catalogs = lwsspy.seismo.compare_catalogs:bin',
+            'cmtinversion-plot-measurements-histograms = lwsspy.seismo.invertcmt.plot_measurements:bin',
             'invert-cmt = lwsspy.seismo.invertcmt.GCMT3DInversion:bin',
             'download-data = lwsspy.seismo.download_waveforms_to_storage:bin',
             'plot_csv_depth_slice = lwsspy.seismo.specfem.plot_csv_depth_slice:bin',
