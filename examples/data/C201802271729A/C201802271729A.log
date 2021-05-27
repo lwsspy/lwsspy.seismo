@@ -1,0 +1,1304 @@
+[2021-05-18 20:51:59.828] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:51:59.828] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 20:51:59.828] - GCMT3D-C201802271729A - INFO    : ====================== GCMT3D LOG: C201802271729A ======================
+[2021-05-18 20:51:59.828] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 20:51:59.828] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:51:59.828] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:51:59.829] - GCMT3D-C201802271729A - INFO    : ============ Setting up the directories and Waveform dicts =============
+[2021-05-18 20:51:59.829] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:51:59.829] - GCMT3D-C201802271729A - DEBUG   : ---> Adapting processing dictionary ... (output.py:128)
+[2021-05-18 20:51:59.829] - GCMT3D-C201802271729A - DEBUG   : ---> Writing it to file ... (output.py:128)
+[2021-05-18 20:51:59.848] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:51:59.848] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 20:51:59.848] - GCMT3D-C201802271729A - INFO    : ============================ Data Download =============================
+[2021-05-18 20:51:59.848] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 20:51:59.848] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:54:05.374] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 06 s seconds
+[2021-05-18 20:54:05.375] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:54:05.375] - GCMT3D-C201802271729A - INFO    : =================== Loading and processing the data ====================
+[2021-05-18 20:54:05.375] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:54:05.375] - GCMT3D-C201802271729A - INFO    : ---> Loading the data ...
+[2021-05-18 20:54:10.147] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 05 s seconds
+[2021-05-18 20:54:10.147] - GCMT3D-C201802271729A - INFO    : ---> Processing data for body ...
+[2021-05-18 20:54:10.147] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 20:55:07.630] - GCMT3D-C201802271729A - INFO    : ---> Processing data for surface ...
+[2021-05-18 20:55:07.630] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 20:56:05.111] - GCMT3D-C201802271729A - INFO    : ---> Processing data for mantle ...
+[2021-05-18 20:56:05.112] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 20:57:02.177] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 52 s seconds
+[2021-05-18 20:57:02.177] - GCMT3D-C201802271729A - INFO    : ---> Prepping simulations ...
+[2021-05-18 20:57:02.294] - GCMT3D-C201802271729A - INFO    : ---> Writing Synthetic CMTSOLUTION ...
+[2021-05-18 20:57:02.295] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rr ...
+[2021-05-18 20:57:02.296] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tt ...
+[2021-05-18 20:57:02.296] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_pp ...
+[2021-05-18 20:57:02.297] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rt ...
+[2021-05-18 20:57:02.297] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rp ...
+[2021-05-18 20:57:02.298] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tp ...
+[2021-05-18 20:57:02.298] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for latitude ...
+[2021-05-18 20:57:02.299] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for longitude ...
+[2021-05-18 20:57:02.299] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for depth_in_m ...
+[2021-05-18 20:57:02.301] - GCMT3D-C201802271729A - INFO    : ---> Submitting all simulations ...
+[2021-05-18 20:59:56.807] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 55 s seconds
+[2021-05-18 20:59:56.808] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:59:56.808] - GCMT3D-C201802271729A - INFO    : =============== Loading and processing all modeled data ================
+[2021-05-18 20:59:56.808] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 20:59:56.808] - GCMT3D-C201802271729A - INFO    : ---> Loading forward synthetics ...
+[2021-05-18 20:59:59.456] - GCMT3D-C201802271729A - INFO    : ---> Loading parameter synthetics ...
+[2021-05-18 20:59:59.457] - GCMT3D-C201802271729A - INFO    : --->     m_rr ...
+[2021-05-18 21:00:02.190] - GCMT3D-C201802271729A - INFO    : --->     m_tt ...
+[2021-05-18 21:00:04.939] - GCMT3D-C201802271729A - INFO    : --->     m_pp ...
+[2021-05-18 21:00:08.016] - GCMT3D-C201802271729A - INFO    : --->     m_rt ...
+[2021-05-18 21:00:10.760] - GCMT3D-C201802271729A - INFO    : --->     m_rp ...
+[2021-05-18 21:00:13.572] - GCMT3D-C201802271729A - INFO    : --->     m_tp ...
+[2021-05-18 21:00:16.335] - GCMT3D-C201802271729A - INFO    : --->     latitude ...
+[2021-05-18 21:00:19.057] - GCMT3D-C201802271729A - INFO    : --->     longitude ...
+[2021-05-18 21:00:21.782] - GCMT3D-C201802271729A - INFO    : --->     time_shift ...
+[2021-05-18 21:00:23.735] - GCMT3D-C201802271729A - INFO    : --->     depth_in_m ...
+[2021-05-18 21:00:26.452] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 30 s seconds
+[2021-05-18 21:00:27.217] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:00:27.218] - GCMT3D-C201802271729A - INFO    : ---> Processing body/synt: 444 waveforms ...
+[2021-05-18 21:00:29.960] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/synt: 444 waveforms ...
+[2021-05-18 21:00:32.977] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/synt: 444 waveforms ...
+[2021-05-18 21:00:37.077] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:00:37.079] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rr: 444 waveforms ...
+[2021-05-18 21:00:46.877] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tt: 444 waveforms ...
+[2021-05-18 21:00:54.453] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_pp: 444 waveforms ...
+[2021-05-18 21:01:02.942] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rt: 444 waveforms ...
+[2021-05-18 21:01:11.337] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rp: 444 waveforms ...
+[2021-05-18 21:01:18.546] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tp: 444 waveforms ...
+[2021-05-18 21:01:26.372] - GCMT3D-C201802271729A - INFO    : ---> Processing body/latitude: 444 waveforms ...
+[2021-05-18 21:01:34.746] - GCMT3D-C201802271729A - INFO    : ---> Processing body/longitude: 444 waveforms ...
+[2021-05-18 21:01:41.678] - GCMT3D-C201802271729A - INFO    : ---> Processing body/time_shift: 444 waveforms ...
+[2021-05-18 21:01:41.969] - GCMT3D-C201802271729A - INFO    : ---> Processing body/depth_in_m: 444 waveforms ...
+[2021-05-18 21:01:48.227] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rr: 444 waveforms ...
+[2021-05-18 21:01:54.955] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tt: 444 waveforms ...
+[2021-05-18 21:02:01.209] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_pp: 444 waveforms ...
+[2021-05-18 21:02:07.831] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rt: 444 waveforms ...
+[2021-05-18 21:02:15.924] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rp: 444 waveforms ...
+[2021-05-18 21:02:22.865] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tp: 444 waveforms ...
+[2021-05-18 21:02:29.011] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/latitude: 444 waveforms ...
+[2021-05-18 21:02:34.937] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/longitude: 444 waveforms ...
+[2021-05-18 21:02:41.052] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/time_shift: 444 waveforms ...
+[2021-05-18 21:02:41.346] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/depth_in_m: 444 waveforms ...
+[2021-05-18 21:02:47.482] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rr: 444 waveforms ...
+[2021-05-18 21:02:53.496] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tt: 444 waveforms ...
+[2021-05-18 21:02:59.365] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_pp: 444 waveforms ...
+[2021-05-18 21:03:05.500] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rt: 444 waveforms ...
+[2021-05-18 21:03:11.625] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rp: 444 waveforms ...
+[2021-05-18 21:03:18.174] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tp: 444 waveforms ...
+[2021-05-18 21:03:24.157] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/latitude: 444 waveforms ...
+[2021-05-18 21:03:30.131] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/longitude: 444 waveforms ...
+[2021-05-18 21:03:36.406] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/time_shift: 444 waveforms ...
+[2021-05-18 21:03:36.701] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/depth_in_m: 444 waveforms ...
+[2021-05-18 21:03:42.980] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 03 m 17 s seconds
+[2021-05-18 21:03:50.115] - GCMT3D-C201802271729A - INFO    : ---> Windowing body ...
+[2021-05-18 21:05:36.065] - GCMT3D-C201802271729A - INFO    : ---> Merging bodywindows ...
+[2021-05-18 21:05:36.108] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.108] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.TAM.00.BHN): list index out of range
+[2021-05-18 21:05:36.138] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.139] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH1): list index out of range
+[2021-05-18 21:05:36.140] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.141] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH2): list index out of range
+[2021-05-18 21:05:36.144] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.144] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH1): list index out of range
+[2021-05-18 21:05:36.146] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.146] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH2): list index out of range
+[2021-05-18 21:05:36.161] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.161] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH1): list index out of range
+[2021-05-18 21:05:36.163] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.163] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH2): list index out of range
+[2021-05-18 21:05:36.166] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.166] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH1): list index out of range
+[2021-05-18 21:05:36.168] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.168] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH2): list index out of range
+[2021-05-18 21:05:36.309] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.309] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.PAF.00.BHN): list index out of range
+[2021-05-18 21:05:36.323] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.323] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH1): list index out of range
+[2021-05-18 21:05:36.346] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.346] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH2): list index out of range
+[2021-05-18 21:05:36.354] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.354] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH1): list index out of range
+[2021-05-18 21:05:36.356] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.356] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH2): list index out of range
+[2021-05-18 21:05:36.360] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.360] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH1): list index out of range
+[2021-05-18 21:05:36.361] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.361] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH2): list index out of range
+[2021-05-18 21:05:36.363] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.363] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH1): list index out of range
+[2021-05-18 21:05:36.365] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.365] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH2): list index out of range
+[2021-05-18 21:05:36.369] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.369] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH1): list index out of range
+[2021-05-18 21:05:36.371] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.371] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH2): list index out of range
+[2021-05-18 21:05:36.380] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.380] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH1): list index out of range
+[2021-05-18 21:05:36.381] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.382] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH2): list index out of range
+[2021-05-18 21:05:36.385] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.385] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH1): list index out of range
+[2021-05-18 21:05:36.387] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.387] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH2): list index out of range
+[2021-05-18 21:05:36.391] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.391] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH1): list index out of range
+[2021-05-18 21:05:36.393] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.393] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH2): list index out of range
+[2021-05-18 21:05:36.396] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.396] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH1): list index out of range
+[2021-05-18 21:05:36.398] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.398] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH2): list index out of range
+[2021-05-18 21:05:36.568] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.569] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH1): list index out of range
+[2021-05-18 21:05:36.570] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.570] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH2): list index out of range
+[2021-05-18 21:05:36.574] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.574] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH1): list index out of range
+[2021-05-18 21:05:36.576] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.576] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH2): list index out of range
+[2021-05-18 21:05:36.581] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.581] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH1): list index out of range
+[2021-05-18 21:05:36.583] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.583] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH2): list index out of range
+[2021-05-18 21:05:36.592] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.592] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH1): list index out of range
+[2021-05-18 21:05:36.594] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.594] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH2): list index out of range
+[2021-05-18 21:05:36.761] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.762] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH1): list index out of range
+[2021-05-18 21:05:36.763] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.763] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH2): list index out of range
+[2021-05-18 21:05:36.767] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.767] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH1): list index out of range
+[2021-05-18 21:05:36.769] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.769] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH2): list index out of range
+[2021-05-18 21:05:36.773] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.773] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH1): list index out of range
+[2021-05-18 21:05:36.774] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.774] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH2): list index out of range
+[2021-05-18 21:05:36.778] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.778] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.JTS.00.BH1): list index out of range
+[2021-05-18 21:05:36.782] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.782] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH1): list index out of range
+[2021-05-18 21:05:36.784] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.784] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH2): list index out of range
+[2021-05-18 21:05:36.787] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.788] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH1): list index out of range
+[2021-05-18 21:05:36.789] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.789] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH2): list index out of range
+[2021-05-18 21:05:36.793] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.793] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH1): list index out of range
+[2021-05-18 21:05:36.795] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.795] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH2): list index out of range
+[2021-05-18 21:05:36.799] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.799] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH1): list index out of range
+[2021-05-18 21:05:36.800] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.800] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH2): list index out of range
+[2021-05-18 21:05:36.905] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.905] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH1): list index out of range
+[2021-05-18 21:05:36.908] - GCMT3D-C201802271729A - WARNING : list index out of range
+[2021-05-18 21:05:36.908] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH2): list index out of range
+[2021-05-18 21:05:36.937] - GCMT3D-C201802271729A - INFO    : ---> Windowing surface ...
+[2021-05-18 21:06:26.678] - GCMT3D-C201802271729A - INFO    : ---> Windowing mantle ...
+[2021-05-18 21:07:15.716] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 03 m 26 s seconds
+[2021-05-18 21:07:15.716] - GCMT3D-C201802271729A - INFO    : ---> Prepping simulations ...
+[2021-05-18 21:07:25.271] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 10 s seconds
+[2021-05-18 21:07:25.271] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:07:25.271] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 21:07:25.271] - GCMT3D-C201802271729A - INFO    : ========================== Computing Weights ===========================
+[2021-05-18 21:07:25.271] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 21:07:25.271] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:07:25.631] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:07:25.631] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 21:07:25.631] - GCMT3D-C201802271729A - INFO    : ================================== GN ==================================
+[2021-05-18 21:07:25.632] - GCMT3D-C201802271729A - INFO    : ========================================================================
+[2021-05-18 21:07:25.632] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:07:43.316] - GCMT3D-C201802271729A - INFO    : ---> Writing Synthetic CMTSOLUTION ...
+[2021-05-18 21:07:43.319] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rr ...
+[2021-05-18 21:07:43.321] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tt ...
+[2021-05-18 21:07:43.323] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_pp ...
+[2021-05-18 21:07:43.325] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rt ...
+[2021-05-18 21:07:43.327] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rp ...
+[2021-05-18 21:07:43.329] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tp ...
+[2021-05-18 21:07:43.331] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for latitude ...
+[2021-05-18 21:07:43.333] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for longitude ...
+[2021-05-18 21:07:43.334] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for depth_in_m ...
+[2021-05-18 21:07:57.617] - GCMT3D-C201802271729A - DEBUG   : M, G, H: (GCMT3DInversion.py:1306)
+[2021-05-18 21:07:57.617] - GCMT3D-C201802271729A - DEBUG   : [ -1.10000000e+23   8.28000000e+24  -8.18000000e+24  -2.60000000e+24
+   4.50000000e+23  -9.53000000e+24  -6.02300000e+01   1.50180000e+02
+   7.40000000e+00   1.20000000e+04] (GCMT3DInversion.py:1307)
+[2021-05-18 21:07:57.618] - GCMT3D-C201802271729A - DEBUG   : [  1.34812356e-27  -2.48422231e-27  -1.15988437e-27  -8.35048106e-29
+   2.26048981e-28   4.58011032e-29   9.62317015e-03  -4.14606628e-02
+  -1.62964431e-03   2.88171105e-07] (GCMT3DInversion.py:1308)
+[2021-05-18 21:07:57.618] - GCMT3D-C201802271729A - DEBUG   : [  9.40888771e-52  -1.34577470e-51  -1.13296022e-51   1.50654087e-53
+  -9.48626380e-54  -1.13130146e-52   3.25780594e-28  -8.83734503e-29
+   5.25981456e-30   5.63732022e-32  -1.34577470e-51   2.94542863e-51
+   9.41306077e-52  -5.18472555e-53   5.24459559e-54   8.31767188e-52
+  -2.25771890e-27   2.88032906e-28  -4.67568271e-29  -2.09401046e-31
+  -1.13296022e-51   9.41306077e-52   2.40073859e-51  -3.23535552e-53
+   3.95464905e-53  -6.75639240e-52  -3.43331790e-28  -1.95914902e-28
+  -3.45832279e-29   3.93687434e-32   1.50654087e-53  -5.18472555e-53
+  -3.23535552e-53   3.73741609e-52  -2.89841680e-53   1.43750821e-53
+  -4.33349674e-27  -2.01781579e-27   8.75879348e-29  -8.47803343e-32
+  -9.48626380e-54   5.24459559e-54   3.95464905e-53  -2.89841680e-53
+   3.77808285e-52  -3.38143787e-53   3.95310264e-27  -8.55930179e-28
+  -1.63235950e-29   2.71329226e-32  -1.13130146e-52   8.31767188e-52
+  -6.75639240e-52   1.43750821e-53  -3.38143787e-53   3.31000153e-51
+  -1.60119101e-28   1.12353077e-27  -3.71520889e-29   3.36597368e-31
+   3.25780594e-28  -2.25771890e-27  -3.43331790e-28  -4.33349674e-27
+   3.95310264e-27  -1.60119101e-28   5.06015821e-01   5.42918113e-03
+  -6.19334886e-04   2.17714288e-06  -8.83734503e-29   2.88032906e-28
+  -1.95914902e-28  -2.01781579e-27  -8.55930179e-28   1.12353077e-27
+   5.42918113e-03   1.13084993e-01  -1.71835816e-04   8.37261593e-07
+   5.25981456e-30  -4.67568271e-29  -3.45832279e-29   8.75879348e-29
+  -1.63235950e-29  -3.71520889e-29  -6.19334886e-04  -1.71835816e-04
+   1.92912138e-03  -2.52836523e-08   5.63732022e-32  -2.09401046e-31
+   3.93687434e-32  -8.47803343e-32   2.71329226e-32   3.36597368e-31
+   2.17714288e-06   8.37261593e-07  -2.52836523e-08   2.47711775e-10] (GCMT3DInversion.py:1309)
+[2021-05-18 21:07:57.621] - GCMT3D-C201802271729A - DEBUG   : Raw (GCMT3DInversion.py:1168)
+[2021-05-18 21:07:57.621] - GCMT3D-C201802271729A - DEBUG   : C: 0.1723928464721423 (GCMT3DInversion.py:1169)
+[2021-05-18 21:07:57.621] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1170)
+[2021-05-18 21:07:57.621] - GCMT3D-C201802271729A - DEBUG   : [  1.34812356e-27  -2.48422231e-27  -1.15988437e-27  -8.35048106e-29
+   2.26048981e-28   4.58011032e-29   9.62317015e-03  -4.14606628e-02
+  -1.62964431e-03   2.88171105e-07] (GCMT3DInversion.py:1171)
+[2021-05-18 21:07:57.622] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1172)
+[2021-05-18 21:07:57.622] - GCMT3D-C201802271729A - DEBUG   : [  9.40888771e-52  -1.34577470e-51  -1.13296022e-51   1.50654087e-53
+  -9.48626380e-54  -1.13130146e-52   3.25780594e-28  -8.83734503e-29
+   5.25981456e-30   5.63732022e-32  -1.34577470e-51   2.94542863e-51
+   9.41306077e-52  -5.18472555e-53   5.24459559e-54   8.31767188e-52
+  -2.25771890e-27   2.88032906e-28  -4.67568271e-29  -2.09401046e-31
+  -1.13296022e-51   9.41306077e-52   2.40073859e-51  -3.23535552e-53
+   3.95464905e-53  -6.75639240e-52  -3.43331790e-28  -1.95914902e-28
+  -3.45832279e-29   3.93687434e-32   1.50654087e-53  -5.18472555e-53
+  -3.23535552e-53   3.73741609e-52  -2.89841680e-53   1.43750821e-53
+  -4.33349674e-27  -2.01781579e-27   8.75879348e-29  -8.47803343e-32
+  -9.48626380e-54   5.24459559e-54   3.95464905e-53  -2.89841680e-53
+   3.77808285e-52  -3.38143787e-53   3.95310264e-27  -8.55930179e-28
+  -1.63235950e-29   2.71329226e-32  -1.13130146e-52   8.31767188e-52
+  -6.75639240e-52   1.43750821e-53  -3.38143787e-53   3.31000153e-51
+  -1.60119101e-28   1.12353077e-27  -3.71520889e-29   3.36597368e-31
+   3.25780594e-28  -2.25771890e-27  -3.43331790e-28  -4.33349674e-27
+   3.95310264e-27  -1.60119101e-28   5.06015821e-01   5.42918113e-03
+  -6.19334886e-04   2.17714288e-06  -8.83734503e-29   2.88032906e-28
+  -1.95914902e-28  -2.01781579e-27  -8.55930179e-28   1.12353077e-27
+   5.42918113e-03   1.13084993e-01  -1.71835816e-04   8.37261593e-07
+   5.25981456e-30  -4.67568271e-29  -3.45832279e-29   8.75879348e-29
+  -1.63235950e-29  -3.71520889e-29  -6.19334886e-04  -1.71835816e-04
+   1.92912138e-03  -2.52836523e-08   5.63732022e-32  -2.09401046e-31
+   3.93687434e-32  -8.47803343e-32   2.71329226e-32   3.36597368e-31
+   2.17714288e-06   8.37261593e-07  -2.52836523e-08   2.47711775e-10] (GCMT3DInversion.py:1173)
+[2021-05-18 21:07:57.656] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1179)
+[2021-05-18 21:07:57.656] - GCMT3D-C201802271729A - DEBUG   : C: 0.1723928464721423 (GCMT3DInversion.py:1180)
+[2021-05-18 21:07:57.656] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1181)
+[2021-05-18 21:07:57.656] - GCMT3D-C201802271729A - DEBUG   : [  1.73444806e-02  -3.19611251e-02  -1.49226618e-02  -1.07434334e-03
+   2.90826619e-03   5.89260785e-04   9.62317015e-02  -4.14606628e+00
+  -1.62964431e-03   2.88171105e-03] (GCMT3DInversion.py:1182)
+[2021-05-18 21:07:57.657] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1183)
+[2021-05-18 21:07:57.657] - GCMT3D-C201802271729A - DEBUG   : [  1.55740473e-01  -2.22759155e-01  -1.87533070e-01   2.49369952e-03
+  -1.57021239e-03  -1.87258505e-02   4.19137783e-02  -1.13698154e-01
+   6.76709127e-05   7.25277670e-03  -2.22759155e-01   4.87541632e-01
+   1.55809547e-01  -8.58200919e-03   8.68110898e-04   1.37678139e-01
+  -2.90470124e-01   3.70572944e-01  -6.01556792e-04  -2.69407975e-02
+  -1.87533070e-01   1.55809547e-01   3.97381894e-01  -5.35531737e-03
+   6.54592691e-03  -1.11835084e-01  -4.41718531e-02  -2.52057180e-01
+  -4.44935571e-04   5.06504320e-03   2.49369952e-03  -8.58200919e-03
+  -5.35531737e-03   6.18635237e-02  -4.79760006e-03   2.37943330e-03
+  -5.57532355e-01  -2.59605039e+00   1.12687537e-03  -1.09075378e-02
+  -1.57021239e-03   8.68110898e-04   6.54592691e-03  -4.79760006e-03
+   6.25366598e-02  -5.59711996e-03   5.08592196e-01  -1.10120948e+00
+  -2.10013597e-04   3.49082580e-03  -1.87258505e-02   1.37678139e-01
+  -1.11835084e-01   2.37943330e-03  -5.59711996e-03   5.47887507e-01
+  -2.06003569e-02   1.44549493e+00  -4.77985628e-04   4.33054262e-02
+   4.19137783e-02  -2.90470124e-01  -4.41718531e-02  -5.57532355e-01
+   5.08592196e-01  -2.06003569e-02   5.06015821e+01   5.42918113e+00
+  -6.19334886e-03   2.17714288e-01  -1.13698154e-01   3.70572944e-01
+  -2.52057180e-01  -2.59605039e+00  -1.10120948e+00   1.44549493e+00
+   5.42918113e+00   1.13084993e+03  -1.71835816e-02   8.37261593e-01
+   6.76709127e-05  -6.01556792e-04  -4.44935571e-04   1.12687537e-03
+  -2.10013597e-04  -4.77985628e-04  -6.19334886e-03  -1.71835816e-02
+   1.92912138e-03  -2.52836523e-04   7.25277670e-03  -2.69407975e-02
+   5.06504320e-03  -1.09075378e-02   3.49082580e-03   4.33054262e-02
+   2.17714288e-01   8.37261593e-01  -2.52836523e-04   2.47711775e-02] (GCMT3DInversion.py:1184)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : f: 1.1308499270301435 (GCMT3DInversion.py:1188)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : Model Residual: [ 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.] (GCMT3DInversion.py:1190)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : Cost Before: 0.1723928464721423 (GCMT3DInversion.py:1191)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : Cost After: 0.1723928464721423 (GCMT3DInversion.py:1193)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : Damped (GCMT3DInversion.py:1197)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1198)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : C: 0.1723928464721423 (GCMT3DInversion.py:1199)
+[2021-05-18 21:07:57.660] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1200)
+[2021-05-18 21:07:57.661] - GCMT3D-C201802271729A - DEBUG   : [  1.73444806e-02  -3.19611251e-02  -1.49226618e-02  -1.07434334e-03
+   2.90826619e-03   5.89260785e-04   9.62317015e-02  -4.14606628e+00
+  -1.62964431e-03   2.88171105e-03] (GCMT3DInversion.py:1201)
+[2021-05-18 21:07:57.661] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1202)
+[2021-05-18 21:07:57.661] - GCMT3D-C201802271729A - DEBUG   : [  1.28659040e+00  -2.22759155e-01  -1.87533070e-01   2.49369952e-03
+  -1.57021239e-03  -1.87258505e-02   4.19137783e-02  -1.13698154e-01
+   6.76709127e-05   7.25277670e-03  -2.22759155e-01   1.61839156e+00
+   1.55809547e-01  -8.58200919e-03   8.68110898e-04   1.37678139e-01
+  -2.90470124e-01   3.70572944e-01  -6.01556792e-04  -2.69407975e-02
+  -1.87533070e-01   1.55809547e-01   1.52823182e+00  -5.35531737e-03
+   6.54592691e-03  -1.11835084e-01  -4.41718531e-02  -2.52057180e-01
+  -4.44935571e-04   5.06504320e-03   2.49369952e-03  -8.58200919e-03
+  -5.35531737e-03   1.19271345e+00  -4.79760006e-03   2.37943330e-03
+  -5.57532355e-01  -2.59605039e+00   1.12687537e-03  -1.09075378e-02
+  -1.57021239e-03   8.68110898e-04   6.54592691e-03  -4.79760006e-03
+   1.19338659e+00  -5.59711996e-03   5.08592196e-01  -1.10120948e+00
+  -2.10013597e-04   3.49082580e-03  -1.87258505e-02   1.37678139e-01
+  -1.11835084e-01   2.37943330e-03  -5.59711996e-03   1.67873743e+00
+  -2.06003569e-02   1.44549493e+00  -4.77985628e-04   4.33054262e-02
+   4.19137783e-02  -2.90470124e-01  -4.41718531e-02  -5.57532355e-01
+   5.08592196e-01  -2.06003569e-02   5.17324320e+01   5.42918113e+00
+  -6.19334886e-03   2.17714288e-01  -1.13698154e-01   3.70572944e-01
+  -2.52057180e-01  -2.59605039e+00  -1.10120948e+00   1.44549493e+00
+   5.42918113e+00   1.13198078e+03  -1.71835816e-02   8.37261593e-01
+   6.76709127e-05  -6.01556792e-04  -4.44935571e-04   1.12687537e-03
+  -2.10013597e-04  -4.77985628e-04  -6.19334886e-03  -1.71835816e-02
+   1.13277905e+00  -2.52836523e-04   7.25277670e-03  -2.69407975e-02
+   5.06504320e-03  -1.09075378e-02   3.49082580e-03   4.33054262e-02
+   2.17714288e-01   8.37261593e-01  -2.52836523e-04   1.15562110e+00] (GCMT3DInversion.py:1203)
+[2021-05-18 21:07:57.664] - GCMT3D-C201802271729A - DEBUG   : Zero_traced (GCMT3DInversion.py:1217)
+[2021-05-18 21:07:57.664] - GCMT3D-C201802271729A - DEBUG   : C: 0.1723928464721423 (GCMT3DInversion.py:1218)
+[2021-05-18 21:07:57.664] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1219)
+[2021-05-18 21:07:57.664] - GCMT3D-C201802271729A - DEBUG   : [  1.73444806e-02  -3.19611251e-02  -1.49226618e-02  -1.07434334e-03
+   2.90826619e-03   5.89260785e-04   9.62317015e-02  -4.14606628e+00
+  -1.62964431e-03   2.88171105e-03  -7.77263723e-04] (GCMT3DInversion.py:1220)
+[2021-05-18 21:07:57.664] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1221)
+[2021-05-18 21:07:57.665] - GCMT3D-C201802271729A - DEBUG   : [  1.28659040e+00  -2.22759155e-01  -1.87533070e-01   2.49369952e-03
+  -1.57021239e-03  -1.87258505e-02   4.19137783e-02  -1.13698154e-01
+   6.76709127e-05   7.25277670e-03   1.00000000e+00  -2.22759155e-01
+   1.61839156e+00   1.55809547e-01  -8.58200919e-03   8.68110898e-04
+   1.37678139e-01  -2.90470124e-01   3.70572944e-01  -6.01556792e-04
+  -2.69407975e-02   1.00000000e+00  -1.87533070e-01   1.55809547e-01
+   1.52823182e+00  -5.35531737e-03   6.54592691e-03  -1.11835084e-01
+  -4.41718531e-02  -2.52057180e-01  -4.44935571e-04   5.06504320e-03
+   1.00000000e+00   2.49369952e-03  -8.58200919e-03  -5.35531737e-03
+   1.19271345e+00  -4.79760006e-03   2.37943330e-03  -5.57532355e-01
+  -2.59605039e+00   1.12687537e-03  -1.09075378e-02   0.00000000e+00
+  -1.57021239e-03   8.68110898e-04   6.54592691e-03  -4.79760006e-03
+   1.19338659e+00  -5.59711996e-03   5.08592196e-01  -1.10120948e+00
+  -2.10013597e-04   3.49082580e-03   0.00000000e+00  -1.87258505e-02
+   1.37678139e-01  -1.11835084e-01   2.37943330e-03  -5.59711996e-03
+   1.67873743e+00  -2.06003569e-02   1.44549493e+00  -4.77985628e-04
+   4.33054262e-02   0.00000000e+00   4.19137783e-02  -2.90470124e-01
+  -4.41718531e-02  -5.57532355e-01   5.08592196e-01  -2.06003569e-02
+   5.17324320e+01   5.42918113e+00  -6.19334886e-03   2.17714288e-01
+   0.00000000e+00  -1.13698154e-01   3.70572944e-01  -2.52057180e-01
+  -2.59605039e+00  -1.10120948e+00   1.44549493e+00   5.42918113e+00
+   1.13198078e+03  -1.71835816e-02   8.37261593e-01   0.00000000e+00
+   6.76709127e-05  -6.01556792e-04  -4.44935571e-04   1.12687537e-03
+  -2.10013597e-04  -4.77985628e-04  -6.19334886e-03  -1.71835816e-02
+   1.13277905e+00  -2.52836523e-04   0.00000000e+00   7.25277670e-03
+  -2.69407975e-02   5.06504320e-03  -1.09075378e-02   3.49082580e-03
+   4.33054262e-02   2.17714288e-01   8.37261593e-01  -2.52836523e-04
+   1.15562110e+00   0.00000000e+00   1.00000000e+00   1.00000000e+00
+   1.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00] (GCMT3DInversion.py:1222)
+[2021-05-18 21:07:57.668] - GCMT3D-C201802271729A - INFO    :     Model: [-0.0085499   0.64357436 -0.63580173 -0.20208857  0.03497687 -0.74073233
+ -6.023       1.5018      7.4         1.2         1.        ]
+[2021-05-18 21:07:57.668] - GCMT3D-C201802271729A - INFO    :     Grad:  [  1.73444806e-02  -3.19611251e-02  -1.49226618e-02  -1.07434334e-03
+   2.90826619e-03   5.89260785e-04   9.62317015e-02  -4.14606628e+00
+  -1.62964431e-03   2.88171105e-03  -7.77263723e-04]
+[2021-05-18 21:07:57.669] - GCMT3D-C201802271729A - INFO    : ---> Writing Synthetic CMTSOLUTION ...
+[2021-05-18 21:07:57.672] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rr ...
+[2021-05-18 21:07:57.673] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tt ...
+[2021-05-18 21:07:57.673] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_pp ...
+[2021-05-18 21:07:57.673] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rt ...
+[2021-05-18 21:07:57.674] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rp ...
+[2021-05-18 21:07:57.674] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tp ...
+[2021-05-18 21:07:57.675] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for latitude ...
+[2021-05-18 21:07:57.675] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for longitude ...
+[2021-05-18 21:07:57.675] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for depth_in_m ...
+[2021-05-18 21:07:57.676] - GCMT3D-C201802271729A - INFO    : ---> Submitting all simulations ...
+[2021-05-18 21:10:51.070] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 53 s seconds
+[2021-05-18 21:10:51.071] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:10:51.071] - GCMT3D-C201802271729A - INFO    : =============== Loading and processing all modeled data ================
+[2021-05-18 21:10:51.071] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:10:51.071] - GCMT3D-C201802271729A - INFO    : ---> Loading forward synthetics ...
+[2021-05-18 21:10:53.704] - GCMT3D-C201802271729A - INFO    : ---> Loading parameter synthetics ...
+[2021-05-18 21:10:53.704] - GCMT3D-C201802271729A - INFO    : --->     m_rr ...
+[2021-05-18 21:10:56.537] - GCMT3D-C201802271729A - INFO    : --->     m_tt ...
+[2021-05-18 21:10:59.161] - GCMT3D-C201802271729A - INFO    : --->     m_pp ...
+[2021-05-18 21:11:01.786] - GCMT3D-C201802271729A - INFO    : --->     m_rt ...
+[2021-05-18 21:11:05.160] - GCMT3D-C201802271729A - INFO    : --->     m_rp ...
+[2021-05-18 21:11:07.956] - GCMT3D-C201802271729A - INFO    : --->     m_tp ...
+[2021-05-18 21:11:10.745] - GCMT3D-C201802271729A - INFO    : --->     latitude ...
+[2021-05-18 21:11:13.454] - GCMT3D-C201802271729A - INFO    : --->     longitude ...
+[2021-05-18 21:11:16.143] - GCMT3D-C201802271729A - INFO    : --->     time_shift ...
+[2021-05-18 21:11:18.054] - GCMT3D-C201802271729A - INFO    : --->     depth_in_m ...
+[2021-05-18 21:11:20.678] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 30 s seconds
+[2021-05-18 21:11:21.585] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:11:21.587] - GCMT3D-C201802271729A - INFO    : ---> Processing body/synt: 444 waveforms ...
+[2021-05-18 21:11:23.885] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/synt: 444 waveforms ...
+[2021-05-18 21:11:26.295] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/synt: 444 waveforms ...
+[2021-05-18 21:11:29.691] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:11:29.692] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rr: 444 waveforms ...
+[2021-05-18 21:11:36.164] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tt: 444 waveforms ...
+[2021-05-18 21:11:42.559] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_pp: 444 waveforms ...
+[2021-05-18 21:11:48.817] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rt: 444 waveforms ...
+[2021-05-18 21:11:54.787] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rp: 444 waveforms ...
+[2021-05-18 21:12:00.602] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tp: 444 waveforms ...
+[2021-05-18 21:12:06.803] - GCMT3D-C201802271729A - INFO    : ---> Processing body/latitude: 444 waveforms ...
+[2021-05-18 21:12:12.733] - GCMT3D-C201802271729A - INFO    : ---> Processing body/longitude: 444 waveforms ...
+[2021-05-18 21:12:18.614] - GCMT3D-C201802271729A - INFO    : ---> Processing body/time_shift: 444 waveforms ...
+[2021-05-18 21:12:18.902] - GCMT3D-C201802271729A - INFO    : ---> Processing body/depth_in_m: 444 waveforms ...
+[2021-05-18 21:12:24.626] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rr: 444 waveforms ...
+[2021-05-18 21:12:30.359] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tt: 444 waveforms ...
+[2021-05-18 21:12:36.944] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_pp: 444 waveforms ...
+[2021-05-18 21:12:42.760] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rt: 444 waveforms ...
+[2021-05-18 21:12:48.722] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rp: 444 waveforms ...
+[2021-05-18 21:12:54.940] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tp: 444 waveforms ...
+[2021-05-18 21:13:01.363] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/latitude: 444 waveforms ...
+[2021-05-18 21:13:07.116] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/longitude: 444 waveforms ...
+[2021-05-18 21:13:12.887] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/time_shift: 444 waveforms ...
+[2021-05-18 21:13:13.175] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/depth_in_m: 444 waveforms ...
+[2021-05-18 21:13:19.298] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rr: 444 waveforms ...
+[2021-05-18 21:13:25.136] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tt: 444 waveforms ...
+[2021-05-18 21:13:30.886] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_pp: 444 waveforms ...
+[2021-05-18 21:13:36.613] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rt: 444 waveforms ...
+[2021-05-18 21:13:42.809] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rp: 444 waveforms ...
+[2021-05-18 21:13:48.751] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tp: 444 waveforms ...
+[2021-05-18 21:13:54.574] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/latitude: 444 waveforms ...
+[2021-05-18 21:14:00.295] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/longitude: 444 waveforms ...
+[2021-05-18 21:14:06.364] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/time_shift: 444 waveforms ...
+[2021-05-18 21:14:06.654] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/depth_in_m: 444 waveforms ...
+[2021-05-18 21:14:12.797] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 52 s seconds
+[2021-05-18 21:14:27.457] - GCMT3D-C201802271729A - DEBUG   : M, G, H: (GCMT3DInversion.py:1306)
+[2021-05-18 21:14:27.458] - GCMT3D-C201802271729A - DEBUG   : [ -3.03973141e+23   8.44552703e+24  -8.14155389e+24  -2.49590471e+24
+   4.73638565e+23  -9.58765691e+24  -6.02507610e+01   1.50549673e+02
+   7.40148173e+00   1.19583970e+04] (GCMT3DInversion.py:1307)
+[2021-05-18 21:14:27.458] - GCMT3D-C201802271729A - DEBUG   : [  1.18662560e-27  -2.68865128e-27  -4.57115137e-28  -5.55509971e-28
+  -1.13587105e-28   1.10340726e-29  -1.31660558e-03  -5.25224151e-03
+  -1.41961257e-03   8.88541484e-07] (GCMT3DInversion.py:1308)
+[2021-05-18 21:14:27.459] - GCMT3D-C201802271729A - DEBUG   : [  9.40955145e-52  -1.34581648e-51  -1.13254774e-51   1.60601337e-53
+  -4.54052485e-54  -1.15354580e-52   3.16329981e-28   5.87986805e-29
+   4.30703431e-30   6.23511059e-32  -1.34581648e-51   2.93487740e-51
+   9.45824327e-52  -5.62146906e-53  -1.51105533e-54   8.32470705e-52
+  -2.29930353e-27   5.34798793e-29  -4.56497244e-29  -2.23361264e-31
+  -1.13254774e-51   9.45824327e-52   2.38836976e-51  -3.11547730e-53
+   2.90036511e-53  -6.69127911e-52  -3.17877560e-28  -4.09906434e-28
+  -3.28984250e-29   2.47486682e-32   1.60601337e-53  -5.62146906e-53
+  -3.11547730e-53   3.68994592e-52  -2.85660356e-53   5.67214240e-54
+  -4.57046306e-27  -2.05554748e-27   8.18011108e-29  -8.01573407e-32
+  -4.54052485e-54  -1.51105533e-54   2.90036511e-53  -2.85660356e-53
+   3.70485743e-52  -3.04308532e-53   4.07191080e-27  -7.09006839e-28
+  -5.51631838e-30   2.59498068e-32  -1.15354580e-52   8.32470705e-52
+  -6.69127911e-52   5.67214240e-54  -3.04308532e-53   3.33277430e-51
+   1.72371503e-28   1.03974311e-27  -3.66016536e-29   3.48250766e-31
+   3.16329981e-28  -2.29930353e-27  -3.17877560e-28  -4.57046306e-27
+   4.07191080e-27   1.72371503e-28   5.27695508e-01   1.16417796e-02
+  -6.62811081e-04   2.38766567e-06   5.87986805e-29   5.34798793e-29
+  -4.09906434e-28  -2.05554748e-27  -7.09006839e-28   1.03974311e-27
+   1.16417796e-02   1.14319332e-01  -3.50838843e-04   8.45591538e-07
+   4.30703431e-30  -4.56497244e-29  -3.28984250e-29   8.18011108e-29
+  -5.51631838e-30  -3.66016536e-29  -6.62811081e-04  -3.50838843e-04
+   1.95740416e-03  -2.14933816e-08   6.23511059e-32  -2.23361264e-31
+   2.47486682e-32  -8.01573407e-32   2.59498068e-32   3.48250766e-31
+   2.38766567e-06   8.45591538e-07  -2.14933816e-08   2.52785389e-10] (GCMT3DInversion.py:1309)
+[2021-05-18 21:14:27.462] - GCMT3D-C201802271729A - DEBUG   : Raw (GCMT3DInversion.py:1168)
+[2021-05-18 21:14:27.462] - GCMT3D-C201802271729A - DEBUG   : C: 0.15170901590265148 (GCMT3DInversion.py:1169)
+[2021-05-18 21:14:27.462] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1170)
+[2021-05-18 21:14:27.462] - GCMT3D-C201802271729A - DEBUG   : [  1.18662560e-27  -2.68865128e-27  -4.57115137e-28  -5.55509971e-28
+  -1.13587105e-28   1.10340726e-29  -1.31660558e-03  -5.25224151e-03
+  -1.41961257e-03   8.88541484e-07] (GCMT3DInversion.py:1171)
+[2021-05-18 21:14:27.462] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1172)
+[2021-05-18 21:14:27.462] - GCMT3D-C201802271729A - DEBUG   : [  9.40955145e-52  -1.34581648e-51  -1.13254774e-51   1.60601337e-53
+  -4.54052485e-54  -1.15354580e-52   3.16329981e-28   5.87986805e-29
+   4.30703431e-30   6.23511059e-32  -1.34581648e-51   2.93487740e-51
+   9.45824327e-52  -5.62146906e-53  -1.51105533e-54   8.32470705e-52
+  -2.29930353e-27   5.34798793e-29  -4.56497244e-29  -2.23361264e-31
+  -1.13254774e-51   9.45824327e-52   2.38836976e-51  -3.11547730e-53
+   2.90036511e-53  -6.69127911e-52  -3.17877560e-28  -4.09906434e-28
+  -3.28984250e-29   2.47486682e-32   1.60601337e-53  -5.62146906e-53
+  -3.11547730e-53   3.68994592e-52  -2.85660356e-53   5.67214240e-54
+  -4.57046306e-27  -2.05554748e-27   8.18011108e-29  -8.01573407e-32
+  -4.54052485e-54  -1.51105533e-54   2.90036511e-53  -2.85660356e-53
+   3.70485743e-52  -3.04308532e-53   4.07191080e-27  -7.09006839e-28
+  -5.51631838e-30   2.59498068e-32  -1.15354580e-52   8.32470705e-52
+  -6.69127911e-52   5.67214240e-54  -3.04308532e-53   3.33277430e-51
+   1.72371503e-28   1.03974311e-27  -3.66016536e-29   3.48250766e-31
+   3.16329981e-28  -2.29930353e-27  -3.17877560e-28  -4.57046306e-27
+   4.07191080e-27   1.72371503e-28   5.27695508e-01   1.16417796e-02
+  -6.62811081e-04   2.38766567e-06   5.87986805e-29   5.34798793e-29
+  -4.09906434e-28  -2.05554748e-27  -7.09006839e-28   1.03974311e-27
+   1.16417796e-02   1.14319332e-01  -3.50838843e-04   8.45591538e-07
+   4.30703431e-30  -4.56497244e-29  -3.28984250e-29   8.18011108e-29
+  -5.51631838e-30  -3.66016536e-29  -6.62811081e-04  -3.50838843e-04
+   1.95740416e-03  -2.14933816e-08   6.23511059e-32  -2.23361264e-31
+   2.47486682e-32  -8.01573407e-32   2.59498068e-32   3.48250766e-31
+   2.38766567e-06   8.45591538e-07  -2.14933816e-08   2.52785389e-10] (GCMT3DInversion.py:1173)
+[2021-05-18 21:14:27.465] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1179)
+[2021-05-18 21:14:27.465] - GCMT3D-C201802271729A - DEBUG   : C: 0.15170901590265148 (GCMT3DInversion.py:1180)
+[2021-05-18 21:14:27.465] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1181)
+[2021-05-18 21:14:27.466] - GCMT3D-C201802271729A - DEBUG   : [  1.52667051e-02  -3.45912359e-02  -5.88108158e-03  -7.14699470e-03
+  -1.46137149e-03   1.41960473e-04  -1.31660558e-02  -5.25224151e-01
+  -1.41961257e-03   8.88541484e-03] (GCMT3DInversion.py:1182)
+[2021-05-18 21:14:27.466] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1183)
+[2021-05-18 21:14:27.466] - GCMT3D-C201802271729A - DEBUG   : [  1.55751459e-01  -2.22766070e-01  -1.87464795e-01   2.65835123e-03
+  -7.51569695e-04  -1.90940496e-02   4.06978960e-02   7.56483015e-02
+   5.54127793e-05   8.02187263e-03  -2.22766070e-01   4.85795141e-01
+   1.56557430e-01  -9.30492822e-03  -2.50117206e-04   1.37794589e-01
+  -2.95820255e-01   6.88053201e-02  -5.87313200e-04  -2.87368697e-02
+  -1.87464795e-01   1.56557430e-01   3.95334547e-01  -5.15688913e-03
+   4.80082500e-03  -1.10757297e-01  -4.08970020e-02  -5.27371111e-01
+  -4.23259493e-04   3.18407606e-03   2.65835123e-03  -9.30492822e-03
+  -5.15688913e-03   6.10777745e-02  -4.72838876e-03   9.38880520e-04
+  -5.88019604e-01  -2.64459465e+00   1.05242414e-03  -1.03127598e-02
+  -7.51569695e-04  -2.50117206e-04   4.80082500e-03  -4.72838876e-03
+   6.13245970e-02  -5.03706241e-03   5.23877633e-01  -9.12183109e-01
+  -7.09710001e-05   3.33861031e-03  -1.90940496e-02   1.37794589e-01
+  -1.10757297e-01   9.38880520e-04  -5.03706241e-03   5.51656966e-01
+   2.21767076e-02   1.33769669e+00  -4.70903922e-04   4.48047111e-02
+   4.06978960e-02  -2.95820255e-01  -4.08970020e-02  -5.88019604e-01
+   5.23877633e-01   2.21767076e-02   5.27695508e+01   1.16417796e+01
+  -6.62811081e-03   2.38766567e-01   7.56483015e-02   6.88053201e-02
+  -5.27371111e-01  -2.64459465e+00  -9.12183109e-01   1.33769669e+00
+   1.16417796e+01   1.14319332e+03  -3.50838843e-02   8.45591538e-01
+   5.54127793e-05  -5.87313200e-04  -4.23259493e-04   1.05242414e-03
+  -7.09710001e-05  -4.70903922e-04  -6.62811081e-03  -3.50838843e-02
+   1.95740416e-03  -2.14933816e-04   8.02187263e-03  -2.87368697e-02
+   3.18407606e-03  -1.03127598e-02   3.33861031e-03   4.48047111e-02
+   2.38766567e-01   8.45591538e-01  -2.14933816e-04   2.52785389e-02] (GCMT3DInversion.py:1184)
+[2021-05-18 21:14:27.469] - GCMT3D-C201802271729A - DEBUG   : f: 1.1431933168586954 (GCMT3DInversion.py:1188)
+[2021-05-18 21:14:27.469] - GCMT3D-C201802271729A - DEBUG   : Model Residual: [-0.01507683  0.01286582  0.00298828  0.00809095  0.00183734 -0.00448146
+ -0.0020761   0.00369673  0.00148173 -0.0041603 ] (GCMT3DInversion.py:1190)
+[2021-05-18 21:14:27.469] - GCMT3D-C201802271729A - DEBUG   : Cost Before: 0.15170901590265148 (GCMT3DInversion.py:1191)
+[2021-05-18 21:14:27.469] - GCMT3D-C201802271729A - DEBUG   : Cost After: 0.15170901590265148 (GCMT3DInversion.py:1193)
+[2021-05-18 21:14:27.469] - GCMT3D-C201802271729A - DEBUG   : Damped (GCMT3DInversion.py:1197)
+[2021-05-18 21:14:27.470] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1198)
+[2021-05-18 21:14:27.470] - GCMT3D-C201802271729A - DEBUG   : C: 0.15170901590265148 (GCMT3DInversion.py:1199)
+[2021-05-18 21:14:27.470] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1200)
+[2021-05-18 21:14:27.470] - GCMT3D-C201802271729A - DEBUG   : [ -1.96902461e-03  -1.98831212e-02  -2.46490399e-03   2.10252407e-03
+   6.39063196e-04  -4.98121766e-03  -1.55394398e-02  -5.20998078e-01
+   2.74291668e-04   4.12938976e-03] (GCMT3DInversion.py:1201)
+[2021-05-18 21:14:27.470] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1202)
+[2021-05-18 21:14:27.470] - GCMT3D-C201802271729A - DEBUG   : [  1.29894478e+00  -2.22766070e-01  -1.87464795e-01   2.65835123e-03
+  -7.51569695e-04  -1.90940496e-02   4.06978960e-02   7.56483015e-02
+   5.54127793e-05   8.02187263e-03  -2.22766070e-01   1.62898846e+00
+   1.56557430e-01  -9.30492822e-03  -2.50117206e-04   1.37794589e-01
+  -2.95820255e-01   6.88053201e-02  -5.87313200e-04  -2.87368697e-02
+  -1.87464795e-01   1.56557430e-01   1.53852786e+00  -5.15688913e-03
+   4.80082500e-03  -1.10757297e-01  -4.08970020e-02  -5.27371111e-01
+  -4.23259493e-04   3.18407606e-03   2.65835123e-03  -9.30492822e-03
+  -5.15688913e-03   1.20427109e+00  -4.72838876e-03   9.38880520e-04
+  -5.88019604e-01  -2.64459465e+00   1.05242414e-03  -1.03127598e-02
+  -7.51569695e-04  -2.50117206e-04   4.80082500e-03  -4.72838876e-03
+   1.20451791e+00  -5.03706241e-03   5.23877633e-01  -9.12183109e-01
+  -7.09710001e-05   3.33861031e-03  -1.90940496e-02   1.37794589e-01
+  -1.10757297e-01   9.38880520e-04  -5.03706241e-03   1.69485028e+00
+   2.21767076e-02   1.33769669e+00  -4.70903922e-04   4.48047111e-02
+   4.06978960e-02  -2.95820255e-01  -4.08970020e-02  -5.88019604e-01
+   5.23877633e-01   2.21767076e-02   5.39127441e+01   1.16417796e+01
+  -6.62811081e-03   2.38766567e-01   7.56483015e-02   6.88053201e-02
+  -5.27371111e-01  -2.64459465e+00  -9.12183109e-01   1.33769669e+00
+   1.16417796e+01   1.14433651e+03  -3.50838843e-02   8.45591538e-01
+   5.54127793e-05  -5.87313200e-04  -4.23259493e-04   1.05242414e-03
+  -7.09710001e-05  -4.70903922e-04  -6.62811081e-03  -3.50838843e-02
+   1.14515072e+00  -2.14933816e-04   8.02187263e-03  -2.87368697e-02
+   3.18407606e-03  -1.03127598e-02   3.33861031e-03   4.48047111e-02
+   2.38766567e-01   8.45591538e-01  -2.14933816e-04   1.16847186e+00] (GCMT3DInversion.py:1203)
+[2021-05-18 21:14:27.473] - GCMT3D-C201802271729A - DEBUG   : Zero_traced (GCMT3DInversion.py:1217)
+[2021-05-18 21:14:27.473] - GCMT3D-C201802271729A - DEBUG   : C: 0.15170901590265148 (GCMT3DInversion.py:1218)
+[2021-05-18 21:14:27.473] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1219)
+[2021-05-18 21:14:27.473] - GCMT3D-C201802271729A - DEBUG   : [ -1.96902461e-03  -1.98831212e-02  -2.46490399e-03   2.10252407e-03
+   6.39063196e-04  -4.98121766e-03  -1.55394398e-02  -5.20998078e-01
+   2.74291668e-04   4.12938976e-03   0.00000000e+00] (GCMT3DInversion.py:1220)
+[2021-05-18 21:14:27.474] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1221)
+[2021-05-18 21:14:27.474] - GCMT3D-C201802271729A - DEBUG   : [  1.29894478e+00  -2.22766070e-01  -1.87464795e-01   2.65835123e-03
+  -7.51569695e-04  -1.90940496e-02   4.06978960e-02   7.56483015e-02
+   5.54127793e-05   8.02187263e-03   1.00000000e+00  -2.22766070e-01
+   1.62898846e+00   1.56557430e-01  -9.30492822e-03  -2.50117206e-04
+   1.37794589e-01  -2.95820255e-01   6.88053201e-02  -5.87313200e-04
+  -2.87368697e-02   1.00000000e+00  -1.87464795e-01   1.56557430e-01
+   1.53852786e+00  -5.15688913e-03   4.80082500e-03  -1.10757297e-01
+  -4.08970020e-02  -5.27371111e-01  -4.23259493e-04   3.18407606e-03
+   1.00000000e+00   2.65835123e-03  -9.30492822e-03  -5.15688913e-03
+   1.20427109e+00  -4.72838876e-03   9.38880520e-04  -5.88019604e-01
+  -2.64459465e+00   1.05242414e-03  -1.03127598e-02   0.00000000e+00
+  -7.51569695e-04  -2.50117206e-04   4.80082500e-03  -4.72838876e-03
+   1.20451791e+00  -5.03706241e-03   5.23877633e-01  -9.12183109e-01
+  -7.09710001e-05   3.33861031e-03   0.00000000e+00  -1.90940496e-02
+   1.37794589e-01  -1.10757297e-01   9.38880520e-04  -5.03706241e-03
+   1.69485028e+00   2.21767076e-02   1.33769669e+00  -4.70903922e-04
+   4.48047111e-02   0.00000000e+00   4.06978960e-02  -2.95820255e-01
+  -4.08970020e-02  -5.88019604e-01   5.23877633e-01   2.21767076e-02
+   5.39127441e+01   1.16417796e+01  -6.62811081e-03   2.38766567e-01
+   0.00000000e+00   7.56483015e-02   6.88053201e-02  -5.27371111e-01
+  -2.64459465e+00  -9.12183109e-01   1.33769669e+00   1.16417796e+01
+   1.14433651e+03  -3.50838843e-02   8.45591538e-01   0.00000000e+00
+   5.54127793e-05  -5.87313200e-04  -4.23259493e-04   1.05242414e-03
+  -7.09710001e-05  -4.70903922e-04  -6.62811081e-03  -3.50838843e-02
+   1.14515072e+00  -2.14933816e-04   0.00000000e+00   8.02187263e-03
+  -2.87368697e-02   3.18407606e-03  -1.03127598e-02   3.33861031e-03
+   4.48047111e-02   2.38766567e-01   8.45591538e-01  -2.14933816e-04
+   1.16847186e+00   0.00000000e+00   1.00000000e+00   1.00000000e+00
+   1.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00] (GCMT3DInversion.py:1222)
+[2021-05-18 21:14:27.477] - GCMT3D-C201802271729A - INFO    :     ils: 0 -- f/fo=8.8002e-01 -- model: [-0.02362673  0.65644018 -0.63281345 -0.19399762  0.03681421 -0.74521379
+ -6.0250761   1.50549673  7.40148173  1.1958397   1.00591579] -- alpha: 1
+[2021-05-18 21:14:27.477] - GCMT3D-C201802271729A - INFO    : iter = 0, f/fo=8.8002e-01, nls = 0, wolfe1 = True wolfe2 = True, a=1, al=0, ar=0
+[2021-05-18 21:14:27.478] - GCMT3D-C201802271729A - INFO    : ---> Writing Synthetic CMTSOLUTION ...
+[2021-05-18 21:14:27.484] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rr ...
+[2021-05-18 21:14:27.487] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tt ...
+[2021-05-18 21:14:27.490] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_pp ...
+[2021-05-18 21:14:27.493] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rt ...
+[2021-05-18 21:14:27.496] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rp ...
+[2021-05-18 21:14:27.499] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tp ...
+[2021-05-18 21:14:27.502] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for latitude ...
+[2021-05-18 21:14:27.505] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for longitude ...
+[2021-05-18 21:14:27.508] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for depth_in_m ...
+[2021-05-18 21:14:27.511] - GCMT3D-C201802271729A - INFO    : ---> Submitting all simulations ...
+[2021-05-18 21:17:20.474] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 53 s seconds
+[2021-05-18 21:17:20.475] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:17:20.475] - GCMT3D-C201802271729A - INFO    : =============== Loading and processing all modeled data ================
+[2021-05-18 21:17:20.475] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:17:20.475] - GCMT3D-C201802271729A - INFO    : ---> Loading forward synthetics ...
+[2021-05-18 21:17:23.425] - GCMT3D-C201802271729A - INFO    : ---> Loading parameter synthetics ...
+[2021-05-18 21:17:23.425] - GCMT3D-C201802271729A - INFO    : --->     m_rr ...
+[2021-05-18 21:17:26.281] - GCMT3D-C201802271729A - INFO    : --->     m_tt ...
+[2021-05-18 21:17:29.279] - GCMT3D-C201802271729A - INFO    : --->     m_pp ...
+[2021-05-18 21:17:32.768] - GCMT3D-C201802271729A - INFO    : --->     m_rt ...
+[2021-05-18 21:17:35.796] - GCMT3D-C201802271729A - INFO    : --->     m_rp ...
+[2021-05-18 21:17:38.730] - GCMT3D-C201802271729A - INFO    : --->     m_tp ...
+[2021-05-18 21:17:41.623] - GCMT3D-C201802271729A - INFO    : --->     latitude ...
+[2021-05-18 21:17:44.514] - GCMT3D-C201802271729A - INFO    : --->     longitude ...
+[2021-05-18 21:17:47.283] - GCMT3D-C201802271729A - INFO    : --->     time_shift ...
+[2021-05-18 21:17:49.617] - GCMT3D-C201802271729A - INFO    : --->     depth_in_m ...
+[2021-05-18 21:17:52.440] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 32 s seconds
+[2021-05-18 21:17:53.423] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:17:53.424] - GCMT3D-C201802271729A - INFO    : ---> Processing body/synt: 444 waveforms ...
+[2021-05-18 21:17:55.922] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/synt: 444 waveforms ...
+[2021-05-18 21:17:58.218] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/synt: 444 waveforms ...
+[2021-05-18 21:18:01.474] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:18:01.475] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rr: 444 waveforms ...
+[2021-05-18 21:18:07.990] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tt: 444 waveforms ...
+[2021-05-18 21:18:14.681] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_pp: 444 waveforms ...
+[2021-05-18 21:18:21.648] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rt: 444 waveforms ...
+[2021-05-18 21:18:28.438] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rp: 444 waveforms ...
+[2021-05-18 21:18:34.812] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tp: 444 waveforms ...
+[2021-05-18 21:18:40.766] - GCMT3D-C201802271729A - INFO    : ---> Processing body/latitude: 444 waveforms ...
+[2021-05-18 21:18:47.611] - GCMT3D-C201802271729A - INFO    : ---> Processing body/longitude: 444 waveforms ...
+[2021-05-18 21:18:54.094] - GCMT3D-C201802271729A - INFO    : ---> Processing body/time_shift: 444 waveforms ...
+[2021-05-18 21:18:54.384] - GCMT3D-C201802271729A - INFO    : ---> Processing body/depth_in_m: 444 waveforms ...
+[2021-05-18 21:19:00.713] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rr: 444 waveforms ...
+[2021-05-18 21:19:07.370] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tt: 444 waveforms ...
+[2021-05-18 21:19:13.589] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_pp: 444 waveforms ...
+[2021-05-18 21:19:20.975] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rt: 444 waveforms ...
+[2021-05-18 21:19:27.604] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rp: 444 waveforms ...
+[2021-05-18 21:19:33.930] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tp: 444 waveforms ...
+[2021-05-18 21:19:41.280] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/latitude: 444 waveforms ...
+[2021-05-18 21:19:48.212] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/longitude: 444 waveforms ...
+[2021-05-18 21:19:55.440] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/time_shift: 444 waveforms ...
+[2021-05-18 21:19:55.730] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/depth_in_m: 444 waveforms ...
+[2021-05-18 21:20:02.222] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rr: 444 waveforms ...
+[2021-05-18 21:20:09.380] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tt: 444 waveforms ...
+[2021-05-18 21:20:16.354] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_pp: 444 waveforms ...
+[2021-05-18 21:20:22.938] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rt: 444 waveforms ...
+[2021-05-18 21:20:29.103] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rp: 444 waveforms ...
+[2021-05-18 21:20:35.940] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tp: 444 waveforms ...
+[2021-05-18 21:20:42.096] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/latitude: 444 waveforms ...
+[2021-05-18 21:20:48.268] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/longitude: 444 waveforms ...
+[2021-05-18 21:20:54.494] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/time_shift: 444 waveforms ...
+[2021-05-18 21:20:54.785] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/depth_in_m: 444 waveforms ...
+[2021-05-18 21:21:01.767] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 03 m 09 s seconds
+[2021-05-18 21:21:16.440] - GCMT3D-C201802271729A - DEBUG   : M, G, H: (GCMT3DInversion.py:1306)
+[2021-05-18 21:21:16.441] - GCMT3D-C201802271729A - DEBUG   : [ -3.47152061e+23   8.54143998e+24  -8.19428792e+24  -2.50398968e+24
+   4.70841047e+23  -9.56505514e+24  -6.02477018e+01   1.50595075e+02
+   7.40125117e+00   1.19202148e+04] (GCMT3DInversion.py:1307)
+[2021-05-18 21:21:16.441] - GCMT3D-C201802271729A - DEBUG   : [  1.11286442e-27  -2.46759546e-27  -4.86505878e-28  -6.54208249e-28
+  -1.38507714e-28   1.71983244e-28   1.63003776e-03  -5.37173789e-04
+  -1.41499558e-03   9.37030068e-07] (GCMT3DInversion.py:1308)
+[2021-05-18 21:21:16.442] - GCMT3D-C201802271729A - DEBUG   : [  9.41798688e-52  -1.34752634e-51  -1.13423416e-51   1.61767180e-53
+  -3.88514607e-54  -1.15610882e-52   3.46002325e-28   7.99414853e-29
+   4.25473016e-30   6.36960735e-32  -1.34752634e-51   2.93685905e-51
+   9.47627838e-52  -5.65548496e-53  -2.50522386e-54   8.33620673e-52
+  -2.37193513e-27   2.14091908e-29  -4.55961643e-29  -2.29268339e-31
+  -1.13423416e-51   9.47627838e-52   2.39021411e-51  -3.08357315e-53
+   2.75653313e-53  -6.69177590e-52  -3.61238138e-28  -4.45372226e-28
+  -3.27695005e-29   2.45126180e-32   1.61767180e-53  -5.65548496e-53
+  -3.08357315e-53   3.65802955e-52  -2.78037737e-53   4.37255824e-54
+  -4.65917537e-27  -2.03746250e-27   8.09236191e-29  -8.00941504e-32
+  -3.88514607e-54  -2.50522386e-54   2.75653313e-53  -2.78037737e-53
+   3.67564620e-52  -3.00804206e-53   4.04322224e-27  -7.14479503e-28
+  -6.68691960e-30   2.55679563e-32  -1.15610882e-52   8.33620673e-52
+  -6.69177590e-52   4.37255824e-54  -3.00804206e-53   3.33975155e-51
+   2.55163582e-28   1.04361863e-27  -3.71525265e-29   3.46813825e-31
+   3.46002325e-28  -2.37193513e-27  -3.61238138e-28  -4.65917537e-27
+   4.04322224e-27   2.55163582e-28   5.35646580e-01   1.32676280e-02
+  -6.97749918e-04   2.48470433e-06   7.99414853e-29   2.14091908e-29
+  -4.45372226e-28  -2.03746250e-27  -7.14479503e-28   1.04361863e-27
+   1.32676280e-02   1.14789865e-01  -3.46241860e-04   8.49465122e-07
+   4.25473016e-30  -4.55961643e-29  -3.27695005e-29   8.09236191e-29
+  -6.68691960e-30  -3.71525265e-29  -6.97749918e-04  -3.46241860e-04
+   1.96877916e-03  -2.15300555e-08   6.36960735e-32  -2.29268339e-31
+   2.45126180e-32  -8.00941504e-32   2.55679563e-32   3.46813825e-31
+   2.48470433e-06   8.49465122e-07  -2.15300555e-08   2.55067155e-10] (GCMT3DInversion.py:1309)
+[2021-05-18 21:21:16.445] - GCMT3D-C201802271729A - DEBUG   : Raw (GCMT3DInversion.py:1168)
+[2021-05-18 21:21:16.445] - GCMT3D-C201802271729A - DEBUG   : C: 0.15115680277020344 (GCMT3DInversion.py:1169)
+[2021-05-18 21:21:16.445] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1170)
+[2021-05-18 21:21:16.445] - GCMT3D-C201802271729A - DEBUG   : [  1.11286442e-27  -2.46759546e-27  -4.86505878e-28  -6.54208249e-28
+  -1.38507714e-28   1.71983244e-28   1.63003776e-03  -5.37173789e-04
+  -1.41499558e-03   9.37030068e-07] (GCMT3DInversion.py:1171)
+[2021-05-18 21:21:16.445] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1172)
+[2021-05-18 21:21:16.445] - GCMT3D-C201802271729A - DEBUG   : [  9.41798688e-52  -1.34752634e-51  -1.13423416e-51   1.61767180e-53
+  -3.88514607e-54  -1.15610882e-52   3.46002325e-28   7.99414853e-29
+   4.25473016e-30   6.36960735e-32  -1.34752634e-51   2.93685905e-51
+   9.47627838e-52  -5.65548496e-53  -2.50522386e-54   8.33620673e-52
+  -2.37193513e-27   2.14091908e-29  -4.55961643e-29  -2.29268339e-31
+  -1.13423416e-51   9.47627838e-52   2.39021411e-51  -3.08357315e-53
+   2.75653313e-53  -6.69177590e-52  -3.61238138e-28  -4.45372226e-28
+  -3.27695005e-29   2.45126180e-32   1.61767180e-53  -5.65548496e-53
+  -3.08357315e-53   3.65802955e-52  -2.78037737e-53   4.37255824e-54
+  -4.65917537e-27  -2.03746250e-27   8.09236191e-29  -8.00941504e-32
+  -3.88514607e-54  -2.50522386e-54   2.75653313e-53  -2.78037737e-53
+   3.67564620e-52  -3.00804206e-53   4.04322224e-27  -7.14479503e-28
+  -6.68691960e-30   2.55679563e-32  -1.15610882e-52   8.33620673e-52
+  -6.69177590e-52   4.37255824e-54  -3.00804206e-53   3.33975155e-51
+   2.55163582e-28   1.04361863e-27  -3.71525265e-29   3.46813825e-31
+   3.46002325e-28  -2.37193513e-27  -3.61238138e-28  -4.65917537e-27
+   4.04322224e-27   2.55163582e-28   5.35646580e-01   1.32676280e-02
+  -6.97749918e-04   2.48470433e-06   7.99414853e-29   2.14091908e-29
+  -4.45372226e-28  -2.03746250e-27  -7.14479503e-28   1.04361863e-27
+   1.32676280e-02   1.14789865e-01  -3.46241860e-04   8.49465122e-07
+   4.25473016e-30  -4.55961643e-29  -3.27695005e-29   8.09236191e-29
+  -6.68691960e-30  -3.71525265e-29  -6.97749918e-04  -3.46241860e-04
+   1.96877916e-03  -2.15300555e-08   6.36960735e-32  -2.29268339e-31
+   2.45126180e-32  -8.00941504e-32   2.55679563e-32   3.46813825e-31
+   2.48470433e-06   8.49465122e-07  -2.15300555e-08   2.55067155e-10] (GCMT3DInversion.py:1173)
+[2021-05-18 21:21:16.449] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1179)
+[2021-05-18 21:21:16.449] - GCMT3D-C201802271729A - DEBUG   : C: 0.15115680277020344 (GCMT3DInversion.py:1180)
+[2021-05-18 21:21:16.449] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1181)
+[2021-05-18 21:21:16.449] - GCMT3D-C201802271729A - DEBUG   : [ 0.01431772 -0.03174721 -0.00625921 -0.00841681 -0.00178199  0.00221268
+  0.01630038 -0.05371738 -0.001415    0.0093703 ] (GCMT3DInversion.py:1182)
+[2021-05-18 21:21:16.449] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1183)
+[2021-05-18 21:21:16.449] - GCMT3D-C201802271729A - DEBUG   : [  1.55891087e-01  -2.23049096e-01  -1.87743939e-01   2.67764882e-03
+  -6.43088221e-04  -1.91364739e-02   4.45154346e-02   1.02849886e-01
+   5.47398526e-05   8.19491141e-03  -2.23049096e-01   4.86123153e-01
+   1.56855956e-01  -9.36123300e-03  -4.14676804e-04   1.37984937e-01
+  -3.05164780e-01   2.75443072e-02  -5.86624115e-04  -2.94968531e-02
+  -1.87743939e-01   1.56855956e-01   3.95639831e-01  -5.10407983e-03
+   4.56274733e-03  -1.10765520e-01  -4.64756205e-02  -5.73000145e-01
+  -4.21600796e-04   3.15370669e-03   2.67764882e-03  -9.36123300e-03
+  -5.10407983e-03   6.05494793e-02  -4.60221547e-03   7.23767046e-04
+  -5.99433015e-01  -2.62132715e+00   1.04113465e-03  -1.03046300e-02
+  -6.43088221e-04  -4.14676804e-04   4.56274733e-03  -4.60221547e-03
+   6.08410786e-02  -4.97905711e-03   5.20186665e-01  -9.19224045e-01
+  -8.60315411e-05   3.28948278e-03  -1.91364739e-02   1.37984937e-01
+  -1.10765520e-01   7.23767046e-04  -4.97905711e-03   5.52811874e-01
+   3.28284435e-02   1.34268279e+00  -4.77991259e-04   4.46198394e-02
+   4.45154346e-02  -3.05164780e-01  -4.64756205e-02  -5.99433015e-01
+   5.20186665e-01   3.28284435e-02   5.35646580e+01   1.32676280e+01
+  -6.97749918e-03   2.48470433e-01   1.02849886e-01   2.75443072e-02
+  -5.73000145e-01  -2.62132715e+00  -9.19224045e-01   1.34268279e+00
+   1.32676280e+01   1.14789865e+03  -3.46241860e-02   8.49465122e-01
+   5.47398526e-05  -5.86624115e-04  -4.21600796e-04   1.04113465e-03
+  -8.60315411e-05  -4.77991259e-04  -6.97749918e-03  -3.46241860e-02
+   1.96877916e-03  -2.15300555e-04   8.19491141e-03  -2.94968531e-02
+   3.15370669e-03  -1.03046300e-02   3.28948278e-03   4.46198394e-02
+   2.48470433e-01   8.49465122e-01  -2.15300555e-04   2.55067155e-02] (GCMT3DInversion.py:1184)
+[2021-05-18 21:21:16.452] - GCMT3D-C201802271729A - DEBUG   : f: 1.147898645329133 (GCMT3DInversion.py:1188)
+[2021-05-18 21:21:16.452] - GCMT3D-C201802271729A - DEBUG   : Model Residual: [-0.01843297  0.02032078 -0.00111055  0.00746253  0.0016199  -0.00272471
+ -0.00177018  0.00415075  0.00125117 -0.00797852] (GCMT3DInversion.py:1190)
+[2021-05-18 21:21:16.452] - GCMT3D-C201802271729A - DEBUG   : Cost Before: 0.15115680277020344 (GCMT3DInversion.py:1191)
+[2021-05-18 21:21:16.452] - GCMT3D-C201802271729A - DEBUG   : Cost After: 0.15115680277020344 (GCMT3DInversion.py:1193)
+[2021-05-18 21:21:16.453] - GCMT3D-C201802271729A - DEBUG   : Damped (GCMT3DInversion.py:1197)
+[2021-05-18 21:21:16.453] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1198)
+[2021-05-18 21:21:16.453] - GCMT3D-C201802271729A - DEBUG   : C: 0.15115680277020344 (GCMT3DInversion.py:1199)
+[2021-05-18 21:21:16.453] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1200)
+[2021-05-18 21:21:16.453] - GCMT3D-C201802271729A - DEBUG   : [ -6.84146077e-03  -8.42101257e-03  -7.53400924e-03   1.49420831e-04
+   7.74886257e-05  -9.15014238e-04   1.42683861e-02  -4.89527417e-02
+   2.12242185e-05   2.11774025e-04] (GCMT3DInversion.py:1201)
+[2021-05-18 21:21:16.454] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1202)
+[2021-05-18 21:21:16.454] - GCMT3D-C201802271729A - DEBUG   : [  1.30378973e+00  -2.23049096e-01  -1.87743939e-01   2.67764882e-03
+  -6.43088221e-04  -1.91364739e-02   4.45154346e-02   1.02849886e-01
+   5.47398526e-05   8.19491141e-03  -2.23049096e-01   1.63402180e+00
+   1.56855956e-01  -9.36123300e-03  -4.14676804e-04   1.37984937e-01
+  -3.05164780e-01   2.75443072e-02  -5.86624115e-04  -2.94968531e-02
+  -1.87743939e-01   1.56855956e-01   1.54353848e+00  -5.10407983e-03
+   4.56274733e-03  -1.10765520e-01  -4.64756205e-02  -5.73000145e-01
+  -4.21600796e-04   3.15370669e-03   2.67764882e-03  -9.36123300e-03
+  -5.10407983e-03   1.20844812e+00  -4.60221547e-03   7.23767046e-04
+  -5.99433015e-01  -2.62132715e+00   1.04113465e-03  -1.03046300e-02
+  -6.43088221e-04  -4.14676804e-04   4.56274733e-03  -4.60221547e-03
+   1.20873972e+00  -4.97905711e-03   5.20186665e-01  -9.19224045e-01
+  -8.60315411e-05   3.28948278e-03  -1.91364739e-02   1.37984937e-01
+  -1.10765520e-01   7.23767046e-04  -4.97905711e-03   1.70071052e+00
+   3.28284435e-02   1.34268279e+00  -4.77991259e-04   4.46198394e-02
+   4.45154346e-02  -3.05164780e-01  -4.64756205e-02  -5.99433015e-01
+   5.20186665e-01   3.28284435e-02   5.47125566e+01   1.32676280e+01
+  -6.97749918e-03   2.48470433e-01   1.02849886e-01   2.75443072e-02
+  -5.73000145e-01  -2.62132715e+00  -9.19224045e-01   1.34268279e+00
+   1.32676280e+01   1.14904654e+03  -3.46241860e-02   8.49465122e-01
+   5.47398526e-05  -5.86624115e-04  -4.21600796e-04   1.04113465e-03
+  -8.60315411e-05  -4.77991259e-04  -6.97749918e-03  -3.46241860e-02
+   1.14986742e+00  -2.15300555e-04   8.19491141e-03  -2.94968531e-02
+   3.15370669e-03  -1.03046300e-02   3.28948278e-03   4.46198394e-02
+   2.48470433e-01   8.49465122e-01  -2.15300555e-04   1.17340536e+00] (GCMT3DInversion.py:1203)
+[2021-05-18 21:21:16.456] - GCMT3D-C201802271729A - DEBUG   : Zero_traced (GCMT3DInversion.py:1217)
+[2021-05-18 21:21:16.456] - GCMT3D-C201802271729A - DEBUG   : C: 0.15115680277020344 (GCMT3DInversion.py:1218)
+[2021-05-18 21:21:16.456] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1219)
+[2021-05-18 21:21:16.457] - GCMT3D-C201802271729A - DEBUG   : [ -6.84146077e-03  -8.42101257e-03  -7.53400924e-03   1.49420831e-04
+   7.74886257e-05  -9.15014238e-04   1.42683861e-02  -4.89527417e-02
+   2.12242185e-05   2.11774025e-04   0.00000000e+00] (GCMT3DInversion.py:1220)
+[2021-05-18 21:21:16.457] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1221)
+[2021-05-18 21:21:16.457] - GCMT3D-C201802271729A - DEBUG   : [  1.30378973e+00  -2.23049096e-01  -1.87743939e-01   2.67764882e-03
+  -6.43088221e-04  -1.91364739e-02   4.45154346e-02   1.02849886e-01
+   5.47398526e-05   8.19491141e-03   1.00000000e+00  -2.23049096e-01
+   1.63402180e+00   1.56855956e-01  -9.36123300e-03  -4.14676804e-04
+   1.37984937e-01  -3.05164780e-01   2.75443072e-02  -5.86624115e-04
+  -2.94968531e-02   1.00000000e+00  -1.87743939e-01   1.56855956e-01
+   1.54353848e+00  -5.10407983e-03   4.56274733e-03  -1.10765520e-01
+  -4.64756205e-02  -5.73000145e-01  -4.21600796e-04   3.15370669e-03
+   1.00000000e+00   2.67764882e-03  -9.36123300e-03  -5.10407983e-03
+   1.20844812e+00  -4.60221547e-03   7.23767046e-04  -5.99433015e-01
+  -2.62132715e+00   1.04113465e-03  -1.03046300e-02   0.00000000e+00
+  -6.43088221e-04  -4.14676804e-04   4.56274733e-03  -4.60221547e-03
+   1.20873972e+00  -4.97905711e-03   5.20186665e-01  -9.19224045e-01
+  -8.60315411e-05   3.28948278e-03   0.00000000e+00  -1.91364739e-02
+   1.37984937e-01  -1.10765520e-01   7.23767046e-04  -4.97905711e-03
+   1.70071052e+00   3.28284435e-02   1.34268279e+00  -4.77991259e-04
+   4.46198394e-02   0.00000000e+00   4.45154346e-02  -3.05164780e-01
+  -4.64756205e-02  -5.99433015e-01   5.20186665e-01   3.28284435e-02
+   5.47125566e+01   1.32676280e+01  -6.97749918e-03   2.48470433e-01
+   0.00000000e+00   1.02849886e-01   2.75443072e-02  -5.73000145e-01
+  -2.62132715e+00  -9.19224045e-01   1.34268279e+00   1.32676280e+01
+   1.14904654e+03  -3.46241860e-02   8.49465122e-01   0.00000000e+00
+   5.47398526e-05  -5.86624115e-04  -4.21600796e-04   1.04113465e-03
+  -8.60315411e-05  -4.77991259e-04  -6.97749918e-03  -3.46241860e-02
+   1.14986742e+00  -2.15300555e-04   0.00000000e+00   8.19491141e-03
+  -2.94968531e-02   3.15370669e-03  -1.03046300e-02   3.28948278e-03
+   4.46198394e-02   2.48470433e-01   8.49465122e-01  -2.15300555e-04
+   1.17340536e+00   0.00000000e+00   1.00000000e+00   1.00000000e+00
+   1.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00] (GCMT3DInversion.py:1222)
+[2021-05-18 21:21:16.461] - GCMT3D-C201802271729A - INFO    :     ils: 0 -- f/fo=8.7682e-01 -- model: [-0.02698287  0.66389514 -0.63691227 -0.19462603  0.03659677 -0.74345704
+ -6.02477018  1.50595075  7.40125117  1.19202148  1.01319542] -- alpha: 1
+[2021-05-18 21:21:16.461] - GCMT3D-C201802271729A - INFO    : iter = 1, f/fo=8.7682e-01, nls = 0, wolfe1 = True wolfe2 = True, a=1, al=0, ar=0
+[2021-05-18 21:21:16.461] - GCMT3D-C201802271729A - INFO    : ---> Writing Synthetic CMTSOLUTION ...
+[2021-05-18 21:21:16.463] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rr ...
+[2021-05-18 21:21:16.464] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tt ...
+[2021-05-18 21:21:16.465] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_pp ...
+[2021-05-18 21:21:16.466] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rt ...
+[2021-05-18 21:21:16.467] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rp ...
+[2021-05-18 21:21:16.469] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tp ...
+[2021-05-18 21:21:16.470] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for latitude ...
+[2021-05-18 21:21:16.471] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for longitude ...
+[2021-05-18 21:21:16.472] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for depth_in_m ...
+[2021-05-18 21:21:16.473] - GCMT3D-C201802271729A - INFO    : ---> Submitting all simulations ...
+[2021-05-18 21:24:10.051] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 02 m 54 s seconds
+[2021-05-18 21:24:10.052] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:24:10.052] - GCMT3D-C201802271729A - INFO    : =============== Loading and processing all modeled data ================
+[2021-05-18 21:24:10.052] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:24:10.052] - GCMT3D-C201802271729A - INFO    : ---> Loading forward synthetics ...
+[2021-05-18 21:24:12.955] - GCMT3D-C201802271729A - INFO    : ---> Loading parameter synthetics ...
+[2021-05-18 21:24:12.955] - GCMT3D-C201802271729A - INFO    : --->     m_rr ...
+[2021-05-18 21:24:15.711] - GCMT3D-C201802271729A - INFO    : --->     m_tt ...
+[2021-05-18 21:24:18.446] - GCMT3D-C201802271729A - INFO    : --->     m_pp ...
+[2021-05-18 21:24:21.179] - GCMT3D-C201802271729A - INFO    : --->     m_rt ...
+[2021-05-18 21:24:23.842] - GCMT3D-C201802271729A - INFO    : --->     m_rp ...
+[2021-05-18 21:24:26.554] - GCMT3D-C201802271729A - INFO    : --->     m_tp ...
+[2021-05-18 21:24:29.496] - GCMT3D-C201802271729A - INFO    : --->     latitude ...
+[2021-05-18 21:24:32.294] - GCMT3D-C201802271729A - INFO    : --->     longitude ...
+[2021-05-18 21:24:35.165] - GCMT3D-C201802271729A - INFO    : --->     time_shift ...
+[2021-05-18 21:24:37.573] - GCMT3D-C201802271729A - INFO    : --->     depth_in_m ...
+[2021-05-18 21:24:40.373] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 30 s seconds
+[2021-05-18 21:24:41.371] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:24:41.372] - GCMT3D-C201802271729A - INFO    : ---> Processing body/synt: 444 waveforms ...
+[2021-05-18 21:24:44.271] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/synt: 444 waveforms ...
+[2021-05-18 21:24:47.045] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/synt: 444 waveforms ...
+[2021-05-18 21:24:50.854] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:24:50.855] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rr: 444 waveforms ...
+[2021-05-18 21:24:58.310] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tt: 444 waveforms ...
+[2021-05-18 21:25:04.739] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_pp: 444 waveforms ...
+[2021-05-18 21:25:10.799] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rt: 444 waveforms ...
+[2021-05-18 21:25:17.677] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_rp: 444 waveforms ...
+[2021-05-18 21:25:24.211] - GCMT3D-C201802271729A - INFO    : ---> Processing body/m_tp: 444 waveforms ...
+[2021-05-18 21:25:30.263] - GCMT3D-C201802271729A - INFO    : ---> Processing body/latitude: 444 waveforms ...
+[2021-05-18 21:25:36.339] - GCMT3D-C201802271729A - INFO    : ---> Processing body/longitude: 444 waveforms ...
+[2021-05-18 21:25:43.097] - GCMT3D-C201802271729A - INFO    : ---> Processing body/time_shift: 444 waveforms ...
+[2021-05-18 21:25:43.408] - GCMT3D-C201802271729A - INFO    : ---> Processing body/depth_in_m: 444 waveforms ...
+[2021-05-18 21:25:50.816] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rr: 444 waveforms ...
+[2021-05-18 21:25:57.163] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tt: 444 waveforms ...
+[2021-05-18 21:26:03.570] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_pp: 444 waveforms ...
+[2021-05-18 21:26:10.182] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rt: 444 waveforms ...
+[2021-05-18 21:26:17.936] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_rp: 444 waveforms ...
+[2021-05-18 21:26:24.051] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/m_tp: 444 waveforms ...
+[2021-05-18 21:26:30.060] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/latitude: 444 waveforms ...
+[2021-05-18 21:26:36.759] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/longitude: 444 waveforms ...
+[2021-05-18 21:26:44.021] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/time_shift: 444 waveforms ...
+[2021-05-18 21:26:44.333] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/depth_in_m: 444 waveforms ...
+[2021-05-18 21:26:51.081] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rr: 444 waveforms ...
+[2021-05-18 21:26:57.477] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tt: 444 waveforms ...
+[2021-05-18 21:27:04.322] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_pp: 444 waveforms ...
+[2021-05-18 21:27:10.620] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rt: 444 waveforms ...
+[2021-05-18 21:27:16.630] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_rp: 444 waveforms ...
+[2021-05-18 21:27:22.669] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/m_tp: 444 waveforms ...
+[2021-05-18 21:27:29.447] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/latitude: 444 waveforms ...
+[2021-05-18 21:27:35.405] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/longitude: 444 waveforms ...
+[2021-05-18 21:27:41.632] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/time_shift: 444 waveforms ...
+[2021-05-18 21:27:41.929] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/depth_in_m: 444 waveforms ...
+[2021-05-18 21:27:47.805] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 03 m 07 s seconds
+[2021-05-18 21:28:02.354] - GCMT3D-C201802271729A - DEBUG   : M, G, H: (GCMT3DInversion.py:1306)
+[2021-05-18 21:28:02.355] - GCMT3D-C201802271729A - DEBUG   : [ -3.52336059e+23   8.54692044e+24  -8.19458439e+24  -2.50603738e+24
+   4.72073341e+23  -9.55903434e+24  -6.02504964e+01   1.50599440e+02
+   7.40123215e+00   1.19185248e+04] (GCMT3DInversion.py:1307)
+[2021-05-18 21:28:02.355] - GCMT3D-C201802271729A - DEBUG   : [  1.11201043e-27  -2.46619510e-27  -4.84376856e-28  -6.47401396e-28
+  -1.51803002e-28   1.72033253e-28   1.63729457e-04  -1.34356603e-04
+  -1.40730007e-03   9.36523615e-07] (GCMT3DInversion.py:1308)
+[2021-05-18 21:28:02.356] - GCMT3D-C201802271729A - DEBUG   : [  9.41850568e-52  -1.34765384e-51  -1.13442865e-51   1.62010528e-53
+  -3.83583716e-54  -1.15627589e-52   3.37760965e-28   8.07119633e-29
+   4.28420834e-30   6.37518460e-32  -1.34765384e-51   2.93699755e-51
+   9.47809271e-52  -5.65934189e-53  -2.57282887e-54   8.33764879e-52
+  -2.35923801e-27   2.15358137e-29  -4.55914382e-29  -2.29652922e-31
+  -1.13442865e-51   9.47809271e-52   2.39055174e-51  -3.08500258e-53
+   2.74293683e-53  -6.69129043e-52  -3.44595205e-28  -4.46709378e-28
+  -3.28337684e-29   2.45325471e-32   1.62010528e-53  -5.65934189e-53
+  -3.08500258e-53   3.65515061e-52  -2.77543450e-53   4.31918420e-54
+  -4.66461329e-27  -2.03474985e-27   8.08354008e-29  -8.01551506e-32
+  -3.83583716e-54  -2.57282887e-54   2.74293683e-53  -2.77543450e-53
+   3.67269157e-52  -3.00277510e-53   4.03873871e-27  -7.15657756e-28
+  -6.79004748e-30   2.55984292e-32  -1.15627589e-52   8.33764879e-52
+  -6.69129043e-52   4.31918420e-54  -3.00277510e-53   3.34049773e-51
+   2.43614716e-28   1.03921517e-27  -3.71673637e-29   3.46564599e-31
+   3.37760965e-28  -2.35923801e-27  -3.44595205e-28  -4.66461329e-27
+   4.03873871e-27   2.43614716e-28   5.35678917e-01   1.32985101e-02
+  -7.00512249e-04   2.48573320e-06   8.07119633e-29   2.15358137e-29
+  -4.46709378e-28  -2.03474985e-27  -7.15657756e-28   1.03921517e-27
+   1.32985101e-02   1.14681306e-01  -3.48020531e-04   8.47156678e-07
+   4.28420834e-30  -4.55914382e-29  -3.28337684e-29   8.08354008e-29
+  -6.79004748e-30  -3.71673637e-29  -7.00512249e-04  -3.48020531e-04
+   1.96838071e-03  -2.15559080e-08   6.37518460e-32  -2.29652922e-31
+   2.45325471e-32  -8.01551506e-32   2.55984292e-32   3.46564599e-31
+   2.48573320e-06   8.47156678e-07  -2.15559080e-08   2.55115493e-10] (GCMT3DInversion.py:1309)
+[2021-05-18 21:28:02.358] - GCMT3D-C201802271729A - DEBUG   : Raw (GCMT3DInversion.py:1168)
+[2021-05-18 21:28:02.359] - GCMT3D-C201802271729A - DEBUG   : C: 0.15102143472115803 (GCMT3DInversion.py:1169)
+[2021-05-18 21:28:02.359] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1170)
+[2021-05-18 21:28:02.359] - GCMT3D-C201802271729A - DEBUG   : [  1.11201043e-27  -2.46619510e-27  -4.84376856e-28  -6.47401396e-28
+  -1.51803002e-28   1.72033253e-28   1.63729457e-04  -1.34356603e-04
+  -1.40730007e-03   9.36523615e-07] (GCMT3DInversion.py:1171)
+[2021-05-18 21:28:02.359] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1172)
+[2021-05-18 21:28:02.359] - GCMT3D-C201802271729A - DEBUG   : [  9.41850568e-52  -1.34765384e-51  -1.13442865e-51   1.62010528e-53
+  -3.83583716e-54  -1.15627589e-52   3.37760965e-28   8.07119633e-29
+   4.28420834e-30   6.37518460e-32  -1.34765384e-51   2.93699755e-51
+   9.47809271e-52  -5.65934189e-53  -2.57282887e-54   8.33764879e-52
+  -2.35923801e-27   2.15358137e-29  -4.55914382e-29  -2.29652922e-31
+  -1.13442865e-51   9.47809271e-52   2.39055174e-51  -3.08500258e-53
+   2.74293683e-53  -6.69129043e-52  -3.44595205e-28  -4.46709378e-28
+  -3.28337684e-29   2.45325471e-32   1.62010528e-53  -5.65934189e-53
+  -3.08500258e-53   3.65515061e-52  -2.77543450e-53   4.31918420e-54
+  -4.66461329e-27  -2.03474985e-27   8.08354008e-29  -8.01551506e-32
+  -3.83583716e-54  -2.57282887e-54   2.74293683e-53  -2.77543450e-53
+   3.67269157e-52  -3.00277510e-53   4.03873871e-27  -7.15657756e-28
+  -6.79004748e-30   2.55984292e-32  -1.15627589e-52   8.33764879e-52
+  -6.69129043e-52   4.31918420e-54  -3.00277510e-53   3.34049773e-51
+   2.43614716e-28   1.03921517e-27  -3.71673637e-29   3.46564599e-31
+   3.37760965e-28  -2.35923801e-27  -3.44595205e-28  -4.66461329e-27
+   4.03873871e-27   2.43614716e-28   5.35678917e-01   1.32985101e-02
+  -7.00512249e-04   2.48573320e-06   8.07119633e-29   2.15358137e-29
+  -4.46709378e-28  -2.03474985e-27  -7.15657756e-28   1.03921517e-27
+   1.32985101e-02   1.14681306e-01  -3.48020531e-04   8.47156678e-07
+   4.28420834e-30  -4.55914382e-29  -3.28337684e-29   8.08354008e-29
+  -6.79004748e-30  -3.71673637e-29  -7.00512249e-04  -3.48020531e-04
+   1.96838071e-03  -2.15559080e-08   6.37518460e-32  -2.29652922e-31
+   2.45325471e-32  -8.01551506e-32   2.55984292e-32   3.46564599e-31
+   2.48573320e-06   8.47156678e-07  -2.15559080e-08   2.55115493e-10] (GCMT3DInversion.py:1173)
+[2021-05-18 21:28:02.362] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1179)
+[2021-05-18 21:28:02.363] - GCMT3D-C201802271729A - DEBUG   : C: 0.15102143472115803 (GCMT3DInversion.py:1180)
+[2021-05-18 21:28:02.363] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1181)
+[2021-05-18 21:28:02.363] - GCMT3D-C201802271729A - DEBUG   : [ 0.01430673 -0.03172919 -0.00623182 -0.00832924 -0.00195304  0.00221332
+  0.00163729 -0.01343566 -0.0014073   0.00936524] (GCMT3DInversion.py:1182)
+[2021-05-18 21:28:02.363] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1183)
+[2021-05-18 21:28:02.363] - GCMT3D-C201802271729A - DEBUG   : [  1.55899674e-01  -2.23070199e-01  -1.87776133e-01   2.68167683e-03
+  -6.34926371e-04  -1.91392393e-02   4.34551304e-02   1.03841156e-01
+   5.51191083e-05   8.20208689e-03  -2.23070199e-01   4.86146079e-01
+   1.56885987e-01  -9.36761717e-03  -4.25867112e-04   1.38008807e-01
+  -3.03531213e-01   2.77072158e-02  -5.86563309e-04  -2.95463323e-02
+  -1.87776133e-01   1.56885987e-01   3.95695718e-01  -5.10644590e-03
+   4.54024207e-03  -1.10757484e-01  -4.43343996e-02  -5.74720477e-01
+  -4.22427645e-04   3.15627070e-03   2.68167683e-03  -9.36761717e-03
+  -5.10644590e-03   6.05018256e-02  -4.59403379e-03   7.14932317e-04
+  -6.00132638e-01  -2.61783716e+00   1.03999966e-03  -1.03124780e-02
+  -6.34926371e-04  -4.25867112e-04   4.54024207e-03  -4.59403379e-03
+   6.07921721e-02  -4.97033897e-03   5.19609829e-01  -9.20739943e-01
+  -8.73583480e-05   3.29340331e-03  -1.91392393e-02   1.38008807e-01
+  -1.10757484e-01   7.14932317e-04  -4.97033897e-03   5.52935386e-01
+   3.13426073e-02   1.33701747e+00  -4.78182148e-04   4.45877749e-02
+   4.34551304e-02  -3.03531213e-01  -4.43343996e-02  -6.00132638e-01
+   5.19609829e-01   3.13426073e-02   5.35678917e+01   1.32985101e+01
+  -7.00512249e-03   2.48573320e-01   1.03841156e-01   2.77072158e-02
+  -5.74720477e-01  -2.61783716e+00  -9.20739943e-01   1.33701747e+00
+   1.32985101e+01   1.14681306e+03  -3.48020531e-02   8.47156678e-01
+   5.51191083e-05  -5.86563309e-04  -4.22427645e-04   1.03999966e-03
+  -8.73583480e-05  -4.78182148e-04  -7.00512249e-03  -3.48020531e-02
+   1.96838071e-03  -2.15559080e-04   8.20208689e-03  -2.95463323e-02
+   3.15627070e-03  -1.03124780e-02   3.29340331e-03   4.45877749e-02
+   2.48573320e-01   8.47156678e-01  -2.15559080e-04   2.55115493e-02] (GCMT3DInversion.py:1184)
+[2021-05-18 21:28:02.366] - GCMT3D-C201802271729A - DEBUG   : f: 1.1468130610329896 (GCMT3DInversion.py:1188)
+[2021-05-18 21:28:02.366] - GCMT3D-C201802271729A - DEBUG   : Model Residual: [-0.0188359   0.02074676 -0.00113359  0.00730337  0.00171568 -0.00225673
+ -0.00204964  0.0041944   0.00123215 -0.00814752] (GCMT3DInversion.py:1190)
+[2021-05-18 21:28:02.366] - GCMT3D-C201802271729A - DEBUG   : Cost Before: 0.15102143472115803 (GCMT3DInversion.py:1191)
+[2021-05-18 21:28:02.366] - GCMT3D-C201802271729A - DEBUG   : Cost After: 0.15102143472115803 (GCMT3DInversion.py:1193)
+[2021-05-18 21:28:02.366] - GCMT3D-C201802271729A - DEBUG   : Damped (GCMT3DInversion.py:1197)
+[2021-05-18 21:28:02.367] - GCMT3D-C201802271729A - DEBUG   : Scaled (GCMT3DInversion.py:1198)
+[2021-05-18 21:28:02.384] - GCMT3D-C201802271729A - DEBUG   : C: 0.15102143472115803 (GCMT3DInversion.py:1199)
+[2021-05-18 21:28:02.384] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1200)
+[2021-05-18 21:28:02.384] - GCMT3D-C201802271729A - DEBUG   : [ -7.29452658e-03  -7.93654048e-03  -7.53183865e-03   4.63668877e-05
+   1.45213550e-05  -3.74732593e-04  -7.13258826e-04  -8.62546419e-03
+   5.74334194e-06   2.15498363e-05] (GCMT3DInversion.py:1201)
+[2021-05-18 21:28:02.385] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1202)
+[2021-05-18 21:28:02.385] - GCMT3D-C201802271729A - DEBUG   : [  1.30271273e+00  -2.23070199e-01  -1.87776133e-01   2.68167683e-03
+  -6.34926371e-04  -1.91392393e-02   4.34551304e-02   1.03841156e-01
+   5.51191083e-05   8.20208689e-03  -2.23070199e-01   1.63295914e+00
+   1.56885987e-01  -9.36761717e-03  -4.25867112e-04   1.38008807e-01
+  -3.03531213e-01   2.77072158e-02  -5.86563309e-04  -2.95463323e-02
+  -1.87776133e-01   1.56885987e-01   1.54250878e+00  -5.10644590e-03
+   4.54024207e-03  -1.10757484e-01  -4.43343996e-02  -5.74720477e-01
+  -4.22427645e-04   3.15627070e-03   2.68167683e-03  -9.36761717e-03
+  -5.10644590e-03   1.20731489e+00  -4.59403379e-03   7.14932317e-04
+  -6.00132638e-01  -2.61783716e+00   1.03999966e-03  -1.03124780e-02
+  -6.34926371e-04  -4.25867112e-04   4.54024207e-03  -4.59403379e-03
+   1.20760523e+00  -4.97033897e-03   5.19609829e-01  -9.20739943e-01
+  -8.73583480e-05   3.29340331e-03  -1.91392393e-02   1.38008807e-01
+  -1.10757484e-01   7.14932317e-04  -4.97033897e-03   1.69974845e+00
+   3.13426073e-02   1.33701747e+00  -4.78182148e-04   4.45877749e-02
+   4.34551304e-02  -3.03531213e-01  -4.43343996e-02  -6.00132638e-01
+   5.19609829e-01   3.13426073e-02   5.47147047e+01   1.32985101e+01
+  -7.00512249e-03   2.48573320e-01   1.03841156e-01   2.77072158e-02
+  -5.74720477e-01  -2.61783716e+00  -9.20739943e-01   1.33701747e+00
+   1.32985101e+01   1.14795987e+03  -3.48020531e-02   8.47156678e-01
+   5.51191083e-05  -5.86563309e-04  -4.22427645e-04   1.03999966e-03
+  -8.73583480e-05  -4.78182148e-04  -7.00512249e-03  -3.48020531e-02
+   1.14878144e+00  -2.15559080e-04   8.20208689e-03  -2.95463323e-02
+   3.15627070e-03  -1.03124780e-02   3.29340331e-03   4.45877749e-02
+   2.48573320e-01   8.47156678e-01  -2.15559080e-04   1.17232461e+00] (GCMT3DInversion.py:1203)
+[2021-05-18 21:28:02.388] - GCMT3D-C201802271729A - DEBUG   : Zero_traced (GCMT3DInversion.py:1217)
+[2021-05-18 21:28:02.388] - GCMT3D-C201802271729A - DEBUG   : C: 0.15102143472115803 (GCMT3DInversion.py:1218)
+[2021-05-18 21:28:02.388] - GCMT3D-C201802271729A - DEBUG   : G: (GCMT3DInversion.py:1219)
+[2021-05-18 21:28:02.388] - GCMT3D-C201802271729A - DEBUG   : [ -7.29452658e-03  -7.93654048e-03  -7.53183865e-03   4.63668877e-05
+   1.45213550e-05  -3.74732593e-04  -7.13258826e-04  -8.62546419e-03
+   5.74334194e-06   2.15498363e-05   0.00000000e+00] (GCMT3DInversion.py:1220)
+[2021-05-18 21:28:02.388] - GCMT3D-C201802271729A - DEBUG   : H (GCMT3DInversion.py:1221)
+[2021-05-18 21:28:02.388] - GCMT3D-C201802271729A - DEBUG   : [  1.30271273e+00  -2.23070199e-01  -1.87776133e-01   2.68167683e-03
+  -6.34926371e-04  -1.91392393e-02   4.34551304e-02   1.03841156e-01
+   5.51191083e-05   8.20208689e-03   1.00000000e+00  -2.23070199e-01
+   1.63295914e+00   1.56885987e-01  -9.36761717e-03  -4.25867112e-04
+   1.38008807e-01  -3.03531213e-01   2.77072158e-02  -5.86563309e-04
+  -2.95463323e-02   1.00000000e+00  -1.87776133e-01   1.56885987e-01
+   1.54250878e+00  -5.10644590e-03   4.54024207e-03  -1.10757484e-01
+  -4.43343996e-02  -5.74720477e-01  -4.22427645e-04   3.15627070e-03
+   1.00000000e+00   2.68167683e-03  -9.36761717e-03  -5.10644590e-03
+   1.20731489e+00  -4.59403379e-03   7.14932317e-04  -6.00132638e-01
+  -2.61783716e+00   1.03999966e-03  -1.03124780e-02   0.00000000e+00
+  -6.34926371e-04  -4.25867112e-04   4.54024207e-03  -4.59403379e-03
+   1.20760523e+00  -4.97033897e-03   5.19609829e-01  -9.20739943e-01
+  -8.73583480e-05   3.29340331e-03   0.00000000e+00  -1.91392393e-02
+   1.38008807e-01  -1.10757484e-01   7.14932317e-04  -4.97033897e-03
+   1.69974845e+00   3.13426073e-02   1.33701747e+00  -4.78182148e-04
+   4.45877749e-02   0.00000000e+00   4.34551304e-02  -3.03531213e-01
+  -4.43343996e-02  -6.00132638e-01   5.19609829e-01   3.13426073e-02
+   5.47147047e+01   1.32985101e+01  -7.00512249e-03   2.48573320e-01
+   0.00000000e+00   1.03841156e-01   2.77072158e-02  -5.74720477e-01
+  -2.61783716e+00  -9.20739943e-01   1.33701747e+00   1.32985101e+01
+   1.14795987e+03  -3.48020531e-02   8.47156678e-01   0.00000000e+00
+   5.51191083e-05  -5.86563309e-04  -4.22427645e-04   1.03999966e-03
+  -8.73583480e-05  -4.78182148e-04  -7.00512249e-03  -3.48020531e-02
+   1.14878144e+00  -2.15559080e-04   0.00000000e+00   8.20208689e-03
+  -2.95463323e-02   3.15627070e-03  -1.03124780e-02   3.29340331e-03
+   4.45877749e-02   2.48573320e-01   8.47156678e-01  -2.15559080e-04
+   1.17232461e+00   0.00000000e+00   1.00000000e+00   1.00000000e+00
+   1.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00   0.00000000e+00   0.00000000e+00   0.00000000e+00
+   0.00000000e+00] (GCMT3DInversion.py:1222)
+[2021-05-18 21:28:02.392] - GCMT3D-C201802271729A - INFO    :     ils: 0 -- f/fo=8.7603e-01 -- model: [-0.0273858   0.66432112 -0.63693532 -0.19478519  0.03669255 -0.74298906
+ -6.02504964  1.5059944   7.40123215  1.19185248  1.02067308] -- alpha: 1
+[2021-05-18 21:28:02.392] - GCMT3D-C201802271729A - INFO    : iter = 2, f/fo=8.7603e-01, nls = 0, wolfe1 = True wolfe2 = True, a=1, al=0, ar=0
+[2021-05-18 21:28:02.392] - GCMT3D-C201802271729A - INFO    : Cost function not decreasing enough to justify iteration.
+[2021-05-18 21:28:02.392] - GCMT3D-C201802271729A - INFO    : ---> DONE with Gauss-Newton. ...
+[2021-05-18 21:28:02.393] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 20 m 37 s seconds
+[2021-05-18 21:28:20.201] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 20 m 55 s seconds
+[2021-05-18 21:28:20.208] - GCMT3D-C201802271729A - INFO    : ---> Writing Synthetic CMTSOLUTION ...
+[2021-05-18 21:28:20.211] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rr ...
+[2021-05-18 21:28:20.212] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tt ...
+[2021-05-18 21:28:20.214] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_pp ...
+[2021-05-18 21:28:20.216] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rt ...
+[2021-05-18 21:28:20.218] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_rp ...
+[2021-05-18 21:28:20.219] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for m_tp ...
+[2021-05-18 21:28:20.221] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for latitude ...
+[2021-05-18 21:28:20.223] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for longitude ...
+[2021-05-18 21:28:20.224] - GCMT3D-C201802271729A - INFO    : ---> Writing Frechet CMTSOLUTION for depth_in_m ...
+[2021-05-18 21:28:20.226] - GCMT3D-C201802271729A - INFO    : ---> Submitting forward simulation ...
+[2021-05-18 21:31:12.250] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:31:12.251] - GCMT3D-C201802271729A - INFO    : =============== Loading and processing the modeled data ================
+[2021-05-18 21:31:12.251] - GCMT3D-C201802271729A - INFO    :  
+[2021-05-18 21:31:12.251] - GCMT3D-C201802271729A - INFO    : ---> Loading forward synthetics ...
+[2021-05-18 21:31:16.540] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 04 s seconds
+[2021-05-18 21:31:17.541] - GCMT3D-C201802271729A - DEBUG   : ---> Processing in parallel using 38 cores ... (output.py:128)
+[2021-05-18 21:31:17.542] - GCMT3D-C201802271729A - INFO    : ---> Processing body/synt: 444 waveforms ...
+[2021-05-18 21:31:20.454] - GCMT3D-C201802271729A - INFO    : ---> Processing surface/synt: 444 waveforms ...
+[2021-05-18 21:31:23.358] - GCMT3D-C201802271729A - INFO    : ---> Processing mantle/synt: 444 waveforms ...
+[2021-05-18 21:31:26.414] - GCMT3D-C201802271729A - INFO    :      Elapsed time: 00 h 00 m 10 s seconds
+[2021-05-18 21:31:31.054] - GCMT3D-C201802271729A - INFO    : Plotting body waves
+[2021-05-18 21:31:39.009] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.TAM.00.BHN): list index out of range
+[2021-05-18 21:31:44.534] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH1): list index out of range
+[2021-05-18 21:31:44.536] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH2): list index out of range
+[2021-05-18 21:31:44.869] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH1): list index out of range
+[2021-05-18 21:31:44.871] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH2): list index out of range
+[2021-05-18 21:31:47.016] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH1): list index out of range
+[2021-05-18 21:31:47.018] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH2): list index out of range
+[2021-05-18 21:31:47.325] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH1): list index out of range
+[2021-05-18 21:31:47.326] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH2): list index out of range
+[2021-05-18 21:32:10.186] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.PAF.00.BHN): list index out of range
+[2021-05-18 21:32:12.382] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH1): list index out of range
+[2021-05-18 21:32:12.384] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH2): list index out of range
+[2021-05-18 21:32:13.675] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH1): list index out of range
+[2021-05-18 21:32:13.677] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH2): list index out of range
+[2021-05-18 21:32:13.999] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH1): list index out of range
+[2021-05-18 21:32:14.001] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH2): list index out of range
+[2021-05-18 21:32:14.002] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH1): list index out of range
+[2021-05-18 21:32:14.004] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH2): list index out of range
+[2021-05-18 21:32:14.300] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH1): list index out of range
+[2021-05-18 21:32:14.302] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH2): list index out of range
+[2021-05-18 21:32:15.634] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH1): list index out of range
+[2021-05-18 21:32:15.636] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH2): list index out of range
+[2021-05-18 21:32:15.936] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH1): list index out of range
+[2021-05-18 21:32:15.938] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH2): list index out of range
+[2021-05-18 21:32:16.264] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH1): list index out of range
+[2021-05-18 21:32:16.266] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH2): list index out of range
+[2021-05-18 21:32:16.594] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH1): list index out of range
+[2021-05-18 21:32:16.596] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH2): list index out of range
+[2021-05-18 21:32:45.885] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH1): list index out of range
+[2021-05-18 21:32:45.887] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH2): list index out of range
+[2021-05-18 21:32:46.213] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH1): list index out of range
+[2021-05-18 21:32:46.215] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH2): list index out of range
+[2021-05-18 21:32:46.788] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH1): list index out of range
+[2021-05-18 21:32:46.790] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH2): list index out of range
+[2021-05-18 21:32:47.960] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH1): list index out of range
+[2021-05-18 21:32:47.962] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH2): list index out of range
+[2021-05-18 21:33:16.834] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH1): list index out of range
+[2021-05-18 21:33:16.837] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH2): list index out of range
+[2021-05-18 21:33:17.148] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH1): list index out of range
+[2021-05-18 21:33:17.150] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH2): list index out of range
+[2021-05-18 21:33:17.480] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH1): list index out of range
+[2021-05-18 21:33:17.482] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH2): list index out of range
+[2021-05-18 21:33:17.798] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.JTS.00.BH1): list index out of range
+[2021-05-18 21:33:18.120] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH1): list index out of range
+[2021-05-18 21:33:18.122] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH2): list index out of range
+[2021-05-18 21:33:18.443] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH1): list index out of range
+[2021-05-18 21:33:18.445] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH2): list index out of range
+[2021-05-18 21:33:18.740] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH1): list index out of range
+[2021-05-18 21:33:18.742] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH2): list index out of range
+[2021-05-18 21:33:19.068] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH1): list index out of range
+[2021-05-18 21:33:19.070] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH2): list index out of range
+[2021-05-18 21:33:34.942] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH1): list index out of range
+[2021-05-18 21:33:34.945] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH2): list index out of range
+[2021-05-18 21:33:36.223] - GCMT3D-C201802271729A - INFO    : Plotting surface waves
+[2021-05-18 21:33:44.316] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.TAM.00.BHN): list index out of range
+[2021-05-18 21:33:49.202] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH1): list index out of range
+[2021-05-18 21:33:49.204] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH2): list index out of range
+[2021-05-18 21:33:50.118] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH1): list index out of range
+[2021-05-18 21:33:50.120] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH2): list index out of range
+[2021-05-18 21:33:52.249] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH1): list index out of range
+[2021-05-18 21:33:52.251] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH2): list index out of range
+[2021-05-18 21:33:52.559] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH1): list index out of range
+[2021-05-18 21:33:52.560] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH2): list index out of range
+[2021-05-18 21:34:16.447] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.PAF.00.BHN): list index out of range
+[2021-05-18 21:34:18.592] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH1): list index out of range
+[2021-05-18 21:34:18.594] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH2): list index out of range
+[2021-05-18 21:34:19.782] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH1): list index out of range
+[2021-05-18 21:34:19.784] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH2): list index out of range
+[2021-05-18 21:34:20.098] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH1): list index out of range
+[2021-05-18 21:34:20.100] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH2): list index out of range
+[2021-05-18 21:34:20.101] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH1): list index out of range
+[2021-05-18 21:34:20.103] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH2): list index out of range
+[2021-05-18 21:34:20.394] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH1): list index out of range
+[2021-05-18 21:34:20.396] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH2): list index out of range
+[2021-05-18 21:34:21.603] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH1): list index out of range
+[2021-05-18 21:34:21.605] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH2): list index out of range
+[2021-05-18 21:34:21.919] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH1): list index out of range
+[2021-05-18 21:34:21.921] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH2): list index out of range
+[2021-05-18 21:34:22.258] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH1): list index out of range
+[2021-05-18 21:34:22.259] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH2): list index out of range
+[2021-05-18 21:34:22.580] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH1): list index out of range
+[2021-05-18 21:34:22.583] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH2): list index out of range
+[2021-05-18 21:34:52.004] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH1): list index out of range
+[2021-05-18 21:34:52.007] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH2): list index out of range
+[2021-05-18 21:34:52.330] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH1): list index out of range
+[2021-05-18 21:34:52.332] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH2): list index out of range
+[2021-05-18 21:34:52.950] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH1): list index out of range
+[2021-05-18 21:34:52.952] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH2): list index out of range
+[2021-05-18 21:34:54.184] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH1): list index out of range
+[2021-05-18 21:34:54.186] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH2): list index out of range
+[2021-05-18 21:35:23.140] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH1): list index out of range
+[2021-05-18 21:35:23.142] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH2): list index out of range
+[2021-05-18 21:35:23.445] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH1): list index out of range
+[2021-05-18 21:35:23.447] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH2): list index out of range
+[2021-05-18 21:35:25.143] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH1): list index out of range
+[2021-05-18 21:35:25.145] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH2): list index out of range
+[2021-05-18 21:35:25.446] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.JTS.00.BH1): list index out of range
+[2021-05-18 21:35:25.760] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH1): list index out of range
+[2021-05-18 21:35:25.762] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH2): list index out of range
+[2021-05-18 21:35:26.062] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH1): list index out of range
+[2021-05-18 21:35:26.064] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH2): list index out of range
+[2021-05-18 21:35:26.359] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH1): list index out of range
+[2021-05-18 21:35:26.362] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH2): list index out of range
+[2021-05-18 21:35:26.679] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH1): list index out of range
+[2021-05-18 21:35:26.681] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH2): list index out of range
+[2021-05-18 21:35:43.213] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH1): list index out of range
+[2021-05-18 21:35:43.216] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH2): list index out of range
+[2021-05-18 21:35:44.484] - GCMT3D-C201802271729A - INFO    : Plotting mantle waves
+[2021-05-18 21:35:52.718] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.TAM.00.BHN): list index out of range
+[2021-05-18 21:35:57.525] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH1): list index out of range
+[2021-05-18 21:35:57.527] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.FFC.00.BH2): list index out of range
+[2021-05-18 21:35:57.837] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH1): list index out of range
+[2021-05-18 21:35:57.839] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KDAK.00.BH2): list index out of range
+[2021-05-18 21:35:59.976] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH1): list index out of range
+[2021-05-18 21:35:59.978] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RPN.00.BH2): list index out of range
+[2021-05-18 21:36:01.221] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH1): list index out of range
+[2021-05-18 21:36:01.223] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SUR.00.BH2): list index out of range
+[2021-05-18 21:36:24.488] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(G.PAF.00.BHN): list index out of range
+[2021-05-18 21:36:26.672] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH1): list index out of range
+[2021-05-18 21:36:26.673] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IC.ENH.00.BH2): list index out of range
+[2021-05-18 21:36:27.919] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH1): list index out of range
+[2021-05-18 21:36:27.921] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.AAK.00.BH2): list index out of range
+[2021-05-18 21:36:28.210] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH1): list index out of range
+[2021-05-18 21:36:28.212] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ASCN.00.BH2): list index out of range
+[2021-05-18 21:36:28.214] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH1): list index out of range
+[2021-05-18 21:36:28.216] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.DGAR.00.BH2): list index out of range
+[2021-05-18 21:36:28.529] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH1): list index out of range
+[2021-05-18 21:36:28.531] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.HOPE.00.BH2): list index out of range
+[2021-05-18 21:36:29.830] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH1): list index out of range
+[2021-05-18 21:36:29.832] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.MBAR.00.BH2): list index out of range
+[2021-05-18 21:36:30.144] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH1): list index out of range
+[2021-05-18 21:36:30.145] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PALK.00.BH2): list index out of range
+[2021-05-18 21:36:30.461] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH1): list index out of range
+[2021-05-18 21:36:30.463] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SACV.00.BH2): list index out of range
+[2021-05-18 21:36:30.767] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH1): list index out of range
+[2021-05-18 21:36:30.769] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.TAU.00.BH2): list index out of range
+[2021-05-18 21:36:59.830] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH1): list index out of range
+[2021-05-18 21:36:59.832] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BORG.00.BH2): list index out of range
+[2021-05-18 21:37:00.135] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH1): list index out of range
+[2021-05-18 21:37:00.137] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ERM.00.BH2): list index out of range
+[2021-05-18 21:37:00.744] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH1): list index out of range
+[2021-05-18 21:37:00.746] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KURK.00.BH2): list index out of range
+[2021-05-18 21:37:01.934] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH1): list index out of range
+[2021-05-18 21:37:01.936] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.PFO.00.BH2): list index out of range
+[2021-05-18 21:37:29.978] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH1): list index out of range
+[2021-05-18 21:37:29.981] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ALE.00.BH2): list index out of range
+[2021-05-18 21:37:30.290] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH1): list index out of range
+[2021-05-18 21:37:30.292] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.BRVK.00.BH2): list index out of range
+[2021-05-18 21:37:30.602] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH1): list index out of range
+[2021-05-18 21:37:30.604] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.ESK.00.BH2): list index out of range
+[2021-05-18 21:37:30.936] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.JTS.00.BH1): list index out of range
+[2021-05-18 21:37:31.261] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH1): list index out of range
+[2021-05-18 21:37:31.263] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.KWJN.00.BH2): list index out of range
+[2021-05-18 21:37:31.567] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH1): list index out of range
+[2021-05-18 21:37:31.569] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.NNA.00.BH2): list index out of range
+[2021-05-18 21:37:31.858] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH1): list index out of range
+[2021-05-18 21:37:31.860] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.RAYN.00.BH2): list index out of range
+[2021-05-18 21:37:32.168] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH1): list index out of range
+[2021-05-18 21:37:32.170] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(II.SIMI.00.BH2): list index out of range
+[2021-05-18 21:37:48.396] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH1): list index out of range
+[2021-05-18 21:37:48.399] - GCMT3D-C201802271729A - WARNING : Couldn't find corresponding synt for obsd trace(IU.WCI.00.BH2): list index out of range
