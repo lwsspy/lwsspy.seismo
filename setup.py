@@ -56,7 +56,8 @@ setup(
         'plot_util/fonts/*.ttc',
         'plot_util/fonts/*.ttf',
         'constant_data/gcmt/*.csv',
-        'constant_data/ttc.mat'
+        'constant_data/ttc.mat',
+        'seismo/invertcmt/*.yml'
     ]},
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
