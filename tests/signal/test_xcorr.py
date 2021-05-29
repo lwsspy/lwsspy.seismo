@@ -26,7 +26,7 @@ def test_correct_index():
     model = np.array([.5])
 
     def forward(a):
-        return a * np.sin(3*times + np.pi*0.25) * taper(len(times))
+        return a * np.sin(3*times + 0.25*np.pi) * taper(len(times))
 
     istart, iend = 300, 700
     _, nshift = lpy.xcorr(data, forward(model))
