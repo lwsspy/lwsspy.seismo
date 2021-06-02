@@ -59,8 +59,10 @@ def test_from_event_file(event):
                   eventname="9703873", cmt_time=cmt_time, half_duration=1.0,
                   latitude=34.1745, longitude=-118.4792, depth_in_m=5400.0,
                   m_rr=1.0e22, m_tt=-1.0e22)
-
-    assert CMTSource.from_event(event) == cmt_true
+    cmt = CMTSource.from_event(event)
+    print(cmt_true)
+    print(cmt)
+    assert cmt == cmt_true
 
 
 def test_write_CMTSOLUTION_File(tmpdir, cmt):
@@ -90,6 +92,31 @@ def test_load_quakeML():
         print("CMT\n", CMTSource.from_CMTSOLUTION_file(cmtfile))
         # assertDictAlmostEqual(CMTSource.from_quakeml_file(new_xml_path),
         #                       CMTSource.from_CMTSOLUTION_file(cmtfile))
+
+
+def test_M0_getter_setter(cmt):
+
+    paramlist = ["m_rr", "m_tt", "m_pp", "m_rt", "m_rp", "m_tp"]
+
+    # Old M0
+    M0 = cmt.M0
+    check_params = [getattr(cmt, _par) for _par in paramlist]
+    print(check_params)
+
+    # M0
+    nM0 = 2e+25
+
+    # Factor
+    factor = nM0/M0
+
+    # Set M0
+    cmt.M0 = nM0
+
+    # Check whether new factor on tensor component matches the M0 factor
+    for _i, _par in enumerate(paramlist):
+        print(getattr(cmt, _par), check_params[_i])
+        if check_params[_i] != 0:
+            assert factor == np.abs(getattr(cmt, _par)/check_params[_i])
 
 
 def test_tbp(cmt):
