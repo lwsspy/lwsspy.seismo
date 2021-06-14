@@ -61,7 +61,7 @@ def test_queue_multiprocessing():
     pprint(stream)
 
     processed_stream = queue_multiprocess_stream(
-        stream, processdict, nproc=5, verbose=True)
+        stream, processdict, nproc=40, verbose=True)
 
     print(processed_stream)
 
