@@ -64,10 +64,10 @@ def test_queue_multiprocessing():
 
     with lpy.Timer():
         processed_stream = queue_multiprocess_stream(
-            stream, processdict, nproc=5, verbose=True)
+            stream, processdict, nproc=20, verbose=True)
 
     with lpy.Timer():
-        multiprocess_stream(stream, processdict, nprocs=5)
+        multiprocess_stream(stream, processdict, nprocs=20)
 
 
 if __name__ == "__main__":
