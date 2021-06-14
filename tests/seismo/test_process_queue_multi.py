@@ -11,9 +11,11 @@ This will not be executed as part of the pytest suite, but can be invoked by
 import os
 from pprint import pprint
 from obspy import read
+import lwsspy as lpy
 from lwsspy import CMTSource
 from lwsspy import read_inventory
 from lwsspy.seismo.process.queue_multiprocess_stream import queue_multiprocess_stream
+from lwsspy.seismo.process.multiprocess_stream import multiprocess_stream
 from lwsspy.utils.io import read_yaml_file
 
 try:
@@ -60,10 +62,12 @@ def test_queue_multiprocessing():
     pprint(processdict)
     pprint(stream)
 
-    processed_stream = queue_multiprocess_stream(
-        stream, processdict, nproc=1, verbose=True)
+    with lpy.Timer():
+        processed_stream = queue_multiprocess_stream(
+            stream, processdict, nproc=5, verbose=True)
 
-    print(processed_stream)
+    with lpy.Timer():
+        multiprocess_stream(stream, processdict, nprocs=5)
 
 
 if __name__ == "__main__":
