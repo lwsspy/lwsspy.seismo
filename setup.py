@@ -84,6 +84,7 @@ setup(
             'cmtinversion-plot-measurements-histograms = lwsspy.seismo.invertcmt.plot_measurements:bin',
             'invert-cmt = lwsspy.seismo.invertcmt.GCMT3DInversion:bin',
             'gcmt3d-syncdata = lwsspy.seismo.invertcmt.sync_data:bin',
+            'gcmt3d-optimstats = lwsspy.seismo.invertcmt.get_optimization_stats:bin',
             'download-data = lwsspy.seismo.download_waveforms_to_storage:bin',
             'plot_csv_depth_slice = lwsspy.seismo.specfem.plot_csv_depth_slice:bin',
             'plot_specfem_xsec_depth = lwsspy.seismo.specfem.plot_specfem_xsec_depth:bin',
