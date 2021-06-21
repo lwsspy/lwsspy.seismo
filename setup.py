@@ -81,7 +81,9 @@ setup(
     entry_points={
         'console_scripts': [
             'compare-catalogs = lwsspy.seismo.compare_catalogs:bin',
-            'cmtinversion-plot-measurements-histograms = lwsspy.seismo.invertcmt.plot_measurements:bin',
+            'gcmt3d-plot-measurement-histograms = lwsspy.seismo.invertcmt.plot_measurements:bin',
+            'gcmt3d-plot-measurement-histograms-pkl = lwsspy.seismo.invertcmt.plot_measurements:bin_plot_pickles',
+            'gcmt3d-fix-dlna-database = lwsspy.seismo.invertcmt.M0:bin_fix_dlna_database',
             'invert-cmt = lwsspy.seismo.invertcmt.GCMT3DInversion:bin',
             'gcmt3d-syncdata = lwsspy.seismo.invertcmt.sync_data:bin',
             'gcmt3d-optimstats = lwsspy.seismo.invertcmt.get_optimization_stats:bin',
