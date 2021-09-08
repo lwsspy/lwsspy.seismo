@@ -62,6 +62,7 @@ setup(
     install_requires=['numpy', 'matplotlib',  'obspy',
                       'PyYAML', 'h5py', 'mpi4py', 'matplotlib',
                       'pyasdf', 'autopep8', 'xarray', 'beautifulsoup4',
+                      'netcdf4', 'cartopy'
                       #   'pyvista'
                       ],
     tests_require=['pytest'],
