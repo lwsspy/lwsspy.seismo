@@ -70,24 +70,3 @@ from .read_gcmt_data import load_1976_2004_mag  # noqa
 from .read_gcmt_data import load_2004_2010_mag  # noqa
 from .read_gcmt_data import load_num_events  # noqa
 from .read_gcmt_data import load_cum_mag  # noqa
-
-
-# CMT3D
-from .invertcmt.GCMT3DInversion import GCMT3DInversion  # noqa
-from .invertcmt.plot_measurements import get_database_measurements  # noqa
-from .invertcmt.plot_measurements import plot_measurements  # noqa
-from .invertcmt.plot_measurements import plot_measurement_pkl  # noqa
-from .invertcmt.plot_measurements import compute_window_hists  # noqa
-from .invertcmt.plot_measurements import plot_window_histograms  # noqa
-from .invertcmt.plot_slab_location import plot_slab_location  # noqa
-from .invertcmt.plot_weights import plot_weights  # noqa
-from .invertcmt.plot_weights import plot_weightpickle  # noqa
-from .invertcmt.plot_weights import plot_weight_histograms  # noqa
-from .invertcmt.plot_weights import plot_weight_histogram_pickle  # noqa
-from .invertcmt.plot_weights import plot_final_weights  # noqa
-from .invertcmt.plot_weights import plot_final_weight_pickle  # noqa
-from .invertcmt.process_classifier import filter_scaling  # noqa
-from .invertcmt.process_classifier import ProcessParams  # noqa
-from .invertcmt.io import read_output_traces  # noqa
-from .invertcmt.io import read_measurements  # noqa
-from .invertcmt.sync_data import sync_data  # noqa
