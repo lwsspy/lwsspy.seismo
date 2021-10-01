@@ -25,7 +25,7 @@ from obspy.core.event import Event
 import warnings
 from . import sourcedecomposition
 from inspect import getmembers, isfunction
-from ..plot_from_axes import axes_from_axes
+from ..plot.axes_from_axes import axes_from_axes
 from ..plot.plot_label import plot_label
 from ..plot.get_aspect import get_aspect
 from ..plot.midpointcolornorm import MidpointNormalize

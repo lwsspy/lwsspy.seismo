@@ -19,9 +19,9 @@ from ..maps.plot_map import plot_map
 from ..maps.haversine import haversine
 from ..maps.bearing import bearing
 from ..plot.axes_from_axes import axes_from_axes
-from ..plot_util.scatterlegend import scatterlegend
-from ..plot_util.plot_label import plot_label
-from ..plot_util.remove_ticklabels import remove_topright
+from ..plot.scatterlegend import scatterlegend
+from ..plot.plot_label import plot_label
+from ..plot.remove_ticklabels import remove_topright
 
 
 class CompareCatalogs:
