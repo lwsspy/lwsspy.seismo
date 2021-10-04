@@ -15,3 +15,7 @@ _build
 rivers
 docs/source/chapters/figures/scripts/data/C201711191509A.1D.sac
 docs/source/chapters/figures/dem_animation
+.ipynb_checkpoints
+*.png
+*.pdf
+*.svg
