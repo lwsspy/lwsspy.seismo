@@ -15,8 +15,8 @@ def plot_traveltimes_ak135(ax: Union[None, Axes] = None,
     '''Loads ttbox ttc struct from matfile'''
 
     # Load ttc file
-    filename = p.join(lpy.CONSTANT_DATA, 'ttc.mat')
-    ttcfile = lpy.loadmat(filename)
+    filename = p.join(lpy.base.CONSTANT_DATA, 'ttc.mat')
+    ttcfile = lpy.utils.loadmat(filename)
 
     # Get vars
     N = ttcfile["ttc"]["anz"]  # Number of ttcurves
@@ -33,11 +33,11 @@ def plot_traveltimes_ak135(ax: Union[None, Axes] = None,
     else:
         factor = 1.0
 
-    # colors = lpy.pick_colors_from_cmap(N, cmap=cmap)
+    # colors = lpy.plot.pick_colors_from_cmap(N, cmap=cmap)
     if cmap is None:
         colors = N * ['k']
     else:
-        colors = lpy.pick_colors_from_cmap(N, cmap=cmap)
+        colors = lpy.plot.pick_colors_from_cmap(N, cmap=cmap)
 
     for _curve, _color in zip(ttcurves, colors):
         # Wrap epicentral distances around 360

@@ -42,30 +42,31 @@ def plot_csv_depth_slice(infile, outfile, label):
     data = np.genfromtxt(infile, delimiter=',')[1:, :]
 
     # Get Depth of slice
-    depth = lpy.EARTH_RADIUS_KM - (lpy.EARTH_RADIUS_KM * np.max(data[:, -2]))
+    depth = lpy.base.EARTH_RADIUS_KM - \
+        (lpy.base.EARTH_RADIUS_KM * np.max(data[:, -2]))
 
     # Convert to geographical
-    rho, lat, lon = lpy.cart2geo(data[:, 1], data[:, 2], data[:, 3])
+    rho, lat, lon = lpy.math.cart2geo(data[:, 1], data[:, 2], data[:, 3])
 
     # Create interpolation Grid
     llon, llat = np.meshgrid(np.linspace(-180.0, 180.1, 1441),
                              np.linspace(-90.0, 90.1, 721))
     # Interpoalte data
-    SNN = lpy.SphericalNN(lat, lon)
+    SNN = lpy.math.SphericalNN(lat, lon)
     interpolator = SNN.interpolator(llat, llon, no_weighting=True)
     datainterp = interpolator(data[:, -1])
 
     # Create Figure
-    lpy.updaterc()
+    lpy.plot.updaterc()
     plt.figure(figsize=(9, 4))
     ax = plt.axes(projection=cartopy.crs.PlateCarree())
     ax.set_rasterization_zorder(-10)
-    lpy.plot_map(fill=False, zorder=1)
+    lpy.maps.plot_map(fill=False, zorder=1)
 
     pmesh = plt.pcolormesh(llon, llat, datainterp,
                            transform=cartopy.crs.PlateCarree(), zorder=-11)
-    lpy.plot_label(ax, f"{depth:.1f} km", aspect=2.0,
-                   location=1, dist=0.025, box=True)
+    lpy.plot.plot_label(ax, f"{depth:.1f} km", aspect=2.0,
+                        location=1, dist=0.025, box=True)
 
     c = plt.colorbar(pmesh, fraction=0.05, pad=0.075)
     c.set_label(cbartitle, rotation=0, labelpad=10)

@@ -90,7 +90,7 @@ def plot_quakes(latitude, longitude, depth, moment,
 
     # Create
     colormap = plt.get_cmap(cmap)
-    colors = lpy.pick_colors_from_cmap(len(levels), colormap)
+    colors = lpy.plot.pick_colors_from_cmap(len(levels), colormap)
     cmap = ListedColormap(colors)
     norm = BoundaryNorm(levels, cmap.N)
 
@@ -98,8 +98,8 @@ def plot_quakes(latitude, longitude, depth, moment,
     if ax is None:
         plt.figure(figsize=(9, 5.25))
         plt.subplots_adjust(left=0.025, right=0.975, bottom=0.15, top=0.95)
-        ax = lpy.map_axes(proj="moll", central_longitude=-150.0)
-        lpy.plot_map(zorder=-1)
+        ax = lpy.maps.map_axes(proj="moll", central_longitude=-150.0)
+        lpy.maps.plot_map(zorder=-1)
 
     # Fix moments
     rmoments = np.floor(moment)
@@ -142,7 +142,7 @@ def plot_quakes(latitude, longitude, depth, moment,
             frameon=False, fontsize=legendfontsize,
             title_fontsize=title_fontsize,
             bbox_transform=ax.transAxes)
-        lpy.right_align_legend(legend1)
+        lpy.plot.right_align_legend(legend1)
         ax.add_artist(legend1)
 
         # Get Size props of the legend entries.
@@ -169,7 +169,7 @@ def plot_quakes(latitude, longitude, depth, moment,
             ncol=1, handletextpad=0.2,
             fontsize=legendfontsize, title_fontsize=title_fontsize,
             bbox_transform=ax.transAxes)
-        lpy.right_align_legend(legend2)
+        lpy.plot.right_align_legend(legend2)
 
         return scatter, ax, legend1, legend2
     else:

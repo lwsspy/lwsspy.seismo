@@ -216,8 +216,8 @@ class CompareCatalogs:
             plt.switch_backend('pdf')
 
         # Get slab location
-        dss = lpy.get_slabs()
-        vmin, vmax = lpy.get_slab_minmax(dss)
+        dss = lpy.geo.get_slabs()
+        vmin, vmax = lpy.geo.get_slab_minmax(dss)
 
         # Compute levels
         levels = np.linspace(vmin, vmax, 100)
@@ -237,12 +237,12 @@ class CompareCatalogs:
             ax.set_extent(extent)
         else:
             ax.set_global()
-        lpy.plot_map()
-        lpy.plot_map(fill=False, borders=False, zorder=10)
+        lpy.maps.plot_map()
+        lpy.maps.plot_map(fill=False, borders=False, zorder=10)
         # ax.set_extent(extent05)
 
         # Plot map with central longitude on event longitude
-        lpy.plot_slabs(dss=dss, levels=levels, cmap=cmap, norm=norm)
+        lpy.geo.plot_slabs(dss=dss, levels=levels, cmap=cmap, norm=norm)
 
         # Plot CMT as popint or beachball
         # cdepth = cmap(norm(-1*self.o/1000.0))
@@ -269,7 +269,7 @@ class CompareCatalogs:
         if extent is not None:
             ax.set_extent(extent)
 
-        c = lpy.nice_colorbar(aspect=40, fraction=0.1, shrink=0.6)
+        c = lpy.plot.nice_colorbar(aspect=40, fraction=0.1, shrink=0.6)
         c.set_label("Depth [km]")
 
         if outfile is not None:
@@ -362,7 +362,7 @@ class CompareCatalogs:
             quivers = []
         else:
             vcenter = 0
-            norm = lpy.MidpointNormalize(
+            norm = lpy.plot.MidpointNormalize(
                 vmin=vmin, midpoint=vcenter, vmax=vmax)
             cmap = plt.get_cmap('seismic')
 
@@ -1060,8 +1060,8 @@ def bin():
     args = parser.parse_args()
 
     # Get catalogs
-    old = lpy.CMTCatalog.from_file_list(args.old)
-    new = lpy.CMTCatalog.from_file_list(args.new)
+    old = lpy.seismo.CMTCatalog.from_file_list(args.old)
+    new = lpy.seismo.CMTCatalog.from_file_list(args.new)
     new, newp = new.filter(mindict=dict(depth_in_m=0.0))
 
     print("Old:", len(old.cmts))
@@ -1080,9 +1080,9 @@ def bin():
         ncat.save(os.path.join(args.outdir, args.newlabel + ".pkl"))
 
     # Compare Catalog
-    CC = lpy.CompareCatalogs(old=ocat, new=ncat,
-                             oldlabel=args.oldlabel, newlabel=args.newlabel,
-                             nbins=25)
+    CC = lpy.seismo.CompareCatalogs(old=ocat, new=ncat,
+                                    oldlabel=args.oldlabel, newlabel=args.newlabel,
+                                    nbins=25)
     # plt.figure(figsize=(4.5, 3))
     # CC.plot_2D_scatter(param1="moment_magnitude", param2="depth_in_m", d1=False,
     #                    d2=False, xlog=False, ylog=True, yrange=[3, 800],

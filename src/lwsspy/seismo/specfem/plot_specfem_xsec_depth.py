@@ -27,32 +27,32 @@ def plot_specfem_xsec_depth(infile, outfile=None, ax=None, cax=None,
     """
 
     # Load data from file
-    llon, llat, rad, val, _, _, _ = lpy.read_specfem_xsec_depth(
+    llon, llat, rad, val, _, _, _ = lpy.seismo.read_specfem_xsec_depth(
         infile, res=0.25, no_weighting=False)
     extent = [np.min(llon), np.max(llon), np.min(llat), np.max(llat)]
 
     # Get Depth of slice
     if depth is None:
-        depth = lpy.EARTH_RADIUS_KM - np.mean(rad)
+        depth = lpy.base.EARTH_RADIUS_KM - np.mean(rad)
 
     # Create Figure
-    lpy.updaterc()
+    lpy.plot.updaterc()
 
     if ax is None:
         plt.figure(figsize=(8, 6))
         ax = plt.axes(projection=cartopy.crs.Mollweide())
 
     ax.set_rasterization_zorder(-10)
-    lpy.plot_map(fill=False, zorder=1)
+    lpy.maps.plot_map(fill=False, zorder=1)
 
     im = ax.imshow(val[::-1, :], extent=extent,
                    transform=cartopy.crs.PlateCarree(), zorder=-15,
                    cmap='rainbow_r', alpha=0.9)
 
-    lpy.plot_label(ax, f"{depth:.1f} km", aspect=2.0,
-                   location=2, dist=0.0, box=False)
-    c = lpy.nice_colorbar(im, fraction=0.05, pad=0.075,
-                          orientation="horizontal", cax=cax)
+    lpy.plot.plot_label(ax, f"{depth:.1f} km", aspect=2.0,
+                        location=2, dist=0.0, box=False)
+    c = lpy.plot.nice_colorbar(im, fraction=0.05, pad=0.075,
+                               orientation="horizontal", cax=cax)
     # plt.show()
 
     if outfile is not None:

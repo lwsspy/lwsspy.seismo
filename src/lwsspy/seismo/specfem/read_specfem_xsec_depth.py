@@ -48,7 +48,8 @@ def read_specfem_xsec_depth(filename: str, res: float = 0.25,
                              np.arange(-90.0, 90.0 + res, res))
 
     # Interpolate the map
-    SNN = lpy.SphericalNN(lat, lon)  # Creating a kdtree, and use it to interp
+    # Creating a kdtree, and use it to interp
+    SNN = lpy.math.SphericalNN(lat, lon)
     interpolator = SNN.interpolator(llat, llon, no_weighting=no_weighting,
                                     maximum_distance=maximum_distance)
     rad = interpolator(rad)

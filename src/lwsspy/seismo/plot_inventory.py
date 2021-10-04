@@ -22,7 +22,7 @@ def plot_inventory(inv: Inventory, *args, ax: plt.Axes = None,
 
     # Update the colorcycler to automate the different colors of the stations
     # And networks
-    # net_colors = lpy.pick_colors_from_cmap(num_net, cmap)
+    # net_colors = lpy.plot.pick_colors_from_cmap(num_net, cmap)
     colormap = plt.get_cmap(cmap)
     net_colors = [colormap(i) for i in range(num_net)[::-1]]
 
@@ -32,8 +32,8 @@ def plot_inventory(inv: Inventory, *args, ax: plt.Axes = None,
         subinv = inv.select(network=network)
 
         # Get locations
-        lat, lon = lpy.inv2geoloc(subinv)
-        lat, lon = lpy.get_unique_lists(lat, lon)
+        lat, lon = lpy.seismo.inv2geoloc(subinv)
+        lat, lon = lpy.utils.get_unique_lists(lat, lon)
 
         # Plot with label
         ax.plot(lon, lat, 'v', *args, markeredgecolor='k', markeredgewidth=0.25,

@@ -31,14 +31,14 @@ def get_inv_aspect_extent(inv: Inventory) -> Tuple[float, list]:
     """
 
     # Get all lat,lon s
-    lat, lon = lpy.inv2geoloc(inv)
+    lat, lon = lpy.seismo.inv2geoloc(inv)
 
     # Get aspect
     minlat, maxlat = np.min(lat), np.max(lat)
     minlon, maxlon = np.min(lon), np.max(lon)
 
     # Get extent
-    extent = lpy.fix_map_extent([minlon, maxlon, minlat, maxlat])
+    extent = lpy.maps.fix_map_extent([minlon, maxlon, minlat, maxlat])
 
     aspect = (extent[1] - extent[0])/(extent[3] - extent[2])
 

@@ -4,8 +4,10 @@ import numpy as np
 from scipy.fft import fft, ifft, fftfreq
 
 # Internal
-import lwsspy as lpy
-lpy.updaterc()
+import lwsspy.base as lbase
+import lwsspy.plot as lplt
+import lwsspy.seismo as lseis
+lplt.updaterc()
 
 # Setup time vector
 t = np.arange(0, 1.0, 0.00001)  # Longer than plot for resolution in F domain!
@@ -19,8 +21,8 @@ f0 = 20.0  # Dominant frequency
 freq = fftfreq(Nt, dt)[:maxnt]
 
 # Compute Gaussians
-g = lpy.gaussiant(t, t0=t0, f0=f0)
-dg = lpy.dgaussiant(t, t0=t0, f0=f0)
+g = lseis.gaussiant(t, t0=t0, f0=f0)
+dg = lseis.dgaussiant(t, t0=t0, f0=f0)
 
 # Compute Spectrums
 fg = np.abs(fft(g))[:maxnt]
@@ -46,8 +48,8 @@ plt.xlabel("Frequency [Hz]")
 plt.ylabel("Norm. Amplitude")
 plt.xlim(0.0, 100.0)
 
-outnamesvg = os.path.join(lpy.DOCFIGURES, "gaussians.svg")
-outnamepdf = os.path.join(lpy.DOCFIGURES, "gaussians.pdf")
+outnamesvg = os.path.join(lbase.DOCFIGURES, "gaussians.svg")
+outnamepdf = os.path.join(lbase.DOCFIGURES, "gaussians.pdf")
 
 plt.savefig(outnamesvg)
 plt.savefig(outnamepdf)

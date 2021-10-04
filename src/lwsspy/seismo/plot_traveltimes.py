@@ -72,7 +72,7 @@ def compute_traveltimes(source_depth, phase_list=[
                 "without an arrival"
         print(tmpl)
 
-    with open(os.path.join(lpy.DOWNLOAD_CACHE, "traveltimes.pkl"), 'wb') as f:
+    with open(os.path.join(lpy.base.DOWNLOAD_CACHE, "traveltimes.pkl"), 'wb') as f:
         pickle.dump(adict, file=f)
 
     return adict
@@ -132,7 +132,7 @@ def plot_traveltimes(
     if ax is None:
         ax = plt.gca()
 
-    phase_file = os.path.join(lpy.DOWNLOAD_CACHE, "traveltimes.pkl")
+    phase_file = os.path.join(lpy.base.DOWNLOAD_CACHE, "traveltimes.pkl")
     if os.path.exists(phase_file):
         with open(phase_file, 'rb') as f:
             adict = pickle.load(f)
@@ -166,7 +166,7 @@ def plot_traveltimes(
 
     # Create color dictionary
     if colordict is None:
-        colors = lpy.pick_colors_from_cmap(Nph, cmap=cmap)
+        colors = lpy.plot.pick_colors_from_cmap(Nph, cmap=cmap)
         colordict = {ph: col for ph, col in zip(phase_list, colors)}
 
     # Create zorder dictionary so thatcertain phases are overwritten

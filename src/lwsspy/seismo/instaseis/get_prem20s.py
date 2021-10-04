@@ -7,7 +7,7 @@ import tarfile
 def get_prem20s():
 
     # Define locations
-    instadir = os.path.join(lpy.DOWNLOAD_CACHE,
+    instadir = os.path.join(lpy.base.DOWNLOAD_CACHE,
                             "instaseis")
     filetar = os.path.join(instadir, "PREM20s.tar.gz")
     dbdir = os.path.join(instadir, "PREM20s")
@@ -21,7 +21,7 @@ def get_prem20s():
 
     # Check if downloaded already
     if os.path.exists(dbdir) is False:
-        lpy.downloadfile(url, filetar)
+        lpy.shell.downloadfile(url, filetar)
         with tarfile.open(filetar) as tar:
             tar.extractall(path=dbdir)
 
