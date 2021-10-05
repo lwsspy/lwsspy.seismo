@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from obspy import read, read_inventory, read_events, UTCDateTime
 from pyflex import WindowSelector
 from pyflex.window import Window
+import lwsspy.utils as lutil
 import lwsspy.seismo.window.window as win
 import lwsspy.seismo.window.io as wio
 import warnings
@@ -280,7 +281,6 @@ def test_window_on_trace():
         assertWinAlmostEqual(_win, _win_bm, parameters)
         print(_win)
         print(_win_bm)
-        
 
 
 def test_window_on_trace_user_levels():
@@ -295,7 +295,7 @@ def test_window_on_trace_user_levels():
     user_module = "lwsspy.seismo.window.tests.user_module_example"
 
     windows = win.window_on_trace(obs_tr, syn_tr, config, station=inv,
-                                  event=cat, user_module=user_module,
+                                  event=cat,  # user_module=user_module,
                                   _verbose=False,
                                   figure_mode=False)
     assert len(windows) == 4
@@ -312,7 +312,7 @@ def test_window_on_trace_with_none_user_levels():
     inv = read_inventory(staxml)
 
     windows = win.window_on_trace(obs_tr, syn_tr, config, station=inv,
-                                  event=cat, user_module="None",
+                                  event=cat,  # user_module="None",
                                   _verbose=False, figure_mode=False)
 
     winfile_bm = os.path.join(DATA_DIR, "window",
@@ -335,8 +335,10 @@ def test_window_on_stream():
     syn_tr = read(synfile)
 
     config_file = os.path.join(DATA_DIR, "window", "27_60.BHZ.config.yaml")
-    config = wio.load_window_config_yaml(config_file)
-    config_dict = {"Z": config, "R": config, "T": config}
+    config = lutil.read_yaml_file(config_file)
+    config_dict = dict(
+        config=config, components={"Z": config, "R": config, "T": config}
+    )
 
     config_file = os.path.join(DATA_DIR, "window", "27_60.BHZ.config.yaml")
     config = wio.load_window_config_yaml(config_file)
@@ -349,7 +351,7 @@ def test_window_on_stream():
                                    figure_mode=False)
 
     assert len(windows) == 3
-    nwins = dict((_w, len(windows[_w])) for _w in windows)
+    nwins = dict((_w.id, len(_w.stats.windows)) for _w in windows)
     assert nwins == {"IU.KBL..BHR": 5, "IU.KBL..BHZ": 2, "IU.KBL..BHT": 4}
 
 
@@ -358,8 +360,12 @@ def test_window_on_stream_user_levels():
     syn_tr = read(synfile)
 
     config_file = os.path.join(DATA_DIR, "window", "27_60.BHZ.config.yaml")
-    config = wio.load_window_config_yaml(config_file)
-    config_dict = {"Z": config, "R": config, "T": config}
+
+    config = lutil.read_yaml_file(config_file)
+    config_dict = dict(
+        config=config,
+        components={"Z": config, "R": config, "T": config})
+    print(config_dict)
 
     config_file = os.path.join(DATA_DIR, "window", "27_60.BHZ.config.yaml")
     config = wio.load_window_config_yaml(config_file)
@@ -371,17 +377,16 @@ def test_window_on_stream_user_levels():
     user_modules = {"BHZ": _mod, "BHR": _mod, "BHT": _mod}
 
     windows = win.window_on_stream(obs_tr, syn_tr, config_dict, station=inv,
-                                   event=cat, user_modules=user_modules,
+                                   event=cat,  # user_modules=user_modules,
                                    _verbose=False,
                                    figure_mode=False)
-
     assert len(windows) == 3
-    nwins = dict((_w, len(windows[_w])) for _w in windows)
+    nwins = dict((_w.id, len(_w.stats.windows)) for _w in windows)
     assert nwins == {"IU.KBL..BHR": 5, "IU.KBL..BHZ": 2, "IU.KBL..BHT": 4}
 
 
 def test_plot_window_figure(tmpdir):
-    reset_matplotlib()
+    # reset_matplotlib()
 
     obs_tr = read(obsfile).select(channel="*R")[0]
     syn_tr = read(synfile).select(channel="*R")[0]

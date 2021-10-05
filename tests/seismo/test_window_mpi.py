@@ -10,7 +10,7 @@ This will not be executed as part of the pytest suite, but can be invoked by
 
 import os
 from obspy import read, read_events
-from lwsspy import read_inventory
+from lwsspy.seismo import read_inventory
 from lwsspy.seismo.window.mpiwindowclass import MPIWindowStream
 from lwsspy.utils.io import read_yaml_file
 

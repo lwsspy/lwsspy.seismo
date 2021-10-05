@@ -11,9 +11,9 @@ This will not be executed as part of the pytest suite, but can be invoked by
 import os
 from pprint import pprint
 from obspy import read
-from lwsspy import CMTSource
-from lwsspy import read_inventory
-from lwsspy import process_stream
+from lwsspy.seismo import CMTSource
+from lwsspy.seismo import read_inventory
+from lwsspy.seismo import process_stream
 from lwsspy.seismo.process.mpiprocessclass import MPIProcessStream
 from lwsspy.utils.io import read_yaml_file
 

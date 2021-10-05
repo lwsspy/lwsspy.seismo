@@ -11,7 +11,7 @@ This will not be executed as part of the pytest suite, but can be invoked by
 import os
 from obspy import read, read_events
 import obspy
-from lwsspy import read_inventory
+from lwsspy.seismo import read_inventory
 from lwsspy.seismo.window.queue_multiwindow_stream import queue_multiwindow_stream
 from lwsspy.utils.io import read_yaml_file
 
@@ -50,7 +50,7 @@ def test_queue_multiwindow():
 
     # Window the thing
     windowed_stream = queue_multiwindow_stream(
-        observed, synthetic, wrapwindowdict, nproc=5)
+        observed, synthetic, wrapwindowdict, nproc=4)
 
     # Check windowing
     for tr in windowed_stream:
