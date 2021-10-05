@@ -7,7 +7,7 @@ Welcome to lwsspy's documentation!
 ==================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    chapters/seismology.rst

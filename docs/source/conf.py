@@ -17,8 +17,8 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'lwsspy'
-copyright = '2020, Lucas Sawade'
+project = 'lwsspy.seismo'
+copyright = '2021, Lucas Sawade'
 author = 'Lucas Sawade'
 
 # The full version, including alpha/beta/rc tags
@@ -60,8 +60,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 
 html_title = "LWSSPY - Seismology Tools"
-html_logo = "figures/logo.png"
-html_favicon = "figures/favicon.ico"
+html_logo = "chapters/figures/logo.png"
+html_favicon = "chapters/figures/favicon.ico"
 
 html_theme = 'sphinx_book_theme'
 

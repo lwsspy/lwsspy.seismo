@@ -1,8 +1,8 @@
-Aaaalll the functions!
-======================
+Functions
+=========
 
-Seismology
-++++++++++
+Miscellaneous
+-------------
 
 .. autofunction:: lwsspy.seismo.cmt2inv.cmt2inv
 
