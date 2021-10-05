@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lwsspy.seismo.cmtdir2stationxmldir &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lwsspy.seismo.cmtdir2stationxmldir</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lwsspy.seismo.cmtdir2stationxmldir</h1><div class="highlight"><pre>
+<span></span><span class="c1"># External</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="c1"># Internal</span>
+<span class="kn">from</span> <span class="nn">.cmt2stationxml</span> <span class="kn">import</span> <span class="n">cmt2stationxml</span>
+<span class="kn">from</span> <span class="nn">..math.magnitude</span> <span class="kn">import</span> <span class="n">magnitude</span>
+
+
+<div class="viewcode-block" id="cmtdir2stationxmldir"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.seismo.cmtdir2stationxmldir.cmtdir2stationxmldir">[docs]</a><span class="k">def</span> <span class="nf">cmtdir2stationxmldir</span><span class="p">(</span><span class="n">cmtdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stationxmldir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">11000.0</span><span class="p">,</span>
+                         <span class="n">startoffset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">endoffset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                         <span class="n">network</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;IU,II,G&quot;</span><span class="p">,</span>
+                         <span class="n">station</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">client</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;IRIS&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes in CMTSOLUTION directory and creates a stationxml directory</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cmtdir (str):</span>
+<span class="sd">            Path to cmt directory.</span>
+<span class="sd">        stationxmldir (str):</span>
+<span class="sd">            Path to stationxmldir</span>
+<span class="sd">        duration (float, optional):</span>
+<span class="sd">            Duration. Defaults to 11000.0.</span>
+<span class="sd">        startoffset (float, optional):</span>
+<span class="sd">            Starttime in seconds. Defaults to -300.0.</span>
+<span class="sd">        endoffset (float, optional):</span>
+<span class="sd">            Endtime offset in seconds. Defaults to 0.0.</span>
+<span class="sd">        network (Union[str, None], optional):</span>
+<span class="sd">            Networks to be requested. Defaults to &quot;IU,II,G&quot;.</span>
+<span class="sd">        station (Union[str, None], optional):</span>
+<span class="sd">            Stations to be requested. Defaults to None.</span>
+<span class="sd">        client (Union[str, None], optional):</span>
+<span class="sd">            Clients to be used. Defaults to &quot;IRIS&quot;.</span>
+
+<span class="sd">    Last modified: Lucas Sawade, 2020.09.24 15.30 (lsawade@princeton.edu)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Parse all inputs to the cmt2inv function except the STATIONS file</span>
+    <span class="n">input_dict</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+    <span class="n">input_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;cmtdir&#39;</span><span class="p">)</span>
+    <span class="n">input_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;stationxmldir&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get all cmt files</span>
+    <span class="n">cmtfiles</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmtdir</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Create directory if it doesnt exist</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stationxmldir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+        <span class="c1"># directory already exists</span>
+        <span class="k">pass</span>
+
+    <span class="n">Nev</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmtfiles</span><span class="p">)</span>
+    <span class="n">mag</span> <span class="o">=</span> <span class="n">magnitude</span><span class="p">(</span><span class="n">Nev</span><span class="p">)</span>
+    <span class="c1"># Loop over files and write</span>
+    <span class="k">for</span> <span class="n">_i</span><span class="p">,</span> <span class="n">_cmtfile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cmtfiles</span><span class="p">):</span>
+        <span class="n">outname</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stationxmldir</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">_cmtfile</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">)</span>
+        <span class="c1"># Print progress</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">_i</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">0&gt;</span><span class="si">{</span><span class="n">mag</span><span class="o">+</span><span class="mi">1</span><span class="si">}}</span><span class="s2">/</span><span class="si">{</span><span class="n">Nev</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">_cmtfile</span><span class="si">}</span><span class="s2"> --&gt; </span><span class="si">{</span><span class="n">outname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">cmt2stationxml</span><span class="p">(</span><span class="n">_cmtfile</span><span class="p">,</span> <span class="o">**</span><span class="n">input_dict</span><span class="p">,</span> <span class="n">outputfilename</span><span class="o">=</span><span class="n">outname</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

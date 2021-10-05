@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seismology &#8212; LWSSPY - Seismology Tools</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Functions" href="functions.html" />
+    <link rel="prev" title="Welcome to lwsspy’s documentation!" href="../index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">LWSSPY - Seismology Tools</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption">
+ <span class="caption-text">
+  Contents:
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Seismology
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="functions.html">
+   Functions
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/chapters/seismology.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/lwsspy/lwsspy.seismo"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/lwsspy/lwsspy.seismo/issues/new?title=Issue%20on%20page%20%2Fchapters/seismology.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/lwsspy/lwsspy.seismo/edit/master/chapters/seismology.rst"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting-a-good-looking-station-map">
+   Plotting a good looking station map
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ideal-stf">
+   Ideal Source Time Functions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simple-station-wise-mpi-processing-using-mpi4py">
+   Simple station-wise MPI processing using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     mpi4py
+    </span>
+   </code>
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="seismology">
+<h1>Seismology<a class="headerlink" href="#seismology" title="Permalink to this headline">¶</a></h1>
+<p>Just a set of function and scripts, I have created for figures that I like,
+as well as other notes I deem important in terms of coding in seismology.</p>
+<div class="section" id="plotting-a-good-looking-station-map">
+<span id="station-map"></span><h2>Plotting a good looking station map<a class="headerlink" href="#plotting-a-good-looking-station-map" title="Permalink to this headline">¶</a></h2>
+<p>I have created a script that is working well for up to 10 networks with the
+default settings, which use matplotlib’s <code class="docutils literal notranslate"><span class="pre">tab10</span></code> qualatative colormap.
+For more networks, the <code class="xref py py-func docutils literal notranslate"><span class="pre">lwsspy.plot_inventory()</span></code> function takes in
+a colormap option which takes <cite>x</cite> colors for <cite>x</cite> networks sequentially from
+a matplotlib colormap. A full script for writing the figure is shown below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script generates a figure with a station map using functions</span>
+<span class="sd">from lwsspy. Internet required as the station map is downloaded.</span>
+
+<span class="sd">Map created for GCMT3D paper.</span>
+
+<span class="sd">:Author:</span>
+<span class="sd">    Lucas Sawade (lsawade@princeton.edu)</span>
+
+<span class="sd">:Last modifided:</span>
+<span class="sd">    Lucas Sawade 2021.01.14 13.00</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">obspy</span> <span class="kn">import</span> <span class="n">UTCDateTime</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">lwsspy.plot</span> <span class="k">as</span> <span class="nn">lplt</span>
+<span class="kn">import</span> <span class="nn">lwsspy.maps</span> <span class="k">as</span> <span class="nn">lmaps</span>
+<span class="kn">import</span> <span class="nn">lwsspy.seismo</span> <span class="k">as</span> <span class="nn">lseis</span>
+<span class="n">lplt</span><span class="o">.</span><span class="n">updaterc</span><span class="p">()</span>
+
+<span class="n">DOCFIGURES</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+
+<span class="c1"># Get the GCMT3D data directory</span>
+<span class="n">datadir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+
+<span class="c1"># Networks used in the Global CMT Project</span>
+<span class="n">networks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;II&quot;</span><span class="p">,</span> <span class="s2">&quot;IU&quot;</span><span class="p">,</span> <span class="s2">&quot;IC&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;MN&quot;</span><span class="p">,</span> <span class="s2">&quot;GE&quot;</span><span class="p">,</span> <span class="s2">&quot;CU&quot;</span><span class="p">]</span>
+<span class="n">networksstring</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">networks</span><span class="p">)</span>
+
+<span class="c1"># number of legend columns</span>
+<span class="n">ncol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">networks</span><span class="p">)</span>
+
+
+<span class="c1"># Define file</span>
+<span class="n">xml_name</span> <span class="o">=</span> <span class="s2">&quot;gcmt3d_station.xml&quot;</span>
+<span class="n">invfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">xml_name</span><span class="p">)</span>
+
+<span class="c1"># Write inventory after downloading</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">invfile</span><span class="p">):</span>
+    <span class="n">inv</span> <span class="o">=</span> <span class="n">lpy</span><span class="o">.</span><span class="n">seismo</span><span class="o">.</span><span class="n">read_inventory</span><span class="p">(</span><span class="n">invfile</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Download metadata</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="p">(</span><span class="mi">1976</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+
+    <span class="c1"># Download the data</span>
+    <span class="n">inv</span> <span class="o">=</span> <span class="n">lseis</span><span class="o">.</span><span class="n">download_data</span><span class="p">(</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">networksstring</span><span class="p">,</span>
+        <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;stations&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Write it to the script data directory</span>
+    <span class="n">inv</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">invfile</span><span class="p">,</span> <span class="s2">&quot;STATIONXML&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create Figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span>
+                    <span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+<span class="c1"># Create map axes</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">lmaps</span><span class="o">.</span><span class="n">map_axes</span><span class="p">(</span><span class="n">proj</span><span class="o">=</span><span class="s1">&#39;moll&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot continents</span>
+<span class="n">lmaps</span><span class="o">.</span><span class="n">plot_map</span><span class="p">()</span>
+
+<span class="c1"># Plot inventory</span>
+<span class="n">lplt</span><span class="o">.</span><span class="n">plot_inventory</span><span class="p">(</span><span class="n">inv</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create Legend</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scatterpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">,</span>
+           <span class="n">borderaxespad</span><span class="o">=-</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">handletextpad</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+           <span class="n">labelspacing</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">handlelength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">ncol</span><span class="p">,</span>
+           <span class="n">columnspacing</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCFIGURES</span><span class="p">,</span> <span class="s2">&quot;station_map.svg&quot;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+            <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DOCFIGURES</span><span class="p">,</span>
+                         <span class="s2">&quot;station_map.pdf&quot;</span><span class="p">),</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With the output:</p>
+<img alt="../_images/station_map.svg" src="../_images/station_map.svg" /></div>
+<div class="section" id="ideal-stf">
+<span id="ideal-source-time-functions"></span><h2>Ideal Source Time Functions<a class="headerlink" href="#ideal-stf" title="Permalink to this headline">¶</a></h2>
+<p>Just to be on the safe side and to not have to redo it all the time, I created
+some functions that compute sourcetime functions with certain dominant
+frequencies.</p>
+<p><strong>A Gaussian pulse</strong>:</p>
+<div class="math notranslate nohighlight">
+\[s(t) = e^{-{\left(4f_0  (t-t_0)\right)}^2}\]</div>
+<p><strong>and its derivative</strong>:</p>
+<div class="math notranslate nohighlight">
+\[s(t) = -(8f_0) (t-t_0) e^{-{\left(4f_0  (t-t_0)\right)}^2}\]</div>
+<p>A script to plot the functions and their spectra below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">ifft</span><span class="p">,</span> <span class="n">fftfreq</span>
+
+<span class="c1"># Internal</span>
+<span class="kn">import</span> <span class="nn">lwsspy.base</span> <span class="k">as</span> <span class="nn">lbase</span>
+<span class="kn">import</span> <span class="nn">lwsspy.plot</span> <span class="k">as</span> <span class="nn">lplt</span>
+<span class="kn">import</span> <span class="nn">lwsspy.seismo</span> <span class="k">as</span> <span class="nn">lseis</span>
+<span class="n">lplt</span><span class="o">.</span><span class="n">updaterc</span><span class="p">()</span>
+
+<span class="c1"># Setup time vector</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">)</span>  <span class="c1"># Longer than plot for resolution in F domain!</span>
+<span class="n">Nt</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">maxnt</span> <span class="o">=</span> <span class="n">Nt</span><span class="o">//</span><span class="mi">2</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># Time shift</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="mf">20.0</span>  <span class="c1"># Dominant frequency</span>
+
+<span class="c1"># Setup Frequency Vector</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="n">fftfreq</span><span class="p">(</span><span class="n">Nt</span><span class="p">,</span> <span class="n">dt</span><span class="p">)[:</span><span class="n">maxnt</span><span class="p">]</span>
+
+<span class="c1"># Compute Gaussians</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">lseis</span><span class="o">.</span><span class="n">gaussiant</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t0</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">f0</span><span class="o">=</span><span class="n">f0</span><span class="p">)</span>
+<span class="n">dg</span> <span class="o">=</span> <span class="n">lseis</span><span class="o">.</span><span class="n">dgaussiant</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t0</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">f0</span><span class="o">=</span><span class="n">f0</span><span class="p">)</span>
+
+<span class="c1"># Compute Spectrums</span>
+<span class="n">fg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span><span class="n">g</span><span class="p">))[:</span><span class="n">maxnt</span><span class="p">]</span>
+<span class="n">fdg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span><span class="n">dg</span><span class="p">))[:</span><span class="n">maxnt</span><span class="p">]</span>
+
+
+<span class="c1"># Create figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;d/dt(Gaussian)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time [s]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">fg</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">fg</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">fdg</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">fdg</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;d/dt(Gaussian)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frequency [Hz]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Norm. Amplitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">)</span>
+
+<span class="n">outnamesvg</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lbase</span><span class="o">.</span><span class="n">DOCFIGURES</span><span class="p">,</span> <span class="s2">&quot;gaussians.svg&quot;</span><span class="p">)</span>
+<span class="n">outnamepdf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lbase</span><span class="o">.</span><span class="n">DOCFIGURES</span><span class="p">,</span> <span class="s2">&quot;gaussians.pdf&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outnamesvg</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outnamepdf</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With the output:</p>
+<img alt="../_images/gaussians.svg" src="../_images/gaussians.svg" /><p>The functions are documented here <a class="reference internal" href="functions.html#lwsspy.seismo.gaussiant.gaussiant" title="lwsspy.seismo.gaussiant.gaussiant"><code class="xref py py-func docutils literal notranslate"><span class="pre">lwsspy.seismo.gaussiant.gaussiant()</span></code></a>
+and <a class="reference internal" href="functions.html#lwsspy.seismo.gaussiant.dgaussiant" title="lwsspy.seismo.gaussiant.dgaussiant"><code class="xref py py-func docutils literal notranslate"><span class="pre">lwsspy.seismo.gaussiant.dgaussiant()</span></code></a></p>
+</div>
+<div class="section" id="simple-station-wise-mpi-processing-using-mpi4py">
+<h2>Simple station-wise MPI processing using <code class="docutils literal notranslate"><span class="pre">mpi4py</span></code><a class="headerlink" href="#simple-station-wise-mpi-processing-using-mpi4py" title="Permalink to this headline">¶</a></h2>
+<p>I thought it was ridiculous how there is not a single simple example doing this.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span><span class="p">,</span> <span class="n">STDOUT</span>
+<span class="kn">from</span> <span class="nn">obspy</span> <span class="kn">import</span> <span class="n">read</span><span class="p">,</span> <span class="n">read_inventory</span><span class="p">,</span> <span class="n">Stream</span><span class="p">,</span> <span class="n">Inventory</span>
+<span class="kn">from</span> <span class="nn">obspy.geodetics.base</span> <span class="kn">import</span> <span class="n">gps2dist_azimuth</span>
+<span class="kn">from</span> <span class="nn">lwsspy</span> <span class="kn">import</span> <span class="n">Timer</span><span class="p">,</span> <span class="n">CMTSource</span>
+<span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+<span class="n">nprocs</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">process_stream</span><span class="p">(</span><span class="n">st</span><span class="p">:</span> <span class="n">Stream</span><span class="p">,</span> <span class="n">inv</span><span class="p">:</span> <span class="n">Inventory</span><span class="p">,</span> <span class="n">event_latitude</span><span class="p">,</span> <span class="n">event_longitude</span><span class="p">):</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="s1">&#39;demean&#39;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">attach_response</span><span class="p">(</span><span class="n">inv</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">freqmin</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">freqmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">zerophase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">remove_response</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;DISP&quot;</span><span class="p">,</span> <span class="n">zero_mean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">taper</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">water_level</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span> <span class="n">freqmin</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">freqmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
+        <span class="c1"># Get station coordinates</span>
+        <span class="n">coord_dict</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">get_coordinates</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">get_id</span><span class="p">())</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">coord_dict</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">coord_dict</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+        <span class="c1"># Get distance to earthquake</span>
+        <span class="n">m2deg</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">6371000.0</span><span class="o">/</span><span class="mi">360</span>
+        <span class="n">tr</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">gps2dist_azimuth</span><span class="p">(</span>
+            <span class="n">event_latitude</span><span class="p">,</span> <span class="n">event_longitude</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">m2deg</span>
+        <span class="n">tr</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">back_azimuth</span> <span class="o">=</span> <span class="n">gps2dist_azimuth</span><span class="p">(</span>
+            <span class="n">event_latitude</span><span class="p">,</span> <span class="n">event_longitude</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="s1">&#39;-&gt;ZNE&#39;</span><span class="p">,</span> <span class="n">inventory</span><span class="o">=</span><span class="n">inv</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="s1">&#39;NE-&gt;RT&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">st</span>
+
+<span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple function splitting a container into equal length chunks.</span>
+<span class="sd">    Order is not preserved but this is potentially an advantage depending on</span>
+<span class="sd">    the use case.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">container</span><span class="p">[</span><span class="n">_i</span><span class="p">::</span><span class="n">count</span><span class="p">]</span> <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">)]</span>
+
+<span class="n">statglob</span> <span class="o">=</span> <span class="s1">&#39;your xmls&#39;</span>
+<span class="n">waveglob</span> <span class="o">=</span> <span class="s1">&#39;you miniseeds&#39;</span>
+<span class="c1"># coul use an obspy event here, but it&#39;s so difficult to handle...</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">CMTSource</span><span class="o">.</span><span class="n">from_CMTSOLUTION_file</span><span class="p">(</span><span class="s2">&quot;your cmt solution&quot;</span><span class="p">)</span>
+<span class="c1"># Important for specfem simulations</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;from&quot;</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">nprocs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+<span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Read data</span>
+    <span class="k">with</span> <span class="n">Timer</span><span class="p">():</span>
+        <span class="n">inv</span> <span class="o">=</span> <span class="n">read_inventory</span><span class="p">(</span><span class="n">statglob</span><span class="p">)</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">waveglob</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# Traces:   </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# Channels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">inv</span><span class="o">.</span><span class="n">get_contents</span><span class="p">()[</span><span class="s1">&#39;channels&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reading done.&#39;</span><span class="p">)</span>
+    <span class="c1"># Split up stations into station chunks</span>
+    <span class="n">stations</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inv</span><span class="o">.</span><span class="n">get_contents</span><span class="p">()[</span><span class="s1">&#39;stations&#39;</span><span class="p">]]</span>
+    <span class="n">sstations</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">stations</span><span class="p">,</span> <span class="n">nprocs</span><span class="p">)</span>
+    <span class="c1"># Split up traces in to station chunks</span>
+    <span class="k">with</span> <span class="n">Timer</span><span class="p">():</span>
+        <span class="n">stinvlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_stalist</span> <span class="ow">in</span> <span class="n">sstations</span><span class="p">:</span>
+            <span class="n">subinv</span> <span class="o">=</span> <span class="n">Inventory</span><span class="p">()</span>
+            <span class="n">substream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">_sta</span> <span class="ow">in</span> <span class="n">_stalist</span><span class="p">:</span>
+                <span class="n">network</span><span class="p">,</span> <span class="n">station</span> <span class="o">=</span> <span class="n">_sta</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">substream</span> <span class="o">+=</span> <span class="n">st</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">)</span>
+                <span class="n">subinv</span> <span class="o">+=</span> <span class="n">inv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">)</span>
+            <span class="n">stinvlist</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">substream</span><span class="p">,</span> <span class="n">subinv</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Splitting done.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">stinvlist</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1"># Scatter stream chunks</span>
+<span class="n">stinvlist</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">stinvlist</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Get stream and inventory chunks</span>
+<span class="n">substream</span><span class="p">,</span> <span class="n">subinv</span> <span class="o">=</span> <span class="n">stinvlist</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Stream </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">substream</span><span class="p">)</span><span class="si">}</span><span class="s2"> -- &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Inv: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">subinv</span><span class="o">.</span><span class="n">get_contents</span><span class="p">()[</span><span class="s1">&#39;channels&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> -- &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Rank: </span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">nprocs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Process</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="n">Timer</span><span class="p">():</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">process_stream</span><span class="p">(</span><span class="n">substream</span><span class="p">,</span> <span class="n">subinv</span><span class="p">,</span>
+                                <span class="n">event</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">longitude</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rank: </span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">nprocs</span><span class="si">}</span><span class="s2"> -- Done.&quot;</span><span class="p">)</span>
+<span class="c1"># Gather</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Sort</span>
+<span class="k">if</span> <span class="n">comm</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Flatten list of lists.</span>
+    <span class="n">resultst</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">resultst</span> <span class="o">+=</span> <span class="n">_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">resultst</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="../index.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Welcome to lwsspy’s documentation!</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="functions.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Functions</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Lucas Sawade<br/>
+        
+            &copy; Copyright 2021, Lucas Sawade.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

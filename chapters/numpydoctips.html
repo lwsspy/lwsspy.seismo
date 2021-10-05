@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>NumpyDoc Tips &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Seismology" href="seismology.html" />
+    <link rel="prev" title="Tips And Tricks for Matplotlib" href="matplotlibtips.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NumpyDoc Tips</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#documenting-functions">Documenting functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documenting-classes">Documenting Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>NumpyDoc Tips</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/chapters/numpydoctips.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="numpydoc-tips">
+<h1>NumpyDoc Tips<a class="headerlink" href="#numpydoc-tips" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This may look long and tedious, but IDE’s such as VSCode can autogenerate
+a large chunk of the <code class="docutils literal notranslate"><span class="pre">docstring</span></code> using the functions inputs, outputs, and
+raise errors. That way you only have to fill out descriptions of your
+functions and extra things that you want the user to know.</p>
+</div>
+<div class="section" id="documenting-functions">
+<h2>Documenting functions<a class="headerlink" href="#documenting-functions" title="Permalink to this headline">¶</a></h2>
+<p>Functions have a set of expected headers, which all are optional, but should be
+thought about when writing the <code class="docutils literal notranslate"><span class="pre">docstring</span></code> for <code class="docutils literal notranslate"><span class="pre">numpydoc</span></code>. I include a sample
+docstring below to show how a normal funnction should be documented.
+Note that the function’s docstring is not the same as in the package, since
+that would be too long for tthe sake of the example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pick_data_from_image</span><span class="p">(</span><span class="n">infile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outfile</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function&#39;s purpose is the replication of previously published data.</span>
+
+<span class="sd">    ``csv`` output format:</span>
+
+<span class="sd">    ::</span>
+<span class="sd">        # Created from following file:</span>
+<span class="sd">        x0, y0</span>
+<span class="sd">        x1, y1</span>
+<span class="sd">        ...</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    infile: str</span>
+<span class="sd">        Image file name to be loaded by the function. The image should be</span>
+<span class="sd">        cropped to the axes edges.</span>
+<span class="sd">    outfile: Union[str, None], optional</span>
+<span class="sd">        output file name. Must contain ``.csv`` file ending</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[np.ndarray, np.ndarray]</span>
+<span class="sd">        x, y vectors of the picked data.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        if file ending is not ``.csv``</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    lwsspy.utils.pixels2data.pixels2data : Scaling from pixels to dataunits</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import lwsspy as lpy</span>
+<span class="sd">    &gt;&gt;&gt; x,y = lpy.pick_data_from_image(&#39;test.png&#39;, &#39;testdata.csv&#39;)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        Some note</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        some  warning</span>
+
+<span class="sd">    :Authors:</span>
+<span class="sd">        Lucas Sawade (lsawade@princeton.edu)</span>
+
+<span class="sd">    :Last Modified:</span>
+<span class="sd">        2020.01.06 11.00</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Just pseudo-code...</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">pickdata</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">savefile</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">xy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span>
+</pre></div>
+</div>
+<p>Usage:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Parameters</span></code> section to explain the inputs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Returns</span></code> section for outputs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Raises</span></code> section for errors that are raised by the function</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span></code> section to link other functions to the function you want
+to document.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Examples</span></code> section to describe the funcitonality of your code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Notes</span></code> section for notes and possible author info</p></li>
+</ul>
+</div>
+<div class="section" id="documenting-classes">
+<h2>Documenting Classes<a class="headerlink" href="#documenting-classes" title="Permalink to this headline">¶</a></h2>
+<p>Documenting class is very similar to documenting functions, but there are
+some extra directives you want for the <code class="docutils literal notranslate"><span class="pre">class</span></code> description, which are
+<code class="docutils literal notranslate"><span class="pre">Methods</span></code> and <code class="docutils literal notranslate"><span class="pre">Attributes</span></code>. The method section is very optional and should
+only be used if not all methods are supposed to be documented.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SphericalNN</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Spherical nearest neighbour queries using scipy&#39;s fast kd-tree</span>
+<span class="sd">    implementation.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : numpy.ndarray</span>
+<span class="sd">        cartesian point data array [x,y,z]</span>
+<span class="sd">    kd_tree : scipy.spatial.cKDTree</span>
+<span class="sd">        a KDTree used to query data</span>
+
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    query(qlat, qlon)</span>
+<span class="sd">        Query a set of latitudes and longitudes</span>
+<span class="sd">    SphericalNN.query_pairs(maximum_distance)</span>
+<span class="sd">        Find pairs of points that are within a certain distance of each other</span>
+<span class="sd">    SphericalNN.interp(data, qlat, qlon)</span>
+<span class="sd">        Use the kdtree to interpolate data corresponding</span>
+<span class="sd">        to the points of the Kdtree onto a new set of points using nearest</span>
+<span class="sd">        neighbor interpolation or weighted nearest neighbor</span>
+<span class="sd">        interpolation (default).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    :Authors:</span>
+<span class="sd">        Lucas Sawade (lsawade@princeton.edu)</span>
+
+<span class="sd">    :Last Modified:</span>
+<span class="sd">        2020.01.06 14.00</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize class</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lat : numpy.ndarray</span>
+<span class="sd">            latitudes</span>
+<span class="sd">        lon : numpy.ndarray</span>
+<span class="sd">            longitudes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cart_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spherical2cartesian</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">cart_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kd_tree</span> <span class="o">=</span> <span class="n">cKDTree</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">cart_data</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">othermethodsasmetioned</span><span class="p">():</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>In the class description we describe two extra section as mention earlier.
+That’s it. Method docstrings should be the same as function docstrings, but make
+sure you omit the <code class="docutils literal notranslate"><span class="pre">self</span></code> statement.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="seismology.html" class="btn btn-neutral float-right" title="Seismology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="matplotlibtips.html" class="btn btn-neutral float-left" title="Tips And Tricks for Matplotlib" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lwsspy.maps.plot_topography &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lwsspy.maps.plot_topography</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lwsspy.maps.plot_topography</h1><div class="highlight"><pre>
+<span></span><span class="c1"># External imports</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LightSource</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cm</span> <span class="kn">import</span> <span class="n">ScalarMappable</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
+
+<span class="kn">import</span> <span class="nn">lwsspy</span> <span class="k">as</span> <span class="nn">lpy</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="plot_topography"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.maps.plot_topography.plot_topography">[docs]</a><span class="k">def</span> <span class="nf">plot_topography</span><span class="p">(</span><span class="n">extent</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span>
+                    <span class="n">dataset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;etopo1&#39;</span><span class="p">,</span> <span class="n">subsampling</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+                    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">colorbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plots topography into existing axes. Much faster if extent is set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    extent : List[float], optional</span>
+<span class="sd">        Map extent, by default [-180.0, 180.0, -90.0, 90.0]</span>
+<span class="sd">    dataset : str, optional</span>
+<span class="sd">        which topography map is used, by default &#39;etopo1&#39; and only supported</span>
+<span class="sd">        one right now.</span>
+<span class="sd">    subsampling : int, optional</span>
+<span class="sd">        number by which to decimate the topographic map, default 8</span>
+<span class="sd">    sigma : float, optional</span>
+<span class="sd">        standard devation for the gaussian image filter, default 0.0</span>
+<span class="sd">        5.0-10.0 for a cartoonish look</span>
+<span class="sd">    colorbar: bool, optional</span>
+<span class="sd">        whether to draw the elevation colrbar or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get topography</span>
+    <span class="n">etopo_bed</span> <span class="o">=</span> <span class="n">lpy</span><span class="o">.</span><span class="n">read_etopo</span><span class="p">()</span>
+    <span class="c1"># etopo_ice = lpy.read_etopo(version=&#39;ice&#39;)</span>
+
+    <span class="c1"># decimate</span>
+    <span class="n">fextent</span> <span class="o">=</span> <span class="n">lpy</span><span class="o">.</span><span class="n">fix_map_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">aspect</span> <span class="o">=</span> <span class="p">(</span><span class="n">fextent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">fextent</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">fextent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">fextent</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">grid_bed</span> <span class="o">=</span> <span class="n">etopo_bed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">fextent</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">fextent</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                             <span class="n">longitude</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">fextent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fextent</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># grid_ice = etopo_ice.sel(latitude=slice(fextent[2], fextent[3]),</span>
+    <span class="c1">#                          longitude=slice(fextent[0], fextent[1]))</span>
+
+    <span class="c1"># Get current axis</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="c1"># Illuminate the scene from the northwest</span>
+    <span class="n">ls</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">azdeg</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">altdeg</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">ve</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">lpy</span><span class="o">.</span><span class="n">topocolormap</span><span class="p">()</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">lpy</span><span class="o">.</span><span class="n">FixedPointColorNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">10000</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+
+    <span class="c1"># Interpolating 1000x aspect</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">gaussian_filter</span><span class="p">(</span>
+        <span class="n">grid_bed</span><span class="o">.</span><span class="n">bedrock</span><span class="p">[::</span><span class="o">-</span><span class="n">subsampling</span><span class="p">,</span> <span class="p">::</span><span class="n">subsampling</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="s1">&#39;wrap&#39;</span><span class="p">])</span>
+    <span class="n">bed</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ls</span><span class="o">.</span><span class="n">shade</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">vert_exag</span><span class="o">=</span><span class="n">ve</span><span class="p">,</span> <span class="n">blend_mode</span><span class="o">=</span><span class="s1">&#39;soft&#39;</span><span class="p">,</span>
+                             <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">),</span> <span class="n">extent</span><span class="o">=</span><span class="n">fextent</span><span class="p">,</span>
+                    <span class="n">zorder</span><span class="o">=-</span><span class="mi">15</span><span class="p">)</span>
+    <span class="c1"># ice = ax.imshow(grid_ice.ice[::-1, :], cmap=&#39;Blues&#39;,</span>
+    <span class="c1">#                 extent=fextent,</span>
+    <span class="c1">#                 zorder=-14)</span>
+    <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">lpy</span><span class="o">.</span><span class="n">nice_colorbar</span><span class="p">(</span><span class="n">ScalarMappable</span><span class="p">(</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">),</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.125</span><span class="o">/</span><span class="n">aspect</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Elevation [m]&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

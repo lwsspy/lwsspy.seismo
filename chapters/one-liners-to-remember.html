@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>One-liners to Remember &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Aaaalll the functions!" href="functions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">One-liners to Remember</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simple-function-wrapper-in-bash">Simple Function wrapper in Bash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-mp4-or-gif-from-images-using-ffmpeg">Create MP4 or GIF from images using <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>One-liners to Remember</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/chapters/one-liners-to-remember.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="one-liners-to-remember">
+<h1>One-liners to Remember<a class="headerlink" href="#one-liners-to-remember" title="Permalink to this headline">¶</a></h1>
+<p>Just one-liners that I decided to document for posterity.</p>
+<div class="section" id="simple-function-wrapper-in-bash">
+<h2>Simple Function wrapper in Bash<a class="headerlink" href="#simple-function-wrapper-in-bash" title="Permalink to this headline">¶</a></h2>
+<p>I had the issue that a cluster (very large, very national) didn’t like
+launching jobs using mpirun or mpiexec (Noted in there User manual),
+but for debugging with an interactive allocation, that is nice.
+The alternative was writing <code class="docutils literal notranslate"><span class="pre">jsrun</span> <span class="pre">-n</span> <span class="pre">&lt;nproces&gt;</span> <span class="pre">-a</span> <span class="pre">1</span> <span class="pre">-c</span> <span class="pre">1</span> <span class="pre">&lt;yourscript&gt;</span></code>
+to avoid that I found a neat one-liner for bash that you can put in your
+<code class="docutils literal notranslate"><span class="pre">.bashrc</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpifunc<span class="o">()</span> <span class="o">{</span>​​​​​​​​ jsrun -n <span class="nv">$1</span> -a <span class="m">1</span> -c <span class="m">1</span> <span class="si">${</span><span class="p">​​​​​​​​@:</span><span class="nv">2</span><span class="si">}</span>​​​​​​​​ <span class="p">;</span> <span class="o">}</span>​​​​​​​​
+</pre></div>
+</div>
+<p>What I found nice about this is the simplicity of accessing the command line
+variables, where <code class="docutils literal notranslate"><span class="pre">${​​​​​​​​&#64;:2}​​​​​​​​</span></code> means all arguments including and after argument 2.
+and <code class="docutils literal notranslate"><span class="pre">$&#64;</span></code> is just all arguments.</p>
+<p>Another example I found on stackoverflow:</p>
+<ol class="arabic simple">
+<li><p>open new file and edit it: r.sh:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;params only 2    : </span><span class="si">${</span><span class="p">​​​​​​​​@:</span><span class="nv">2</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span><span class="s2">​​​​​​​​&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;params 2 and 3   : </span><span class="si">${</span><span class="p">​​​​​​​​@:</span><span class="nv">2</span><span class="p">:</span><span class="nv">2</span><span class="si">}</span><span class="s2">​​​​​​​​&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;params all from 2: </span><span class="si">${</span><span class="p">​​​​​​​​@:</span><span class="nv">2</span><span class="p">:</span><span class="nv">99</span><span class="si">}</span><span class="s2">​​​​​​​​&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;params all from 2: </span><span class="si">${</span><span class="p">​​​​​​​​@:</span><span class="nv">2</span><span class="si">}</span><span class="s2">​​​​​​​​&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Make your script executable and execute it</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod u+x r.sh
+./r.sh <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="m">7</span> <span class="m">8</span> <span class="m">9</span> <span class="m">10</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Checkout output:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>params only <span class="m">2</span>    : <span class="m">2</span>
+params <span class="m">2</span> and <span class="m">3</span>   : <span class="m">2</span> <span class="m">3</span>
+params all from <span class="m">2</span>: <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="m">7</span> <span class="m">8</span> <span class="m">9</span> <span class="m">10</span>
+params all from <span class="m">2</span>: <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="m">7</span> <span class="m">8</span> <span class="m">9</span> <span class="m">10</span>
+</pre></div>
+</div>
+<p>While this is super simple, I assume I haven’t used bash enough to have had a need for using the${​​​​​​​​​&#64;:2}​​​​​​​​ syntax! Here the stakcoverflow link: <a class="reference external" href="https://stackoverflow.com/questions/1537673/how-do-i-forward-parameters-to-other-command-in-bash-script">https://stackoverflow.com/questions/1537673/how-do-i-forward-parameters-to-other-command-in-bash-script</a></p>
+<p>Here, more on accessing parameters etc. in BASH from IBM <a class="reference external" href="https://developer.ibm.com/tutorials/l-bash-parameters/#N10171">https://developer.ibm.com/tutorials/l-bash-parameters/#N10171</a></p>
+</div>
+<div class="section" id="create-mp4-or-gif-from-images-using-ffmpeg">
+<h2>Create MP4 or GIF from images using <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code><a class="headerlink" href="#create-mp4-or-gif-from-images-using-ffmpeg" title="Permalink to this headline">¶</a></h2>
+<p>The oneliner</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ffmpeg -framerate <span class="m">60</span> -r <span class="m">30</span> -pattern_type glob -i <span class="s1">&#39;*.png&#39;</span> -vf <span class="nv">scale</span><span class="o">=</span><span class="m">1920</span>:-1 -pix_fmt yuv420p -vcodec libx264 hello.mp4
+</pre></div>
+</div>
+<p>Decode the onliner</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ffmpeg <span class="se">\</span>
+    -framerate <span class="m">60</span> <span class="se">\ </span>      <span class="c1"># Define Framerate for Movie</span>
+    -r <span class="m">30</span> <span class="se">\ </span>              <span class="c1"># Define Adjust frames to be displayed during s</span>
+    -pattern_type glob <span class="se">\ </span> <span class="c1"># Use glob pattern to get files</span>
+    -i <span class="s1">&#39;*.png&#39;</span> <span class="se">\ </span>         <span class="c1"># Provide patter</span>
+    -vf <span class="nv">scale</span><span class="o">=</span><span class="m">1920</span>:-1 <span class="se">\ </span>  <span class="c1"># rescale width of the video</span>
+    -pix_fmt yuv420p <span class="se">\ </span>   <span class="c1"># Make it available for quicktime to play</span>
+    -vcodec libx264 <span class="se">\ </span>    <span class="c1">#  --- == ---</span>
+    hello.mp4             <span class="c1"># Provide file name</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="functions.html" class="btn btn-neutral float-left" title="Aaaalll the functions!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

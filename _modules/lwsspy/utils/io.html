@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lwsspy.utils.io &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lwsspy.utils.io</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lwsspy.utils.io</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">Some important and simple IO help functions.</span>
+
+<span class="sd">:copyright:</span>
+<span class="sd">    Wenjie Lei (lei@princeton.edu) Year? pyasdf</span>
+<span class="sd">    Lucas Sawade (lsawade@princeton.edu) 2019</span>
+
+<span class="sd">:license:</span>
+<span class="sd">    GNU General Public License, Version 3</span>
+<span class="sd">    (http://www.gnu.org/copyleft/gpl.html)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># External imports</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pyasdf</span> <span class="kn">import</span> <span class="n">ASDFDataSet</span>
+<span class="kn">from</span> <span class="nn">obspy</span> <span class="kn">import</span> <span class="n">Stream</span><span class="p">,</span> <span class="n">Inventory</span>
+<span class="kn">from</span> <span class="nn">obspy</span> <span class="kn">import</span> <span class="n">read_inventory</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span> <span class="k">as</span> <span class="nn">spio</span>
+
+<span class="c1"># Internal imports</span>
+
+
+<div class="viewcode-block" id="loadmat"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.utils.io.loadmat">[docs]</a><span class="k">def</span> <span class="nf">loadmat</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Uses ``scipy.io.loadmat()`` and loads ``.mat`` file created in matlab of </span>
+<span class="sd">    version ``-v7``. Note the this is only necessary, because matlab saves</span>
+<span class="sd">    structs to the HDF5 files incredible complicated in ``-v7.3``, which makes</span>
+<span class="sd">    them almost unreadable.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        matlab file description</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        dictionary containing the ``.mat`` file content as a nested</span>
+<span class="sd">        dictionary</span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    User mergen&#39;s answer, modified by user jcbsv</span>
+<span class="sd">    Taken from: https://stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries</span>
+
+
+<span class="sd">    :Author:</span>
+<span class="sd">        Lucas Sawade (lsawade@princeton.edu)</span>
+
+<span class="sd">    :Last Modified:</span>
+<span class="sd">        2021.01.26 22.30</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_check_keys</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        checks if entries in dictionary are mat-objects. If yes</span>
+<span class="sd">        todict is called to change them to nested dictionaries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">spio</span><span class="o">.</span><span class="n">matlab</span><span class="o">.</span><span class="n">mio5_params</span><span class="o">.</span><span class="n">mat_struct</span><span class="p">):</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_todict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">_has_struct</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine if elem is an array and if any array item is a struct&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">e</span><span class="p">,</span> <span class="n">spio</span><span class="o">.</span><span class="n">matlab</span><span class="o">.</span><span class="n">mio5_params</span><span class="o">.</span><span class="n">mat_struct</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elem</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_todict</span><span class="p">(</span><span class="n">matobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A recursive function which constructs from matobjects nested </span>
+<span class="sd">        dictionaries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">strg</span> <span class="ow">in</span> <span class="n">matobj</span><span class="o">.</span><span class="n">_fieldnames</span><span class="p">:</span>
+            <span class="n">elem</span> <span class="o">=</span> <span class="n">matobj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">strg</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">spio</span><span class="o">.</span><span class="n">matlab</span><span class="o">.</span><span class="n">mio5_params</span><span class="o">.</span><span class="n">mat_struct</span><span class="p">):</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">strg</span><span class="p">]</span> <span class="o">=</span> <span class="n">_todict</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_has_struct</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">strg</span><span class="p">]</span> <span class="o">=</span> <span class="n">_tolist</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">strg</span><span class="p">]</span> <span class="o">=</span> <span class="n">elem</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">_tolist</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A recursive function which constructs lists from cellarrays</span>
+<span class="sd">        (which are loaded as numpy ndarrays), recursing into the elements</span>
+<span class="sd">        if they contain matobjects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elem_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sub_elem</span> <span class="ow">in</span> <span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_elem</span><span class="p">,</span> <span class="n">spio</span><span class="o">.</span><span class="n">matlab</span><span class="o">.</span><span class="n">mio5_params</span><span class="o">.</span><span class="n">mat_struct</span><span class="p">):</span>
+                <span class="n">elem_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_todict</span><span class="p">(</span><span class="n">sub_elem</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">_has_struct</span><span class="p">(</span><span class="n">sub_elem</span><span class="p">):</span>
+                <span class="n">elem_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tolist</span><span class="p">(</span><span class="n">sub_elem</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">elem_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_elem</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">elem_list</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">spio</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">struct_as_record</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">squeeze_me</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_check_keys</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">loadxy_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">dump_json</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">fh</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">check_dict_keys</span><span class="p">(</span><span class="n">dict_to_check</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dict_to_check</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;input dict_to_check should be type of dict: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dict_to_check</span><span class="p">)))</span>
+
+    <span class="n">set_input</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dict_to_check</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">set_stand</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">set_input</span> <span class="o">!=</span> <span class="n">set_stand</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;More: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">set_input</span> <span class="o">-</span> <span class="n">set_stand</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">set_stand</span> <span class="o">-</span> <span class="n">set_input</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Keys is not consistent: </span><span class="si">%s</span><span class="s2"> --- </span><span class="si">%s</span><span class="s2">&quot;</span>
+                         <span class="o">%</span> <span class="p">(</span><span class="n">set_input</span><span class="p">,</span> <span class="n">set_stand</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="write_yaml_file"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.utils.io.write_yaml_file">[docs]</a><span class="k">def</span> <span class="nf">write_yaml_file</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Writes dictionary to given yaml file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">          d: Dictionary to be written into the yaml file</span>
+<span class="sd">          filename: string with filename of the file to be written.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yaml_file</span><span class="p">:</span>
+        <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">yaml_file</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">read_yaml_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="smart_read_yaml"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.utils.io.smart_read_yaml">[docs]</a><span class="k">def</span> <span class="nf">smart_read_yaml</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">,</span> <span class="n">mpi_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comm</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read yaml file into python dict, in mpi_mode or not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mpi_mode</span><span class="p">:</span>
+        <span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">read_yaml_file</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">comm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">comm</span> <span class="o">=</span> <span class="n">_get_mpi_comm</span><span class="p">()</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">rank</span>
+        <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">read_yaml_file</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in read </span><span class="si">%s</span><span class="s2"> as yaml file: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">yaml_file</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
+                <span class="n">comm</span><span class="o">.</span><span class="n">Abort</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">yaml_dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">yaml_dict</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">yaml_dict</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">yaml_dict</span></div>
+
+
+<div class="viewcode-block" id="is_mpi_env"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.utils.io.is_mpi_env">[docs]</a><span class="k">def</span> <span class="nf">is_mpi_env</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test if current environment is MPI or not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">mpi4py</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">mpi4py.MPI</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">mpi4py</span><span class="o">.</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">mpi4py</span><span class="o">.</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_mpi_comm</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+    <span class="k">return</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+
+
+<span class="c1"># def get_location_in_database(cmtfile, databasedir):</span>
+<span class="c1">#     &quot;&quot;&quot; Takes in CMT solution and database directory and outputs path to the CMT</span>
+<span class="c1">#     in the</span>
+
+<span class="c1">#     :param cmtfile: cmtfilename</span>
+<span class="c1">#     :param databasedir: database directory</span>
+<span class="c1">#     :return:</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     # Load CMT solution</span>
+<span class="c1">#     cmtsource = CMTSource.from_CMTSOLUTION_file(cmtfile)</span>
+
+<span class="c1">#     # Get ID from source</span>
+<span class="c1">#     cmtID = cmtsource.eventname</span>
+
+<span class="c1">#     return os.path.join(os.path.abspath(databasedir),</span>
+<span class="c1">#                         &quot;C&quot; + cmtID,</span>
+<span class="c1">#                         &quot;C&quot; + cmtID + &quot;.cmt&quot;)</span>
+
+
+<span class="c1"># def get_cmt_id(cmtfile):</span>
+<span class="c1">#     &quot;&quot;&quot; Takes in CMTSOLUTION file and outputs the id</span>
+
+<span class="c1">#     :param cmtfile: cmtfilename</span>
+<span class="c1">#     :return: ids</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     # Load CMT solution</span>
+<span class="c1">#     cmtsource = CMTSource.from_CMTSOLUTION_file(cmtfile)</span>
+
+<span class="c1">#     # Get ID from source</span>
+<span class="c1">#     return cmtsource.eventname</span>
+
+
+<div class="viewcode-block" id="load_asdf"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.utils.io.load_asdf">[docs]</a><span class="k">def</span> <span class="nf">load_asdf</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">no_event</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes in a filename of an asdf file and outputs event, inventory,</span>
+<span class="sd">    and stream with the traces. Note that this is only good for asdffiles</span>
+<span class="sd">    with one set of traces event and stations since the function will get the</span>
+<span class="sd">    first/only waveform tag from the dataset</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename: ASDF filename. &quot;somethingsomething.h5&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Event, Inventory, Stream</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ASDFDataSet</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># Create empty streams and inventories</span>
+    <span class="n">inv</span> <span class="o">=</span> <span class="n">Inventory</span><span class="p">()</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+
+    <span class="c1"># Get waveform tag</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">waveform_tags</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">waveforms</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">st</span> <span class="o">+=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">waveforms</span><span class="p">[</span><span class="n">station</span><span class="p">],</span> <span class="n">tag</span><span class="p">)</span>
+            <span class="n">inv</span> <span class="o">+=</span> <span class="n">ds</span><span class="o">.</span><span class="n">waveforms</span><span class="p">[</span><span class="n">station</span><span class="p">]</span><span class="o">.</span><span class="n">StationXML</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="c1"># Choose not to load an event from the asdf file (pycmt3d&#39;s event doesn&#39;t</span>
+    <span class="c1"># output an event...)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_event</span><span class="p">:</span>
+        <span class="n">ev</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">ds</span>
+
+        <span class="k">return</span> <span class="n">ev</span><span class="p">,</span> <span class="n">inv</span><span class="p">,</span> <span class="n">st</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">ds</span>
+        <span class="k">return</span> <span class="n">inv</span><span class="p">,</span> <span class="n">st</span></div>
+
+
+<div class="viewcode-block" id="flex_read_stations"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.utils.io.flex_read_stations">[docs]</a><span class="k">def</span> <span class="nf">flex_read_stations</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Takes in a list of strings and tries to read them as inventories</span>
+<span class="sd">    Creates a single inventory, not an aggregate of inventories</span>
+
+<span class="sd">    :param filename: station file(s). wildcards permitted.</span>
+<span class="sd">    :return: `obspy.Inventory`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filenames</span><span class="p">]</span>
+
+    <span class="n">inv</span> <span class="o">=</span> <span class="n">Inventory</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">add_inv</span> <span class="o">=</span> <span class="n">read_inventory</span><span class="p">(</span><span class="n">_file</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">add_inv</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">code</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">inv</span><span class="o">.</span><span class="n">networks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_network</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">code</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># print(new_network)</span>
+                    <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">network</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_network</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="o">.</span><span class="n">code</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">new_network</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+
+                    <span class="n">inv</span> <span class="o">=</span> <span class="n">inv</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+                    <span class="n">inv</span><span class="o">.</span><span class="n">networks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_network</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> could not be read. Error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_file</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">inv</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

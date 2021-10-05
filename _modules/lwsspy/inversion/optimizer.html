@@ -1,0 +1,877 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lwsspy.inversion.optimizer &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lwsspy.inversion.optimizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lwsspy.inversion.optimizer</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span><span class="p">,</span> <span class="n">copy</span>
+
+
+<span class="k">def</span> <span class="nf">NOP</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Does nothing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">args</span>
+
+
+<span class="k">def</span> <span class="nf">norm_l2</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the L2 norm of a vector</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">        array of arbitrary size, but it makes only sense for a 1d vector</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        float witht L2 norm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">val</span>
+
+
+<span class="k">def</span> <span class="nf">scalar_product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes scalar product</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">        array</span>
+<span class="sd">    b : numpy.ndarray</span>
+<span class="sd">        array of same size as array a</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        containing scalar product</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span>
+
+
+<span class="k">def</span> <span class="nf">Solve_Optimisation_Problem</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes in class:`lwsspy.Optimization`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : lwsspy.Optimization</span>
+<span class="sd">        Optimization struct</span>
+<span class="sd">    model : numpy.ndarray</span>
+<span class="sd">        model vector</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lwsspy.Optimization</span>
+<span class="sd">        returns a copy of the optimization struct that has been optimized.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        if wrong optimizaiton algorithm is used</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># because python is weird</span>
+    <span class="n">optim</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;steepest&quot;</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent_direction</span> <span class="o">=</span> <span class="n">get_steepest_descent_direction</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">is_preco</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">apply_preconditioner</span> <span class="o">=</span> <span class="n">NOP</span>
+
+    <span class="k">elif</span> <span class="n">optim</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;bfgs&quot;</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent_direction</span> <span class="o">=</span> <span class="n">get_bfgs_descent_direction</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">is_preco</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">apply_preconditioner</span> <span class="o">=</span> <span class="n">preconditioner_nocedal</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">ro</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">niter_max</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">ai</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">niter_max</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">optim</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;nlcg&quot;</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent_direction</span> <span class="o">=</span> <span class="n">get_nonlinear_conjugate_gradient_direction</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">is_preco</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">apply_preconditioner</span> <span class="o">=</span> <span class="n">NOP</span>
+
+    <span class="k">elif</span> <span class="n">optim</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;gn&quot;</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent_direction</span> <span class="o">=</span> <span class="n">get_gauss_newton_descent_direction</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Optimization algorithm not recognized&quot;</span><span class="p">)</span>
+
+    <span class="n">optim</span><span class="o">.</span><span class="n">model_ini</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_grad_and_hess</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_ini</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">hess_ini</span> <span class="o">=</span> \
+            <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_grad_and_hess</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">hess</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">hess_ini</span>
+    <span class="k">elif</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_gradient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_ini</span> <span class="o">=</span> \
+            <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_gradient</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">grad_ini</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_gradient</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">optim</span><span class="o">.</span><span class="n">fcost</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_ini</span>
+
+    <span class="k">if</span> <span class="kc">False</span> <span class="o">==</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># if (~optim.is_preco)</span>
+
+        <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">perc</span> <span class="o">*</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad_ini</span><span class="p">))</span>
+
+        <span class="c1"># else</span>
+        <span class="c1">#    optim.alpha = optim.perc; % * max(abs.(optim.model));</span>
+        <span class="c1">#</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">nb_mem</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">nb_mem</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">niter_max</span>  <span class="c1"># by default</span>
+
+    <span class="c1"># optim.alpha = 1.</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">msave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">optim</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">nb_mem</span><span class="p">))</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">gsave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">optim</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">nb_mem</span><span class="p">))</span>
+
+    <span class="c1"># Some attached defs</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">bfgs_formula</span> <span class="o">=</span> <span class="n">bfgs_formula</span>       <span class="c1"># accessible outside for resolution</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">get_si_and_yi</span> <span class="o">=</span> <span class="n">get_optim_si_yi</span>      <span class="c1"># could be overwritten</span>
+    <span class="c1"># optim.store_grad_and_model = store_grad_and_model  # could be overwritten</span>
+
+    <span class="c1"># Perform optimization</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Model: </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> -- Grad: </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Start iteration.</span>
+    <span class="k">for</span> <span class="n">_iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">niter_max</span><span class="p">):</span>
+
+        <span class="c1"># Initialize</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">al</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">ar</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span> <span class="o">=</span> <span class="n">_iter</span>
+
+        <span class="c1"># Save model</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">fcost_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost</span><span class="o">/</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">save_model_and_gradient</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+        <span class="c1"># Get descent direction</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+        <span class="c1"># Compute product of descent times gradient</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+
+        <span class="c1"># Perform linesearch</span>
+        <span class="n">perform_linesearch</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;fail&quot;</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Save previous gradient for Non-linear conjugate gradient</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;nlcg&quot;</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">grad_prev</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span>
+
+        <span class="c1"># If linesearch successful update informations</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">fcost</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">model_new</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_new</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">qnew</span>
+
+        <span class="c1"># Check stopping criteria</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost</span> <span class="o">/</span> <span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">optim</span><span class="o">.</span><span class="n">stopping_criterion</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimization algorithm has converged.&quot;</span><span class="p">)</span>
+            <span class="c1"># Update the iteration number otherwise the previous one is overwritten</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span> <span class="o">=</span> <span class="n">_iter</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">fcost_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost</span><span class="o">/</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="p">)</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">save_model_and_gradient</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span><span class="o">/</span><span class="n">optim</span><span class="o">.</span><span class="n">model_ini</span><span class="p">))</span> \
+                <span class="o">&lt;</span> <span class="n">optim</span><span class="o">.</span><span class="n">stopping_criterion_model</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model is not updating enough anymore.&quot;</span><span class="p">)</span>
+            <span class="c1"># Update the iteration number otherwise the previous one is overwritten</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span> <span class="o">=</span> <span class="n">_iter</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">fcost_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost</span><span class="o">/</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="p">)</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">save_model_and_gradient</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">optim</span>
+
+
+<span class="k">def</span> <span class="nf">get_steepest_descent_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets steepest descent direction</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        optimization class</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">is_preco</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">norm_grad</span> <span class="o">=</span> <span class="n">norm_l2</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="o">-</span><span class="n">optim</span><span class="o">.</span><span class="n">apply_preconditioner</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">norm_desc</span> <span class="o">=</span> <span class="n">norm_l2</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">norm_grad</span> <span class="o">/</span> <span class="n">optim</span><span class="o">.</span><span class="n">norm_desc</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="o">-</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span>
+
+
+<span class="k">def</span> <span class="nf">get_nonlinear_conjugate_gradient_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get nonlinear conjugate Gradient descent Direction</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># At first iteration perform a steepest descent update</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">get_steepest_descent_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Compute beta</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">compute_beta</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+        <span class="c1"># Descent equal the conjugate direction</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">-</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span>
+
+
+<span class="k">def</span> <span class="nf">get_bfgs_descent_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets BFGS descent direction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># At first iteration perform a steepest descent update</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">get_steepest_descent_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Call BFGS formula</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">bfgs_formula</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="o">-</span><span class="n">optim</span><span class="o">.</span><span class="n">descent</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># should always be tried first</span>
+
+
+<span class="k">def</span> <span class="nf">get_gauss_newton_descent_direction</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets Gauss-Newton descent direction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">hess</span><span class="p">,</span> <span class="o">-</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># should always be tried first</span>
+
+
+<span class="k">def</span> <span class="nf">bfgs_formula</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Runs BFGS formula to get descent direction</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># First loop</span>
+    <span class="n">_iter</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_iter</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">get_si_and_yi</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">sty</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">si</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">si</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">ro</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sty</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">ai</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">ro</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">std</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">-</span> <span class="n">optim</span><span class="o">.</span><span class="n">ai</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">yi</span>
+
+    <span class="c1"># Apply preco</span>
+    <span class="c1"># Apply preco</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">is_preco</span><span class="p">):</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">apply_preconditioner</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">apply_preconditioner</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+    <span class="c1"># Second loop</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_iter</span><span class="p">):</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">get_si_and_yi</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">yitd</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">ro</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">yitd</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">+</span> <span class="n">optim</span><span class="o">.</span><span class="n">si</span> <span class="o">*</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">ai</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_optim_si_yi</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets the si and and yi history for the descent direction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        Optimization class</span>
+<span class="sd">    i : int</span>
+<span class="sd">        iteration counter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">si</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">msave</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">optim</span><span class="o">.</span><span class="n">msave</span><span class="p">[:,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">yi</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">gsave</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">optim</span><span class="o">.</span><span class="n">gsave</span><span class="p">[:,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># add def to read from disk</span>
+
+
+<span class="k">def</span> <span class="nf">perform_linesearch</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Performs linesearch on class:`lwsspy.Optimization`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        optimization class</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If linesearch fails (max number of linesearch iterations are reached).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Line search</span>
+    <span class="k">for</span> <span class="n">ils</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">nls_max</span><span class="p">):</span>
+
+        <span class="c1"># New model and evaluate</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">model_new</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">model</span> <span class="o">+</span> <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span>
+
+        <span class="c1"># If simultaneous cost and grad computation is defined do that.</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_grad_and_hess</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_new</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">hess_new</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_grad_and_hess</span><span class="p">(</span>
+                <span class="n">optim</span><span class="o">.</span><span class="n">model_new</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_gradient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_new</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost_and_gradient</span><span class="p">(</span>
+                <span class="n">optim</span><span class="o">.</span><span class="n">model_new</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_cost</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model_new</span><span class="p">)</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">grad_new</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">compute_gradient</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">model_new</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ils: </span><span class="si">{</span><span class="n">ils</span><span class="si">}</span><span class="s2"> -- &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;f/fo=</span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span><span class="o">/</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="si">:</span><span class="s2">5.4e</span><span class="si">}</span><span class="s2"> -- &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model: </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">model_new</span><span class="si">}</span><span class="s2"> -- alpha: </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Safeguard check for inf and nans...</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span><span class="p">):</span>
+            <span class="c1"># assume we&#39;ve been too far and reduce step</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">ar</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">al</span><span class="o">+</span><span class="n">optim</span><span class="o">.</span><span class="n">ar</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Compute dot product between new gradient and descent</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">qnew</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad_new</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">descent</span><span class="p">)</span>
+
+        <span class="c1"># Check Wolfe conditions for current iteration</span>
+        <span class="n">check_wolfe_conditions</span><span class="p">(</span><span class="n">optim</span><span class="p">)</span>
+
+        <span class="c1"># Manage alpha in consequence</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">w3</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>  <span class="c1"># not a descent direction... quit</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="s2">&quot;fail&quot;</span>
+            <span class="k">break</span>
+            <span class="c1"># error(&#39;Not a descent direction... STOP&#39;);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">w1</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">w2</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">):</span>  <span class="c1"># both are satisfied, then terminate</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">iter = </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span><span class="si">}</span><span class="s2">, &quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;f/fo=</span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span><span class="o">/</span><span class="n">optim</span><span class="o">.</span><span class="n">fcost_ini</span><span class="si">:</span><span class="s2">5.4e</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;nls = </span><span class="si">{</span><span class="n">ils</span><span class="si">}</span><span class="s2">, wolfe1 = </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">w1</span><span class="si">}</span><span class="s2"> wolfe2 = </span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">w2</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;a=</span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, al=</span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">al</span><span class="si">}</span><span class="s2">, ar=</span><span class="si">{</span><span class="n">optim</span><span class="o">.</span><span class="n">ar</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">w1</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>               <span class="c1"># not a sufficient decrease, we&#39;ve been too far</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">ar</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">al</span><span class="o">+</span><span class="n">optim</span><span class="o">.</span><span class="n">ar</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">w1</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">w2</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">al</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span>
+            <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">ar</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>                 <span class="c1"># sufficient decrease but too close already backeted decrease in interval</span>
+                <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">al</span> <span class="o">+</span> <span class="n">optim</span><span class="o">.</span><span class="n">ar</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># sufficient decrease but too close, then increase a</span>
+                <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">factor</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span>
+
+    <span class="c1"># Check linesearch</span>
+    <span class="k">if</span> <span class="n">ils</span> <span class="o">==</span> <span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">nls_max</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>  <span class="c1"># and optim.w1== False and optim.w2 == False)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linesearch ended without finding good model candidate.&quot;</span><span class="p">)</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="s2">&quot;fail&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">store_grad_and_model</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to store the model and the gradient.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        Optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_iter</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">msave</span><span class="p">[:,</span> <span class="n">_iter</span><span class="p">]</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">model</span><span class="p">[:]</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">gsave</span><span class="p">[:,</span> <span class="n">_iter</span><span class="p">]</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">[:]</span>
+
+
+<span class="k">def</span> <span class="nf">check_wolfe_conditions</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks Wolfe conditions</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        Optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Init wolfe boolean</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">w1</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">w2</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">w3</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Check descent direction</span>
+    <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">q</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">w3</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># error(&#39;Not a descent dir&#39;);</span>
+
+    <span class="c1"># Check first wolfe</span>
+    <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">fcost_new</span> <span class="o">&lt;=</span> <span class="n">optim</span><span class="o">.</span><span class="n">fcost</span> <span class="o">+</span> <span class="n">optim</span><span class="o">.</span><span class="n">c1</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">q</span><span class="p">:</span>
+        <span class="n">optim</span><span class="o">.</span><span class="n">w1</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Check second wolfe</span>
+    <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">strong</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">optim</span><span class="o">.</span><span class="n">qnew</span> <span class="o">&gt;=</span> <span class="n">optim</span><span class="o">.</span><span class="n">c2</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">q</span><span class="p">:</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">w2</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">qnew</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">c2</span> <span class="o">*</span> <span class="n">optim</span><span class="o">.</span><span class="n">q</span><span class="p">):</span>
+            <span class="n">optim</span><span class="o">.</span><span class="n">w2</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">preconditioner_nocedal</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Applies Nocedal style preconditioner to class:`Optimization`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        Optimization</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_iter</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">current_iter</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">get_si_and_yi</span><span class="p">(</span><span class="n">optim</span><span class="p">,</span> <span class="n">_iter</span><span class="p">)</span>
+    <span class="n">sty</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">si</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
+    <span class="n">yty</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">yi</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">yi</span><span class="p">)</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">gam</span> <span class="o">=</span> <span class="n">sty</span> <span class="o">/</span> <span class="n">yty</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">gam</span><span class="o">*</span><span class="n">optim</span><span class="o">.</span><span class="n">descent</span>
+
+
+<span class="k">def</span> <span class="nf">fletcher_reeves</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fletcher-Reeves algorithm to get beta</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimizatiton</span>
+<span class="sd">        Optimization class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xtx</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+    <span class="n">xtxp</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad_prev</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_prev</span><span class="p">)</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">xtx</span> <span class="o">/</span> <span class="n">xtxp</span>
+
+
+<span class="k">def</span> <span class="nf">polak_ribiere</span><span class="p">(</span><span class="n">optim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Polak-Ribiere algorithm to get beta</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optim : Optimization</span>
+<span class="sd">        Optimization struct</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># not sure what happens with this one</span>
+    <span class="n">dgrad</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad</span> <span class="o">-</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_prev</span>
+    <span class="n">xtx</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad</span><span class="p">,</span> <span class="n">dgrad</span><span class="p">)</span>
+    <span class="n">xtxp</span> <span class="o">=</span> <span class="n">scalar_product</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">grad_prev</span><span class="p">,</span> <span class="n">optim</span><span class="o">.</span><span class="n">grad_prev</span><span class="p">)</span>
+    <span class="n">optim</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xtx</span> <span class="o">/</span> <span class="n">xtxp</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">optim</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span>
+    <span class="c1"># pause</span>
+
+
+<div class="viewcode-block" id="Optimization"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.inversion.optimizer.Optimization">[docs]</a><span class="k">class</span> <span class="nc">Optimization</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Optimization.__init__"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.inversion.optimizer.Optimization.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">otype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;bfgs&#39;</span><span class="p">,</span>
+        <span class="n">fcost_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">fcost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">norm_grad_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">norm_grad</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">stopping_criterion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span>
+        <span class="n">stopping_criterion_model</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">niter_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">qk</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">is_preco</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># number of parameters</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span>
+        <span class="n">grad</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span>
+        <span class="n">hess</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[]]),</span>
+        <span class="n">descent</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span>
+        <span class="n">nsave</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">perc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.025</span><span class="p">,</span>
+        <span class="n">damping</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">fcost_hist</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;suceed&quot;</span><span class="p">,</span>
+        <span class="c1"># for linesearch</span>
+        <span class="n">nls_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">c1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">c2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">al</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+        <span class="n">ar</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+        <span class="n">strong</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+        <span class="c1"># For BFGS</span>
+        <span class="n">gsave</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">msave</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="c1"># Routine</span>
+        <span class="n">compute_cost</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">NOP</span><span class="p">,</span>
+        <span class="n">compute_gradient</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">NOP</span><span class="p">,</span>
+        <span class="n">compute_cost_and_gradient</span><span class="p">:</span> <span class="n">callable</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">compute_cost_and_grad_and_hess</span><span class="p">:</span> <span class="n">callable</span> <span class="ow">or</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">descent_direction</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">NOP</span><span class="p">,</span>
+        <span class="n">apply_preconditioner</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">NOP</span><span class="p">,</span>
+        <span class="n">save_model_to_disk</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">NOP</span><span class="p">,</span>
+        <span class="n">save_model_and_gradient</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">store_grad_and_model</span><span class="p">,</span>
+        <span class="n">solve</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">Solve_Optimisation_Problem</span><span class="p">,</span>
+        <span class="n">get_optim_si_yi</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">get_optim_si_yi</span><span class="p">,</span>
+            <span class="n">compute_beta</span><span class="p">:</span> <span class="n">callable</span> <span class="o">=</span> <span class="n">fletcher_reeves</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Optimization class to run optimize a problem with given cost function</span>
+<span class="sd">        and cost function gradient.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        otype : str, optional</span>
+<span class="sd">            Optimization algorithm, by default &#39;bfgs&#39;</span>
+<span class="sd">        fcost_init : float, optional</span>
+<span class="sd">            initial cost, by default 0.0</span>
+<span class="sd">        fcost : float, optional</span>
+<span class="sd">            cost function value, by default 0.0</span>
+<span class="sd">        norm_grad_init : float, optional</span>
+<span class="sd">            initial norm of the gradient, by default 0.0</span>
+<span class="sd">        norm_grad : float, optional</span>
+<span class="sd">            current norm of the gradient, by default 0.0</span>
+<span class="sd">        stopping_criterion : float, optional</span>
+<span class="sd">            value to cost function has to reach, by default 1e-10</span>
+<span class="sd">        stopping_criterion_model : float, optional</span>
+<span class="sd">            value to stop at if model isn&#39;t updating enough anymore</span>
+<span class="sd">        niter_max : int, optional</span>
+<span class="sd">            max iteration (excluding the linesearch), by default 50</span>
+<span class="sd">        qk : float, optional</span>
+<span class="sd">            qk, for linesearch, by default 0.0</span>
+<span class="sd">        q : float, optional</span>
+<span class="sd">            q, for linesearch, by default 0.0</span>
+<span class="sd">        is_preco : bool, optional</span>
+<span class="sd">            proconditioning flag, by default True</span>
+<span class="sd">        alpha : float, optional</span>
+<span class="sd">            alpha sttep length to be found by by linesearch, by default 0.0</span>
+<span class="sd">        n : int, optional</span>
+<span class="sd">            number of model parameters, by default 0</span>
+<span class="sd">        grad : np.ndarray, optional</span>
+<span class="sd">            current gradient, by default np.array([])</span>
+<span class="sd">        descent : np.ndarray, optional</span>
+<span class="sd">            current descent direction, by default np.array([])</span>
+<span class="sd">        nsave : int, optional</span>
+<span class="sd">            matrix to store model iterations, by default 0</span>
+<span class="sd">        perc : float, optional</span>
+<span class="sd">            precentage of step, by default 0.025</span>
+<span class="sd">        damping : float, optional</span>
+<span class="sd">            damping the Gauss-Newton step, 0.0 means no damping, by default 0.0</span>
+<span class="sd">        fcost_hist : list, optional</span>
+<span class="sd">            cost function history, by default []</span>
+<span class="sd">        flag : str, optional</span>
+<span class="sd">            success flag, by default &quot;suceed&quot;</span>
+<span class="sd">        nls_max : int, optional</span>
+<span class="sd">            maximum linesearch itterations, by default 20</span>
+<span class="sd">        c1 : float, optional</span>
+<span class="sd">            linesearch parameter c1, by default 1e-4</span>
+<span class="sd">        c2 : float, optional</span>
+<span class="sd">            linesearch parameter c1, by default 0.9</span>
+<span class="sd">        al : float, optional</span>
+<span class="sd">            left alpha boundary, by default 0.</span>
+<span class="sd">        ar : float, optional</span>
+<span class="sd">            right alpha boundary, by default 0.</span>
+<span class="sd">        strong : bool, optional</span>
+<span class="sd">            strong wolfe condition are abided if True, by default False</span>
+<span class="sd">        factor : float, optional</span>
+<span class="sd">            Factor to multiply alpha by, by default 10.0</span>
+<span class="sd">        gsave : list, optional</span>
+<span class="sd">            array to save the past gradients, by default []</span>
+<span class="sd">        msave : list, optional</span>
+<span class="sd">            array to save past models, by default []</span>
+<span class="sd">        compute_cost : callable, optional</span>
+<span class="sd">            function that computes the cost, by default NOP</span>
+<span class="sd">        compute_gradient : callable, optional</span>
+<span class="sd">            function that computes the gradient, by default NOP</span>
+<span class="sd">        compute_cost_and_gradient : callable or None, optional</span>
+<span class="sd">            function that computes the cost and the gradient at the same time,</span>
+<span class="sd">            by default None</span>
+<span class="sd">        descent_direction : callable, optional</span>
+<span class="sd">            function that computes the descent direction, by default NOP</span>
+<span class="sd">        apply_preconditioner : callable, optional</span>
+<span class="sd">            function that applies a preconditioner, by default NOP</span>
+<span class="sd">        save_model_to_disk : callable, optional</span>
+<span class="sd">            function that writes the model to disk, not implemented,</span>
+<span class="sd">            by default NOP</span>
+<span class="sd">        save_model_and_gradient : callable, optional</span>
+<span class="sd">            funciton that stores model and gradient within the optimization</span>
+<span class="sd">            class, by default store_grad_and_model</span>
+<span class="sd">        solve : callable, optional</span>
+<span class="sd">            solves the optimization problem,</span>
+<span class="sd">            by default Solve_Optimisation_Problem</span>
+<span class="sd">        get_optim_si_yi : callable, optional</span>
+<span class="sd">            function that gets the optimal si and yi,</span>
+<span class="sd">            by default get_optim_si_yi</span>
+<span class="sd">        compute_beta : callable, optional</span>
+<span class="sd">            function that computes beta, by default fletcher_reeves</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Useful things</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">otype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcost_init</span> <span class="o">=</span> <span class="n">fcost_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcost</span> <span class="o">=</span> <span class="n">fcost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_grad_init</span> <span class="o">=</span> <span class="n">norm_grad_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_grad</span> <span class="o">=</span> <span class="n">norm_grad</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopping_criterion</span> <span class="o">=</span> <span class="n">stopping_criterion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopping_criterion_model</span> <span class="o">=</span> <span class="n">stopping_criterion_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">niter_max</span> <span class="o">=</span> <span class="n">niter_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qk</span> <span class="o">=</span> <span class="n">qk</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_preco</span> <span class="o">=</span> <span class="n">is_preco</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>      <span class="c1"># number of parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">grad</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hess</span> <span class="o">=</span> <span class="n">hess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descent</span> <span class="o">=</span> <span class="n">descent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nsave</span> <span class="o">=</span> <span class="n">nsave</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perc</span> <span class="o">=</span> <span class="n">perc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damping</span> <span class="o">=</span> <span class="n">damping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lam</span> <span class="o">=</span> <span class="n">damping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcost_hist</span> <span class="o">=</span> <span class="n">fcost_hist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>
+
+        <span class="c1"># for linesearch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nls_max</span> <span class="o">=</span> <span class="n">nls_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1</span> <span class="o">=</span> <span class="n">c1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c2</span> <span class="o">=</span> <span class="n">c2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">al</span> <span class="o">=</span> <span class="n">al</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ar</span> <span class="o">=</span> <span class="n">ar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strong</span> <span class="o">=</span> <span class="n">strong</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
+
+        <span class="c1"># For BFGS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">niter_max</span>  <span class="c1"># by default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gsave</span> <span class="o">=</span> <span class="n">gsave</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msave</span> <span class="o">=</span> <span class="n">msave</span>
+
+        <span class="c1"># Routine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_cost</span> <span class="o">=</span> <span class="n">compute_cost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_gradient</span> <span class="o">=</span> <span class="n">compute_gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_cost_and_gradient</span> <span class="o">=</span> <span class="n">compute_cost_and_gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_cost_and_grad_and_hess</span> <span class="o">=</span> <span class="n">compute_cost_and_grad_and_hess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descent_direction</span> <span class="o">=</span> <span class="n">descent_direction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_preconditioner</span> <span class="o">=</span> <span class="n">apply_preconditioner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_model_to_disk</span> <span class="o">=</span> <span class="n">save_model_to_disk</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_model_and_gradient</span> <span class="o">=</span> <span class="n">save_model_and_gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solve</span> <span class="o">=</span> <span class="n">solve</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_optim_si_yi</span> <span class="o">=</span> <span class="n">get_optim_si_yi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_beta</span> <span class="o">=</span> <span class="n">compute_beta</span></div></div>
+        <span class="c1"># self.compute_beta  = polak_ribiere # could also be fletcher reeves</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lwsspy.seismo.perturb_cmt &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/seismology.html">Seismology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/hpc-installations.html">High-Performance-Computing Installations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../chapters/one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lwsspy.seismo.perturb_cmt</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lwsspy.seismo.perturb_cmt</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is mostly taken from Wenjie Lei (2020) to create CMTSOLUTION file sets</span>
+<span class="sd">for  forward simulations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># External imports</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="c1"># Internal imports</span>
+<span class="kn">from</span> <span class="nn">.source</span> <span class="kn">import</span> <span class="n">CMTSource</span>
+<span class="kn">from</span> <span class="nn">.validate_cmt</span> <span class="kn">import</span> <span class="n">validate_cmt</span>
+
+
+<span class="k">def</span> <span class="nf">perturb_one_var</span><span class="p">(</span><span class="n">origin_cmt</span><span class="p">:</span> <span class="n">CMTSource</span><span class="p">,</span> <span class="n">pert_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                    <span class="n">pert_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">outputdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This file takes in a CMTSource and a perturbation type and value to</span>
+<span class="sd">    and perturbs the CMTSource with respect to that one value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        origin_cmt (CMTSource):</span>
+<span class="sd">            CMTSource</span>
+<span class="sd">        pert_type (str): </span>
+<span class="sd">            perturbation type: </span>
+<span class="sd">            ``[&#39;m_rr&#39;, &#39;m_tt&#39;, &#39;m_pp&#39;, &#39;m_rt&#39;, &#39;m_rp&#39;, &#39;m_tp&#39;, </span>
+<span class="sd">            &#39;depth_in_m&#39;, &#39;latitude&#39;, &#39;longitude&#39;]``</span>
+<span class="sd">        pert_value (float):</span>
+<span class="sd">            magnitude of perturbation</span>
+<span class="sd">        outputdir (str):</span>
+<span class="sd">            Output directory/where to write the perturbed file with a suffix </span>
+<span class="sd">            depending on the perturbation.</span>
+<span class="sd">    </span>
+<span class="sd">    Last modified: Lucas Sawade, 2020.09.22 12.00 (lsawade@princeton.edu)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmt</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">origin_cmt</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pert_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;m_rr&#39;</span><span class="p">,</span> <span class="s1">&#39;m_tt&#39;</span><span class="p">,</span> <span class="s1">&#39;m_pp&#39;</span><span class="p">,</span> <span class="s1">&#39;m_rt&#39;</span><span class="p">,</span> <span class="s1">&#39;m_rp&#39;</span><span class="p">,</span> <span class="s1">&#39;m_tp&#39;</span><span class="p">]:</span>
+        <span class="c1"># if perturb moment tensor, set all moment tensor to zero</span>
+        <span class="n">cmt</span><span class="o">.</span><span class="n">m_rr</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cmt</span><span class="o">.</span><span class="n">m_tt</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cmt</span><span class="o">.</span><span class="n">m_pp</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cmt</span><span class="o">.</span><span class="n">m_rt</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cmt</span><span class="o">.</span><span class="n">m_rp</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cmt</span><span class="o">.</span><span class="n">m_tp</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">pert_type</span><span class="p">,</span> <span class="n">pert_value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">pert_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;depth_in_m&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">]:</span>
+        <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">pert_type</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">pert_type</span><span class="p">,</span> <span class="n">attr</span><span class="o">+</span><span class="n">pert_value</span><span class="p">)</span>
+
+    <span class="c1"># Check whether perturbation is ok!</span>
+    <span class="n">validate_cmt</span><span class="p">(</span><span class="n">cmt</span><span class="p">)</span>
+
+    <span class="c1"># Depending on perturbation choose CMTSOLUTION suffix</span>
+    <span class="n">suffix_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;m_rr&#39;</span><span class="p">:</span> <span class="s2">&quot;Mrr&quot;</span><span class="p">,</span> <span class="s1">&#39;m_tt&#39;</span><span class="p">:</span> <span class="s2">&quot;Mtt&quot;</span><span class="p">,</span> <span class="s1">&#39;m_pp&#39;</span><span class="p">:</span> <span class="s2">&quot;Mpp&quot;</span><span class="p">,</span> <span class="s1">&#39;m_rt&#39;</span><span class="p">:</span> <span class="s2">&quot;Mrt&quot;</span><span class="p">,</span>
+                   <span class="s1">&#39;m_rp&#39;</span><span class="p">:</span> <span class="s2">&quot;Mrp&quot;</span><span class="p">,</span> <span class="s1">&#39;m_tp&#39;</span><span class="p">:</span> <span class="s2">&quot;Mtp&quot;</span><span class="p">,</span> <span class="s2">&quot;depth_in_m&quot;</span><span class="p">:</span> <span class="s2">&quot;dep&quot;</span><span class="p">,</span>
+                   <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="s2">&quot;lon&quot;</span><span class="p">}</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix_dict</span><span class="p">[</span><span class="n">pert_type</span><span class="p">]</span>
+    <span class="n">outputfn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputdir</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cmt</span><span class="o">.</span><span class="n">eventname</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+
+    <span class="c1"># Write file</span>
+    <span class="n">cmt</span><span class="o">.</span><span class="n">write_CMTSOLUTION_file</span><span class="p">(</span><span class="n">outputfn</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="perturb_cmt"><a class="viewcode-back" href="../../../chapters/functions.html#lwsspy.seismo.perturb_cmt.perturb_cmt">[docs]</a><span class="k">def</span> <span class="nf">perturb_cmt</span><span class="p">(</span><span class="n">input_cmtfile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                <span class="n">dmoment_tensor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">dlongitude</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">dlatitude</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">ddepth_km</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perturb a single CMTSOLUTION given certain perturbation value.</span>
+<span class="sd">    If the perturbation value is ``None``. The file will not be perturbed with </span>
+<span class="sd">    respect to that value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_cmtfile (str):</span>
+<span class="sd">            Path to CMTSOLUTION file</span>
+<span class="sd">        output_dir (str, optional):</span>
+<span class="sd">            Output directory, where to save the perturbed file.</span>
+<span class="sd">            Defaults to &quot;.&quot;.</span>
+<span class="sd">        dmoment_tensor (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in seismic moment. Defaults to None.</span>
+<span class="sd">        dlongitude (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in longitude. Defaults to None.</span>
+<span class="sd">        dlatitude (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in latitude. Defaults to None.</span>
+<span class="sd">        ddepth_km (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in depth. Defaults to None.</span>
+
+<span class="sd">    Last modified: Lucas Sawade, 2020.09.22 12.00 (lsawade@princeton.edu)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create output directory if it doesn&#39;t exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># Create CMTSource</span>
+    <span class="n">cmt</span> <span class="o">=</span> <span class="n">CMTSource</span><span class="o">.</span><span class="n">from_CMTSOLUTION_file</span><span class="p">(</span><span class="n">input_cmtfile</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dmoment_tensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pert_type_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;m_rr&#39;</span><span class="p">,</span> <span class="s1">&#39;m_tt&#39;</span><span class="p">,</span> <span class="s1">&#39;m_pp&#39;</span><span class="p">,</span> <span class="s1">&#39;m_rt&#39;</span><span class="p">,</span> <span class="s1">&#39;m_rp&#39;</span><span class="p">,</span> <span class="s1">&#39;m_tp&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">pert_type</span> <span class="ow">in</span> <span class="n">pert_type_list</span><span class="p">:</span>
+            <span class="n">perturb_one_var</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">pert_type</span><span class="p">,</span> <span class="n">dmoment_tensor</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dlongitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">perturb_one_var</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span> <span class="n">dlongitude</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dlatitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">perturb_one_var</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="n">dlatitude</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ddepth_km</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">perturb_one_var</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="s2">&quot;depth_in_m&quot;</span><span class="p">,</span> <span class="n">ddepth_km</span><span class="o">*</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">perturb_cmt_dir</span><span class="p">(</span><span class="n">cmtdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./CMT&quot;</span><span class="p">,</span> <span class="n">outputdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
+                    <span class="n">dmoment_tensor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dlongitude</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dlatitude</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ddepth_km</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cmtdir (str, optional): </span>
+<span class="sd">            Directory with original CMTs. Defaults to &quot;./CMT&quot;.</span>
+<span class="sd">        outputdir (str, optional):</span>
+<span class="sd">            Directory with. Defaults to &quot;./CMT.perturb&quot;.</span>
+<span class="sd">        dmoment_tensor (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in seismic moment. Defaults to None.</span>
+<span class="sd">        dlongitude (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in longitude. Defaults to None.</span>
+<span class="sd">        dlatitude (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in latitude. Defaults to None.</span>
+<span class="sd">        ddepth_km (Union[float, None], optional):</span>
+<span class="sd">            Perturbation in depth. Defaults to None.</span>
+
+<span class="sd">    Last modified: Lucas Sawade, 2020.09.22 12.00 (lsawade@princeton.edu)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get all CMT files</span>
+    <span class="n">cmtfiles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmtdir</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of CMT files: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmtfiles</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cmtfiles</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">0&gt;5</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cmtfiles</span><span class="p">)</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">_file</span><span class="si">:</span><span class="s2">_&gt;50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">perturb_cmt</span><span class="p">(</span><span class="n">_file</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
+                    <span class="n">dmoment_tensor</span><span class="o">=</span><span class="n">dmoment_tensor</span><span class="p">,</span> <span class="n">ddepth_km</span><span class="o">=</span><span class="n">ddepth_km</span><span class="p">,</span>
+                    <span class="n">dlatitude</span><span class="o">=</span><span class="n">dlatitude</span><span class="p">,</span> <span class="n">dlongitude</span><span class="o">=</span><span class="n">dlongitude</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="c1"># Perturbation</span>
+    <span class="n">dmoment_tensor</span> <span class="o">=</span> <span class="mf">1.0e23</span>
+    <span class="n">ddepth_km</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">dlatitude</span> <span class="o">=</span> <span class="mf">0.02</span>
+    <span class="n">dlongitude</span> <span class="o">=</span> <span class="mf">0.02</span>
+
+    <span class="c1"># Directories</span>
+    <span class="n">cmtdir</span> <span class="o">=</span> <span class="s2">&quot;./CMT&quot;</span>
+    <span class="n">outputdir</span> <span class="o">=</span> <span class="s2">&quot;./CMT.perturb&quot;</span>
+
+    <span class="c1"># Perturb directory of CMTs</span>
+    <span class="n">perturb_cmt_dir</span><span class="p">(</span><span class="n">cmtdir</span><span class="o">=</span><span class="n">cmtdir</span><span class="p">,</span> <span class="n">outputdir</span><span class="o">=</span><span class="n">outputdir</span><span class="p">,</span>
+                    <span class="n">dmoment_tensor</span><span class="o">=</span><span class="n">dmoment_tensor</span><span class="p">,</span> <span class="n">ddepth_km</span><span class="o">=</span><span class="n">ddepth_km</span><span class="p">,</span>
+                    <span class="n">dlatitude</span><span class="o">=</span><span class="n">dlatitude</span><span class="p">,</span> <span class="n">dlongitude</span><span class="o">=</span><span class="n">dlongitude</span><span class="p">)</span>
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

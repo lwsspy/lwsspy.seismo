@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>High-Performance-Computing Installations &mdash; lwsspy 0.0.1alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Paraview" href="paraview.html" />
+    <link rel="prev" title="Seismology" href="seismology.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> lwsspy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="matplotlibtips.html">Tips And Tricks for Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpydoctips.html">NumpyDoc Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seismology.html">Seismology</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">High-Performance-Computing Installations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hdf5-in-parallel-with-fortran-support">HDF5 in Parallel with Fortran support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mpi4py">mpi4py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">h5py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pytables">PyTables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="paraview.html">Paraview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">Aaaalll the functions!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="one-liners-to-remember.html">One-liners to Remember</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">lwsspy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>High-Performance-Computing Installations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/chapters/hpc-installations.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="high-performance-computing-installations">
+<h1>High-Performance-Computing Installations<a class="headerlink" href="#high-performance-computing-installations" title="Permalink to this headline">¶</a></h1>
+<p>On thist page, I’m documenting the different ways of installing packages for
+clusters. Specifically the ones that need <code class="docutils literal notranslate"><span class="pre">MPI</span></code> support, such as
+<a class="reference external" href="https://docs.h5py.org/en/stable/">h5py</a>,
+<a class="reference external" href="https://www.pytables.org/index.html">tables</a>, etc.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The most important thing for this whole page is that you use the <strong>SAME
+MPI COMPILER</strong> for everything.
+If one of the installations do not work with the MPI compiler of your choice
+chances are that they will not work in unison with your other installations,
+if at all.</p>
+<p>For most clusters, you can make an mpi compiler available through
+<code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span> <span class="pre">&lt;your_favorite_mpi_compiler&gt;</span></code>
+(I generally use <code class="docutils literal notranslate"><span class="pre">openmpi/gcc</span></code>, which is not ideal,
+because cluster specific compilers usually give you better support/speed).</p>
+</div>
+<div class="section" id="hdf5-in-parallel-with-fortran-support">
+<h2>HDF5 in Parallel with Fortran support<a class="headerlink" href="#hdf5-in-parallel-with-fortran-support" title="Permalink to this headline">¶</a></h2>
+<p>Below pasted a script that installs <code class="docutils literal notranslate"><span class="pre">HDF5</span></code> in Parallel without fuss.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">### Install parallel HDF5</span>
+<span class="c1"># Set variables</span>
+module load openmpi/gcc  <span class="c1"># or compiler of your choice.</span>
+<span class="nv">MPICC</span><span class="o">=</span><span class="k">$(</span>which mpicc<span class="k">)</span>
+<span class="nv">MPIF90</span><span class="o">=</span><span class="k">$(</span>which mpif90<span class="k">)</span>
+
+<span class="c1"># HDF5</span>
+<span class="nv">HDF5_DESTDIR</span><span class="o">=</span>&lt;Path/to/where/you/to/install/hdf5&gt;
+<span class="nv">HDF5_LINK</span><span class="o">=</span><span class="s2">&quot;https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.0/src/hdf5-1.12.0.tar.gz&quot;</span>
+<span class="nv">HDF5_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HDF5_DIR</span><span class="si">}</span><span class="s2">/build&quot;</span>
+
+<span class="c1"># Get installation files</span>
+wget -O hdf5.tar.gz <span class="nv">$HDF5_LINK</span>
+    tar -xzvf hdf5.tar.gz --strip-components<span class="o">=</span><span class="m">1</span> -C <span class="nv">$HDF5_DESTDIR</span>
+
+<span class="c1"># Change directory to adios directory</span>
+<span class="nb">cd</span> <span class="nv">$HDF5_DESTIR</span>
+
+<span class="c1"># Check whether a previous build exists.</span>
+<span class="k">if</span> <span class="o">[</span> -d build <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    rm -rf build
+<span class="k">fi</span>
+
+<span class="c1"># Make build directory</span>
+mkdir build
+
+<span class="c1"># Configuration</span>
+./configure --enable-shared --enable-parallel <span class="se">\</span>
+    --enable-fortran --enable-fortran2003 <span class="se">\</span>
+    --prefix<span class="o">=</span><span class="nv">$HDF5_DIR</span> <span class="nv">CC</span><span class="o">=</span><span class="nv">$MPICC</span> <span class="nv">FC</span><span class="o">=</span><span class="nv">$MPIF90</span>
+
+<span class="c1"># Make, check, and install</span>
+make -j
+<span class="c1"># make -j check  # not really necessary all the time</span>
+make -j install
+</pre></div>
+</div>
+</div>
+<div class="section" id="mpi4py">
+<h2>mpi4py<a class="headerlink" href="#mpi4py" title="Permalink to this headline">¶</a></h2>
+<p>The installation of <a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/install.html">mpi4py</a>,
+is rather simple compared to the rest since it can be done directly from
+the command line.</p>
+</div>
+<div class="section" id="id2">
+<h2>h5py<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>The newest versions of <a class="reference external" href="https://docs.h5py.org/en/stable/">h5py</a> is also
+installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code> when compiled against <code class="docutils literal notranslate"><span class="pre">Parallel</span> <span class="pre">HDF5</span></code>.
+This was not always the case.</p>
+<p>So, given you have followed the script above and still have your
+<code class="docutils literal notranslate"><span class="pre">HDF5_DESTDIR</span></code> environment variable loaded. <code class="docutils literal notranslate"><span class="pre">h5py</span></code> be installed using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># You need to have HDF5_DIR defined, check: echo $HDF5_DIR</span>
+<span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span><span class="k">$(</span>which mpicc<span class="k">)</span>
+<span class="nb">export</span> <span class="nv">HDF5_MPI</span><span class="o">=</span><span class="s2">&quot;ON&quot;</span>
+pip install --no-binary<span class="o">=</span>h5py h5py
+</pre></div>
+</div>
+</div>
+<div class="section" id="pytables">
+<h2>PyTables<a class="headerlink" href="#pytables" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://www.pytables.org/index.html">PyTables</a> is a great tool to
+interact (write and read) with Pandas DataFrames. However, it can be finicky to
+install with your already parallel <code class="docutils literal notranslate"><span class="pre">HDF5</span></code> and <code class="docutils literal notranslate"><span class="pre">h5py</span></code> packages installed.</p>
+<p>You will have to set two, three environment variables to make the installation
+possible.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set hdf5 library and mpi compiler paths</span>
+<span class="nb">export</span> <span class="nv">HDF5_DIR</span><span class="o">=</span>/path/to/your/parallel_hdf5_installation
+<span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span><span class="k">$(</span>which mpicc<span class="k">)</span>
+
+pip install tables
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="paraview.html" class="btn btn-neutral float-right" title="Paraview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="seismology.html" class="btn btn-neutral float-left" title="Seismology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Lucas Sawade
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
