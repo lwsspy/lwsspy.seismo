@@ -16,7 +16,7 @@ For more networks, the :func:`lwsspy.plot_inventory` function takes in
 a colormap option which takes `x` colors for `x` networks sequentially from
 a matplotlib colormap. A full script for writing the figure is shown below.
 
-.. literalinclude:: figures/scripts/gcmt3d/station_map.py
+.. literalinclude:: figures/scripts/station_map.py
   :language: python
 
 With the output:

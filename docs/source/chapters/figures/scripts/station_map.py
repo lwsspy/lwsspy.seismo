@@ -13,9 +13,13 @@ Map created for GCMT3D paper.
 
 import os
 from obspy import UTCDateTime
-import lwsspy as lpy
 import matplotlib.pyplot as plt
+import lwsspy.plot as lplt
+import lwsspy.maps as lmaps
+import lwsspy.seismo as lseis
 lplt.updaterc()
+
+DOCFIGURES = os.path.dirname(os.path.dirname(__file__))
 
 # Get the GCMT3D data directory
 datadir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -42,8 +46,9 @@ else:
     duration = end - start
 
     # Download the data
-    inv = lpy.seismo.download_data(start, duration=duration, network=networksstring,
-                                   station=None, dtype='stations')
+    inv = lseis.download_data(
+        start, duration=duration, network=networksstring,
+        station=None, dtype='stations')
 
     # Write it to the script data directory
     inv.write(invfile, "STATIONXML")
@@ -69,7 +74,7 @@ plt.legend(loc='lower center', frameon=False, fancybox=False,
            labelspacing=0.2, handlelength=1.0, ncol=ncol,
            columnspacing=1.0)
 
-plt.savefig(os.path.join(lbase.DOCFIGURES, "station_map.svg"), dpi=300,
+plt.savefig(os.path.join(DOCFIGURES, "station_map.svg"), dpi=300,
             transparent=True)
-plt.savefig(os.path.join(lbase.DOCFIGURES,
+plt.savefig(os.path.join(DOCFIGURES,
                          "station_map.pdf"), transparent=True)
