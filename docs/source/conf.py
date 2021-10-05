@@ -22,7 +22,7 @@ copyright = '2020, Lucas Sawade'
 author = 'Lucas Sawade'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1alpha'
+release = '0.0.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -35,6 +35,7 @@ extensions = [
     "sphinx.ext.autosummary",
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'sphinx.ext.autosectionlabel',
     'numpydoc',
 ]
 
@@ -57,4 +58,16 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+
+html_title = "LWSSPY - Seismology Tools"
+html_logo = "figures/logo.png"
+html_favicon = "figures/favicon.ico"
+
+html_theme = 'sphinx_book_theme'
+
+html_theme_options = {
+    "repository_url": "https://github.com/lwsspy/lwsspy.seismo",
+    "use_issues_button": True,
+    "use_repository_button": True,
+    "use_edit_page_button": True,
+}
