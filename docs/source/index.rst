@@ -10,13 +10,8 @@ Welcome to lwsspy's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   chapters/matplotlibtips.rst
-   chapters/numpydoctips.rst
    chapters/seismology.rst
-   chapters/hpc-installations.rst
-   chapters/paraview.rst
    chapters/functions.rst
-   chapters/one-liners-to-remember.rst
 
 Indices and tables
 ==================
