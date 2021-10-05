@@ -1,10 +1,15 @@
-import lwsspy as lpy
+from matplotlib.pyplot import *
+from numpy import *
+import lwsspy.seismo as lseis
+import lwsspy.plot as lplt
+
+
 # Load Catalogs
-initcat = lpy.seismo.CMTsmo.CMTCatalog.load("initcat.pkl")
-g3dcat = lpy.seismo.CMTsmo.CMTCatalog.load("g3dcat.pkl")
+initcat = lseis.CMTCatalog.load("initcat.pkl")
+g3dcat = lseis.CMTCatalog.load("g3dcat.pkl")
 
 # Create comparison class
-C = lpy.seismo.CompareCatalogs(
+C = lseis.CompareCatalogs(
     initcat, g3dcat, oldlabel='GCMT', newlabel='GCMT3D+')
 Cfilt = C.filter(maxdict=dict(depth_in_m=30000.0, M0=.5))
 C.plot_eps_nu()
@@ -21,11 +26,11 @@ moment = unicat.getvals("moment_magnitude")
 depth = unicat.getvals("depth_in_m")/1000.0
 
 # Plot events
-scatter, ax, l1, l2 = plot_quakes(latitude, longitude, depth, moment)
+scatter, ax, l1, l2 = lseis.plot_quakes(latitude, longitude, depth, moment)
 ax.set_global()
 fig = ax.figure
 fig.set_size_inches(6, 4)
-plot_label(ax, f"N: {N}", location=1, box=False, dist=0.0)
+lplt.plot_label(ax, f"N: {N}", location=1, box=False, dist=0.0)
 savefig("inverted_events.pdf")
 
 # Plot Moment tensor source-type dist
@@ -54,11 +59,11 @@ legend(loc='upper left', frameon=False, fancybox=False,
        labelspacing=0.2, handlelength=1.0,
        bbox_to_anchor=(0.0, 1.0))
 
-plot_label(ax, f"\n$\\mu$ = {np.mean(old_eps_nu[:,0]):7.4f}\n"
-               f"$\\sigma$ = {np.std(old_eps_nu[:,0]):7.4f}\n"
-               f"GCMT3D+\n$\\mu$ = {np.mean(new_eps_nu[:,0]):7.4f}\n"
-               f"$\\sigma$ = {np.std(new_eps_nu[:,0]):7.4f}\n",
-               location=2, box=False, fontdict=dict(fontsize='small', fontfamily="monospace"))
+lplt.plot_label(ax, f"\n$\\mu$ = {np.mean(old_eps_nu[:,0]):7.4f}\n"
+                f"$\\sigma$ = {np.std(old_eps_nu[:,0]):7.4f}\n"
+                f"GCMT3D+\n$\\mu$ = {np.mean(new_eps_nu[:,0]):7.4f}\n"
+                f"$\\sigma$ = {np.std(new_eps_nu[:,0]):7.4f}\n",
+                location=2, box=False, fontdict=dict(fontsize='small', fontfamily="monospace"))
 plot_label(ax, "CLVD-", location=6, box=False, fontdict=dict(fontsize='small'))
 plot_label(ax, "CLVD+", location=7, box=False, fontdict=dict(fontsize='small'))
 plot_label(ax, "DC", location=14, box=False, fontdict=dict(fontsize='small'))
