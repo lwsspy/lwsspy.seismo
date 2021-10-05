@@ -1,6 +1,0 @@
-obspy
-pyasdf
-pyyaml
-beautifulsoup4
-flake8
-git+git://github.com/wjlei1990/pyflex.git@merge
