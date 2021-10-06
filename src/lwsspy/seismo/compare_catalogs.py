@@ -1,27 +1,19 @@
 import os
 from typing import Optional
-
-from matplotlib.cm import ScalarMappable
-import lwsspy as lpy
 from copy import copy, deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-from obspy import Inventory
-from cartopy.crs import PlateCarree, Mollweide, Projection
+from matplotlib.cm import ScalarMappable
 from matplotlib.colors import ListedColormap, Normalize, BoundaryNorm
 from matplotlib.patches import Rectangle
+from cartopy.crs import PlateCarree, Mollweide
+from obspy import Inventory
+from .. import geo as lgeo
+from .. import maps as lmap
+from .. import plot as lplt
 from .cmt_catalog import CMTCatalog
-from .source import CMTSource
-from ..utils.chunks import chunks
 from .plot_quakes import plot_quakes
-from ..maps.plot_map import plot_map
-from ..maps.haversine import haversine
-from ..maps.bearing import bearing
-from ..plot.axes_from_axes import axes_from_axes
-from ..plot.scatterlegend import scatterlegend
-from ..plot.plot_label import plot_label
-from ..plot.remove_ticklabels import remove_topright
 
 
 class CompareCatalogs:
@@ -131,8 +123,8 @@ class CompareCatalogs:
             self.nmoment_magnitude, ax=ax,
             yoffsetlegend2=0.09, sizefunc=lambda x: (x-(np.min(x)-1))**2.5 + 5)
         ax.set_global()
-        plot_map(zorder=0, fill=True)
-        plot_label(ax, f"N: {self.N}", location=1, box=False, dist=0.0)
+        lmap.plot_map(zorder=0, fill=True)
+        lplt.plot_label(ax, f"N: {self.N}", location=1, box=False, dist=0.0)
 
     def plot_eps_nu(self):
 
@@ -164,13 +156,13 @@ class CompareCatalogs:
             f"{self.newlabel}\n"
             f"$\\mu$ = {np.mean(self.neps_nu[:,0]):7.4f}\n"
             f"$\\sigma$ = {np.std(self.neps_nu[:,0]):7.4f}\n")
-        plot_label(ax, label, location=2, box=False,
+        lplt.plot_label(ax, label, location=2, box=False,
                    fontdict=dict(fontsize='xx-small', fontfamily="monospace"))
-        plot_label(ax, "CLVD-", location=6, box=False,
+        lplt.plot_label(ax, "CLVD-", location=6, box=False,
                    fontdict=dict(fontsize='small'))
-        plot_label(ax, "CLVD+", location=7, box=False,
+        lplt.plot_label(ax, "CLVD+", location=7, box=False,
                    fontdict=dict(fontsize='small'))
-        plot_label(ax, "DC", location=14, box=False,
+        lplt.plot_label(ax, "DC", location=14, box=False,
                    fontdict=dict(fontsize='small'))
         plt.xlabel(r"$\epsilon$")
 
@@ -216,8 +208,8 @@ class CompareCatalogs:
             plt.switch_backend('pdf')
 
         # Get slab location
-        dss = lpy.geo.get_slabs()
-        vmin, vmax = lpy.geo.get_slab_minmax(dss)
+        dss = lgeo.get_slabs()
+        vmin, vmax = lgeo.get_slab_minmax(dss)
 
         # Compute levels
         levels = np.linspace(vmin, vmax, 100)
@@ -237,12 +229,12 @@ class CompareCatalogs:
             ax.set_extent(extent)
         else:
             ax.set_global()
-        lpy.maps.plot_map()
-        lpy.maps.plot_map(fill=False, borders=False, zorder=10)
+        lmap.plot_map()
+        lmap.plot_map(fill=False, borders=False, zorder=10)
         # ax.set_extent(extent05)
 
         # Plot map with central longitude on event longitude
-        lpy.geo.plot_slabs(dss=dss, levels=levels, cmap=cmap, norm=norm)
+        lgeo.plot_slabs(dss=dss, levels=levels, cmap=cmap, norm=norm)
 
         # Plot CMT as popint or beachball
         # cdepth = cmap(norm(-1*self.o/1000.0))
@@ -269,7 +261,7 @@ class CompareCatalogs:
         if extent is not None:
             ax.set_extent(extent)
 
-        c = lpy.plot.nice_colorbar(aspect=40, fraction=0.1, shrink=0.6)
+        c = lplt.nice_colorbar(aspect=40, fraction=0.1, shrink=0.6)
         c.set_label("Depth [km]")
 
         if outfile is not None:
@@ -320,8 +312,8 @@ class CompareCatalogs:
             nlon = copy(self.nlongitude)
             dlat = nlat - olat
             dlon = nlon - olon
-            dparam = haversine(olon, olat, nlon, nlat)
-            b = 90 - bearing(olon, olat, nlon, nlat)
+            dparam = lmap.haversine(olon, olat, nlon, nlat)
+            b = 90 - lmap.bearing(olon, olat, nlon, nlat)
             print(np.min(b), np.mean(b), np.max(b))
 
         else:
@@ -362,7 +354,7 @@ class CompareCatalogs:
             quivers = []
         else:
             vcenter = 0
-            norm = lpy.plot.MidpointNormalize(
+            norm = lplt.MidpointNormalize(
                 vmin=vmin, midpoint=vcenter, vmax=vmax)
             cmap = plt.get_cmap('seismic')
 
@@ -409,13 +401,13 @@ class CompareCatalogs:
             axes[_i].axis('off')
 
             # Create subaaxes
-            mapinset = axes_from_axes(
+            mapinset = lplt.axes_from_axes(
                 axes[_i], _i, [0.0, 0.2, 1.0, 0.8],
                 projection=Mollweide(central_longitude=self.central_longitude))
             mapinset.set_global()
 
             # Plot map
-            plot_map(ax=mapinset, outline=False, borders=False)
+            lmap.plot_map(ax=mapinset, outline=False, borders=False)
 
             # DO scatter stuff
             if parameter == 'location':
@@ -447,7 +439,7 @@ class CompareCatalogs:
                 mapinset.set_extent(extent)
 
             # Histogram axis
-            inset = axes_from_axes(
+            inset = lplt.axes_from_axes(
                 axes[_i], _i, [0.2, 0.05, 0.6, 0.1])
             inset.spines['right'].set_visible(False)
             inset.spines['top'].set_visible(False)
@@ -472,7 +464,7 @@ class CompareCatalogs:
             ylim = inset.get_ylim()
             inset.plot([0, 0], ylim, 'k', lw=1.0)
             inset.plot(xlim, [0, 0], 'k', lw=1.0)
-            plot_label(
+            lplt.plot_label(
                 inset, f"#: {len(pos)}",
                 fontdict=dict(fontsize="x-small"), box=False, dist=0.0,
                 location=6)
@@ -496,14 +488,14 @@ class CompareCatalogs:
 
         else:
             # Axes for the scatter legend
-            cax = axes_from_axes(axes[-2], 100, [-0.25, -0.15, 1.5, 0.05])
+            cax = lplt.axes_from_axes(axes[-2], 100, [-0.25, -0.15, 1.5, 0.05])
             cax.axis('off')
 
             # Boundaries
             boundaries = np.linspace(vmin, vmax, 9)
 
             # Legend done
-            legend = scatterlegend(
+            legend = lplt.scatterlegend(
                 boundaries, cmap=cmap, norm=norm,
                 sizefunc=sizefunc, loc='upper center', frameon=False,
                 title=f"Change in {self.labeldict[parameter]}",
@@ -542,17 +534,17 @@ class CompareCatalogs:
             central_longitude=self.central_longitude))
         iax.set_global()
         self.plot_cmts()
-        plot_label(ax, 'a)', location=6, box=False)
+        lplt.plot_label(ax, 'a)', location=6, box=False)
 
         # Plot eps_nu change
         ax = fig.add_subplot(GS[0, 2])
         self.plot_eps_nu()
-        plot_label(ax, 'b)', location=17, box=False)
+        lplt.plot_label(ax, 'b)', location=17, box=False)
 
         # Plot Depth v dDepth
         ax = fig.add_subplot(GS[1, 2])
         self.plot_depth_v_ddepth()
-        plot_label(ax, 'c)', location=6, box=False)
+        lplt.plot_label(ax, 'c)', location=6, box=False)
 
         # Plot tshift histogram
         tbins = self.nbins
@@ -561,10 +553,10 @@ class CompareCatalogs:
         self.plot_histogram(
             self.ntime_shift-self.otime_shift, tbins,
             facecolor='lightgray')
-        remove_topright()
+        lplt.remove_topright()
         plt.xlabel("Centroid Time Change [sec]")
         plt.ylabel("N", rotation=0, horizontalalignment='right')
-        plot_label(ax, 'd)', location=6, box=False)
+        lplt.plot_label(ax, 'd)', location=6, box=False)
 
         # Plot Scalar Moment histogram
         Mbins = self.nbins
@@ -573,10 +565,10 @@ class CompareCatalogs:
         self.plot_histogram(
             (self.nM0-self.oM0)/self.oM0*100, Mbins,
             facecolor='lightgray', statsleft=False)
-        remove_topright()
+        lplt.remove_topright()
         plt.xlabel("Scalar Moment Change [%]")
         plt.ylabel("N", rotation=0, horizontalalignment='right')
-        plot_label(ax, 'e)', location=6, box=False)
+        lplt.plot_label(ax, 'e)', location=6, box=False)
 
         # Plot ddepth histogram
         zbins = self.nbins
@@ -585,10 +577,10 @@ class CompareCatalogs:
         self.plot_histogram(
             self.ddepth, zbins, facecolor='lightgray',
             statsleft=True)
-        remove_topright()
+        lplt.remove_topright()
         plt.xlabel("Depth Change [km]")
         plt.ylabel("N", rotation=0, horizontalalignment='right')
-        plot_label(ax, 'f)', location=6, box=False)
+        lplt.plot_label(ax, 'f)', location=6, box=False)
 
         if outfile is not None:
             plt.savefig(outfile)
@@ -682,7 +674,7 @@ class CompareCatalogs:
         # Plot 2D scatter histograms
         if d1 and d2:
             label = " "
-            axscatter, _, _ = lpy.scatter_hist(
+            axscatter, _, _ = lplt.scatter_hist(
                 n1p,
                 n2p,
                 nbins,
@@ -693,7 +685,7 @@ class CompareCatalogs:
 
         elif (d1 and not d2) or (not d1 and d2):
             label = " "
-            axscatter, _, _ = lpy.scatter_hist(
+            axscatter, _, _ = lplt.scatter_hist(
                 n1p,
                 n2p,
                 nbins,
@@ -704,7 +696,7 @@ class CompareCatalogs:
 
         else:
             labels = ["O", "N"]
-            axscatter, _, _ = lpy.scatter_hist(
+            axscatter, _, _ = lplt.scatter_hist(
                 [o1p, n1p],
                 [o2p, n2p],
                 nbins,
@@ -758,7 +750,7 @@ class CompareCatalogs:
             plt.switch_backend('pdf')
             plt.figure(figsize=(4.5, 3))
 
-        axscatter, _, _ = lpy.scatter_hist(
+        axscatter, _, _ = lplt.scatter_hist(
             [self.oeps_nu[:, 0], self.neps_nu[:, 0]],
             [self.odepth_in_m/1000.0, self.ndepth_in_m/1000.0],
             self.nbins,
@@ -775,11 +767,11 @@ class CompareCatalogs:
         axscatter.set_yscale('log')
 
         # Plot clvd labels
-        plot_label(axscatter, "CLVD-", location=11, box=False,
+        lplt.plot_label(axscatter, "CLVD-", location=11, box=False,
                    fontdict=dict(fontsize='small'))
-        plot_label(axscatter, "CLVD+", location=10, box=False,
+        lplt.plot_label(axscatter, "CLVD+", location=10, box=False,
                    fontdict=dict(fontsize='small'))
-        plot_label(axscatter, "DC", location=16, box=False,
+        lplt.plot_label(axscatter, "DC", location=16, box=False,
                    fontdict=dict(fontsize='small'))
         axscatter.tick_params(labelbottom=False)
         plt.ylabel('Depth [km]')
@@ -1060,8 +1052,8 @@ def bin():
     args = parser.parse_args()
 
     # Get catalogs
-    old = lpy.seismo.CMTCatalog.from_file_list(args.old)
-    new = lpy.seismo.CMTCatalog.from_file_list(args.new)
+    old = CMTCatalog.from_file_list(args.old)
+    new = CMTCatalog.from_file_list(args.new)
     new, newp = new.filter(mindict=dict(depth_in_m=0.0))
 
     print("Old:", len(old.cmts))
@@ -1080,7 +1072,7 @@ def bin():
         ncat.save(os.path.join(args.outdir, args.newlabel + ".pkl"))
 
     # Compare Catalog
-    CC = lpy.seismo.CompareCatalogs(old=ocat, new=ncat,
+    CC = CompareCatalogs(old=ocat, new=ncat,
                                     oldlabel=args.oldlabel, newlabel=args.newlabel,
                                     nbins=25)
     # plt.figure(figsize=(4.5, 3))

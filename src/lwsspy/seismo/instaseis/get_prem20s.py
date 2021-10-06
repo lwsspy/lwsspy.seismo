@@ -1,13 +1,14 @@
 import os
-import lwsspy as lpy
 import instaseis
 import tarfile
+from ... import shell as lsh
+from ... import base as lbase
 
 
 def get_prem20s():
 
     # Define locations
-    instadir = os.path.join(lpy.base.DOWNLOAD_CACHE,
+    instadir = os.path.join(lbase.DOWNLOAD_CACHE,
                             "instaseis")
     filetar = os.path.join(instadir, "PREM20s.tar.gz")
     dbdir = os.path.join(instadir, "PREM20s")
@@ -21,7 +22,7 @@ def get_prem20s():
 
     # Check if downloaded already
     if os.path.exists(dbdir) is False:
-        lpy.shell.downloadfile(url, filetar)
+        lsh.downloadfile(url, filetar)
         with tarfile.open(filetar) as tar:
             tar.extractall(path=dbdir)
 

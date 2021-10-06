@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 import os.path as p
-import lwsspy as lpy
+from .. import base as lbase
+from .. import utils as lutil
+from .. import plot as lplt
 
 
 def plot_traveltimes_ak135(ax: Union[None, Axes] = None,
@@ -15,8 +17,8 @@ def plot_traveltimes_ak135(ax: Union[None, Axes] = None,
     '''Loads ttbox ttc struct from matfile'''
 
     # Load ttc file
-    filename = p.join(lpy.base.CONSTANT_DATA, 'ttc.mat')
-    ttcfile = lpy.utils.loadmat(filename)
+    filename = p.join(lbase.CONSTANT_DATA, 'ttc.mat')
+    ttcfile = lutil.loadmat(filename)
 
     # Get vars
     N = ttcfile["ttc"]["anz"]  # Number of ttcurves
@@ -33,11 +35,11 @@ def plot_traveltimes_ak135(ax: Union[None, Axes] = None,
     else:
         factor = 1.0
 
-    # colors = lpy.plot.pick_colors_from_cmap(N, cmap=cmap)
+    # colors = lplt.pick_colors_from_cmap(N, cmap=cmap)
     if cmap is None:
         colors = N * ['k']
     else:
-        colors = lpy.plot.pick_colors_from_cmap(N, cmap=cmap)
+        colors = lplt.pick_colors_from_cmap(N, cmap=cmap)
 
     for _curve, _color in zip(ttcurves, colors):
         # Wrap epicentral distances around 360

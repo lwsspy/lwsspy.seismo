@@ -1,8 +1,6 @@
 from typing import Union, List, Tuple
-from obspy import Stream, Trace
+from obspy import Stream
 import numpy as np
-import lwsspy as lpy
-
 
 class CostGradHess:
 

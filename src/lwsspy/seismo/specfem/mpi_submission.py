@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 from subprocess import Popen, PIPE, STDOUT
-from lwsspy import Timer, CMTSource
+
 from time import sleep
 from mpi4py import MPI
+from ...utils import Timer
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()

@@ -13,7 +13,6 @@ dependencies:
   - scipy
   - cartopy
   - mpi4py
-  - h5py
   - jupyterlab
   - pyvista
   - pip

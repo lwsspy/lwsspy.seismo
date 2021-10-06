@@ -15,17 +15,20 @@ Written by S. Beller, 2020-12-19
 import os
 import datetime as dt
 from urllib.request import urlopen
-import lwsspy as lpy
+
+from .. import base as lbase
+from .. import utils as lutil
+from .. import shell as lsh
 
 
 def download_gcmt_catalog():
     # Get catalog from 1976 to 2017
     url_cat = "https://www.ldeo.columbia.edu/~gcmt/projects/CMT/catalog/jan76_dec17.ndk"
-    catalog_filename = os.path.join(lpy.base.DOWNLOAD_CACHE, "gcmt.ndk")
+    catalog_filename = os.path.join(lbase.DOWNLOAD_CACHE, "gcmt.ndk")
 
     # Download the catalog
-    lpy.utils.print_action(f"Downloading {url_cat}")
-    lpy.shell.downloadfile(url_cat, catalog_filename)
+    lutil.print_action(f"Downloading {url_cat}")
+    lsh.downloadfile(url_cat, catalog_filename)
 
     # Get monthly catalog
     ext = '.ndk'
@@ -49,7 +52,7 @@ def download_gcmt_catalog():
                 else:
 
                     url_monthly = f"{link}{year}/{month}{yy}{ext}"
-                    lpy.utils.print_action(f"Downloading {url_monthly}")
+                    lutil.print_action(f"Downloading {url_monthly}")
 
                     try:
                         catalogfile.write(

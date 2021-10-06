@@ -1,13 +1,15 @@
 from typing import Callable, List, Union, Tuple
 
 from matplotlib.lines import Line2D
-import lwsspy as lpy
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from matplotlib.ticker import FixedLocator
 from cartopy.crs import PlateCarree
 import numpy as np
+
+from .. import plot as lplt
+from .. import maps as lmap
 
 
 def plot_quakes(latitude, longitude, depth, moment,
@@ -90,7 +92,7 @@ def plot_quakes(latitude, longitude, depth, moment,
 
     # Create
     colormap = plt.get_cmap(cmap)
-    colors = lpy.plot.pick_colors_from_cmap(len(levels), colormap)
+    colors = lplt.pick_colors_from_cmap(len(levels), colormap)
     cmap = ListedColormap(colors)
     norm = BoundaryNorm(levels, cmap.N)
 
@@ -98,8 +100,8 @@ def plot_quakes(latitude, longitude, depth, moment,
     if ax is None:
         plt.figure(figsize=(9, 5.25))
         plt.subplots_adjust(left=0.025, right=0.975, bottom=0.15, top=0.95)
-        ax = lpy.maps.map_axes(proj="moll", central_longitude=-150.0)
-        lpy.maps.plot_map(zorder=-1)
+        ax = lmap.map_axes(proj="moll", central_longitude=-150.0)
+        lmap.plot_map(zorder=-1)
 
     # Fix moments
     rmoments = np.floor(moment)
@@ -142,7 +144,7 @@ def plot_quakes(latitude, longitude, depth, moment,
             frameon=False, fontsize=legendfontsize,
             title_fontsize=title_fontsize,
             bbox_transform=ax.transAxes)
-        lpy.plot.right_align_legend(legend1)
+        lplt.right_align_legend(legend1)
         ax.add_artist(legend1)
 
         # Get Size props of the legend entries.
@@ -169,7 +171,7 @@ def plot_quakes(latitude, longitude, depth, moment,
             ncol=1, handletextpad=0.2,
             fontsize=legendfontsize, title_fontsize=title_fontsize,
             bbox_transform=ax.transAxes)
-        lpy.plot.right_align_legend(legend2)
+        lplt.right_align_legend(legend2)
 
         return scatter, ax, legend1, legend2
     else:

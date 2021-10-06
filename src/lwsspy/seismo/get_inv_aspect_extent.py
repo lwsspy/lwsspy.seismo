@@ -1,6 +1,7 @@
 from typing import Tuple
 from obspy import Inventory
-import lwsspy as lpy
+from .. import maps as lmap
+from .inv2geoloc import inv2geoloc
 
 
 def get_inv_aspect_extent(inv: Inventory) -> Tuple[float, list]:
@@ -31,14 +32,14 @@ def get_inv_aspect_extent(inv: Inventory) -> Tuple[float, list]:
     """
 
     # Get all lat,lon s
-    lat, lon = lpy.seismo.inv2geoloc(inv)
+    lat, lon = inv2geoloc(inv)
 
     # Get aspect
     minlat, maxlat = np.min(lat), np.max(lat)
     minlon, maxlon = np.min(lon), np.max(lon)
 
     # Get extent
-    extent = lpy.maps.fix_map_extent([minlon, maxlon, minlat, maxlat])
+    extent = lmap.fix_map_extent([minlon, maxlon, minlat, maxlat])
 
     aspect = (extent[1] - extent[0])/(extent[3] - extent[2])
 

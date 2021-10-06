@@ -2,7 +2,7 @@
 # functions mainly for pypaw.
 """
 import numpy as np
-from lwsspy.utils.io import dump_json
+from ... import utils as lutil
 
 
 def sort_windows_on_channel_and_location(sta_win):
@@ -206,7 +206,7 @@ def stats_all_windows(windows, obsd_tag, synt_tag,
     print(output_file)
 
     print("Windows statistic log file: %s" % output_file)
-    dump_json(log, output_file)
+    lutil.dump_json(log, output_file)
 
 
 def convert_to_window_json_to_txt(windowjson, outputtxt):
