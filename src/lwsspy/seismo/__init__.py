@@ -15,7 +15,6 @@ from .filterstationxml import filterstationxml  # noqa
 from .gaussiant import gaussiant  # noqa
 from .gaussiant import dgaussiant  # noqa
 from .get_inv_aspect_extent import get_inv_aspect_extent  # noqa
-from .instaseis.get_prem20s import get_prem20s  # noqa
 from .inv2geoloc import inv2geoloc  # noqa
 from .inv2net_sta import inv2net_sta  # noqa
 from .inv2stationxml import inv2stationxml  # noqa

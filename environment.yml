@@ -7,7 +7,7 @@ dependencies:
   - ipython
   - flake
   - pytest
-  - matplotlib==3.2.1
+  - matplotlib
   - numpy
   - mypy
   - scipy
@@ -23,5 +23,5 @@ dependencies:
     - pyasdf
     - pyyaml
     - sphinx
-    - sphinx_rtd_theme
+    - sphinx_book_theme
     - git+git://github.com/wjlei1990/pyflex.git@merge
