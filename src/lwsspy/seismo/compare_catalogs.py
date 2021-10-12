@@ -157,13 +157,13 @@ class CompareCatalogs:
             f"$\\mu$ = {np.mean(self.neps_nu[:,0]):7.4f}\n"
             f"$\\sigma$ = {np.std(self.neps_nu[:,0]):7.4f}\n")
         lplt.plot_label(ax, label, location=2, box=False,
-                   fontdict=dict(fontsize='xx-small', fontfamily="monospace"))
+                        fontdict=dict(fontsize='xx-small', fontfamily="monospace"))
         lplt.plot_label(ax, "CLVD-", location=6, box=False,
-                   fontdict=dict(fontsize='small'))
+                        fontdict=dict(fontsize='small'))
         lplt.plot_label(ax, "CLVD+", location=7, box=False,
-                   fontdict=dict(fontsize='small'))
+                        fontdict=dict(fontsize='small'))
         lplt.plot_label(ax, "DC", location=14, box=False,
-                   fontdict=dict(fontsize='small'))
+                        fontdict=dict(fontsize='small'))
         plt.xlabel(r"$\epsilon$")
 
     def plot_depth_v_ddepth(self):
@@ -768,11 +768,11 @@ class CompareCatalogs:
 
         # Plot clvd labels
         lplt.plot_label(axscatter, "CLVD-", location=11, box=False,
-                   fontdict=dict(fontsize='small'))
+                        fontdict=dict(fontsize='small'))
         lplt.plot_label(axscatter, "CLVD+", location=10, box=False,
-                   fontdict=dict(fontsize='small'))
+                        fontdict=dict(fontsize='small'))
         lplt.plot_label(axscatter, "DC", location=16, box=False,
-                   fontdict=dict(fontsize='small'))
+                        fontdict=dict(fontsize='small'))
         axscatter.tick_params(labelbottom=False)
         plt.ylabel('Depth [km]')
 
@@ -1026,6 +1026,7 @@ class CompareCatalogs:
 def bin():
 
     import argparse
+    lplt.updaterc()
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--old', dest='old',
@@ -1073,8 +1074,8 @@ def bin():
 
     # Compare Catalog
     CC = CompareCatalogs(old=ocat, new=ncat,
-                                    oldlabel=args.oldlabel, newlabel=args.newlabel,
-                                    nbins=25)
+                         oldlabel=args.oldlabel, newlabel=args.newlabel,
+                         nbins=25)
     # plt.figure(figsize=(4.5, 3))
     # CC.plot_2D_scatter(param1="moment_magnitude", param2="depth_in_m", d1=False,
     #                    d2=False, xlog=False, ylog=True, yrange=[3, 800],
