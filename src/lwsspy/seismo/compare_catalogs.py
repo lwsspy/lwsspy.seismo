@@ -8,6 +8,7 @@ from matplotlib.cm import ScalarMappable
 from matplotlib.colors import ListedColormap, Normalize, BoundaryNorm
 from matplotlib.patches import Rectangle
 from cartopy.crs import PlateCarree, Mollweide
+from numpy.lib.function_base import quantile
 from obspy import Inventory
 from .. import geo as lgeo
 from .. import maps as lmap
@@ -175,7 +176,7 @@ class CompareCatalogs:
         plt.scatter(
             self.ddepth, self.odepth_in_m/1000,
             c=self.depth_cmap(self.depth_norm(self.odepth_in_m/1000.0)),
-            s=msize, marker='o', alpha=0.5, edgecolors='none')
+            s=msize, marker='o', alpha=0.3, edgecolors='none')
 
         # Custom legend
         classes = ['  <70 km', ' ', '>300 km']
@@ -191,7 +192,22 @@ class CompareCatalogs:
 
         # Zero line
         plt.plot([0, 0], [0, np.max(self.odepth_in_m/1000.0)],
-                 "k--", lw=1.5)
+                 "-", lw=0.5, c='k')
+
+        # Stats plots
+        plotdict = dict(
+            blines=dict(lw=1.0, color='k'),
+            # median=dict(ls='', marker='o', c='k', markersize=2.5),
+            # quantile=dict(ls='', markersize=3, c='k', marker='|'),
+            mean=dict(ls='', marker='o', c='k', markersize=2.0),
+            std=dict(ls='', markersize=4, c='k', marker='|')
+        )
+        bins = np.logspace(1, 2.903, 8)
+        lplt.plot_binnedstats(
+            self.odepth_in_m/1000, self.ddepth, bins=bins,
+            plotdict=plotdict, orientation='vertical',
+            quantile=[0.25, 0.75],  # quantilemarkers=[9, 8]
+        )
 
         # Axes properties
         plt.ylim(([10, np.max(self.odepth_in_m/1000.0)]))
