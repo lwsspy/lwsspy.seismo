@@ -8,6 +8,7 @@ from matplotlib.cm import ScalarMappable
 from matplotlib.colors import ListedColormap, Normalize, BoundaryNorm
 from matplotlib.patches import Rectangle
 from cartopy.crs import PlateCarree, Mollweide
+from numpy.core.fromnumeric import size
 from numpy.lib.function_base import quantile
 from obspy import Inventory
 from .. import geo as lgeo
@@ -15,6 +16,7 @@ from .. import maps as lmap
 from .. import plot as lplt
 from .cmt_catalog import CMTCatalog
 from .plot_quakes import plot_quakes
+from .plot_quakes import get_level_norm_cmap
 
 
 class CompareCatalogs:
@@ -113,16 +115,26 @@ class CompareCatalogs:
                                   2 * self.dd_absmax / self.nbins, self.nbins)
         self.dtbins = np.linspace(-10, 10 + 10 / self.nbins, self.nbins)
 
+        # Get depth dependent cmap and norm
+        self.depth_cmap, self.depth_norm, levels = \
+            get_level_norm_cmap(depth=self.odepth_in_m/1000.0,
+                                cmap='rainbow_r', levels=None)
+
     def plot_cmts(self):
 
         # Get axes (must be map axes)
         ax = plt.gca()
 
+        minm = np.min(self.nmoment_magnitude)
+        maxm = np.max(self.nmoment_magnitude)
+
+        def sizefunc(x): return np.pi*(0.25*(x-minm)/(maxm-minm) + 1)**8
+
         # Plot events
         scatter, ax, l1, l2 = plot_quakes(
             self.nlatitude, self.nlongitude, self.ndepth_in_m/1000.0,
-            self.nmoment_magnitude, ax=ax,
-            yoffsetlegend2=0.09, sizefunc=lambda x: (x-(np.min(x)-1))**2.5 + 5)
+            self.nmoment_magnitude, ax=ax, cmap='rainbow_r',
+            yoffsetlegend2=0.09, sizefunc=sizefunc)
         ax.set_global()
         lmap.plot_map(zorder=0, fill=True)
         lplt.plot_label(ax, f"N: {self.N}", location=1, box=False, dist=0.0)
@@ -173,22 +185,25 @@ class CompareCatalogs:
         ax = plt.gca()
         msize = 15
 
+        # Sort the depth
+        isort = np.argsort(self.odepth_in_m)[::-1]
+
         plt.scatter(
-            self.ddepth, self.odepth_in_m/1000,
-            c=self.depth_cmap(self.depth_norm(self.odepth_in_m/1000.0)),
-            s=msize, marker='o', alpha=0.3, edgecolors='none')
+            self.ddepth, self.odepth_in_m[isort]/1000,
+            c=self.depth_cmap(self.depth_norm(self.odepth_in_m[isort]/1000.0)),
+            s=msize, marker='o', alpha=0.5, edgecolors='none')
 
         # Custom legend
-        classes = ['  <70 km', ' ', '>300 km']
-        colors = [(0.8, 0.2, 0.2), (0.2, 0.6, 0.8), (0.35, 0.35, 0.35)]
-        for cla, col in zip(classes, colors):
-            plt.scatter([], [], c=[col], s=msize, label=cla, alpha=0.5,
-                        edgecolors='none')
-        plt.legend(loc='lower left', frameon=False, fancybox=False,
-                   numpoints=1, scatterpoints=1, fontsize='x-small',
-                   borderaxespad=0.0, borderpad=0.5, handletextpad=0.2,
-                   labelspacing=0.2, handlelength=0.5,
-                   bbox_to_anchor=(0.0, 0.0))
+        # classes = ['  <70 km', ' ', '>300 km']
+        # colors = [(0.8, 0.2, 0.2), (0.2, 0.6, 0.8), (0.35, 0.35, 0.35)]
+        # for cla, col in zip(classes, colors):
+        #     plt.scatter([], [], c=[col], s=msize, label=cla, alpha=0.5,
+        #                 edgecolors='none')
+        # plt.legend(loc='lower left', frameon=False, fancybox=False,
+        #            numpoints=1, scatterpoints=1, fontsize='x-small',
+        #            borderaxespad=0.0, borderpad=0.5, handletextpad=0.2,
+        #            labelspacing=0.2, handlelength=0.5,
+        #            bbox_to_anchor=(0.0, 0.0))
 
         # Zero line
         plt.plot([0, 0], [0, np.max(self.odepth_in_m/1000.0)],
@@ -207,6 +222,7 @@ class CompareCatalogs:
             self.odepth_in_m/1000, self.ddepth, bins=bins,
             plotdict=plotdict, orientation='vertical',
             quantile=[0.25, 0.75],  # quantilemarkers=[9, 8]
+            log=True
         )
 
         # Axes properties
@@ -538,7 +554,7 @@ class CompareCatalogs:
 
         # Create subplot layout
         GS = GridSpec(3, 3)
-        plt.subplots_adjust(wspace=0.25, hspace=0.75)
+        plt.subplots_adjust(wspace=0.3, hspace=0.75)
         # Plot events
         ax = fig.add_subplot(GS[:2, :2])
         ax.axis('off')
@@ -778,9 +794,40 @@ class CompareCatalogs:
         axscatter.set_xlim((-0.5, 0.5))
         ylim = axscatter.get_ylim()
         axscatter.set_ylim(
-            (ylim[0], 0.95*np.min((np.min(self.ndepth_in_m/1000.0),
-                                   np.min(self.odepth_in_m/1000.0)))))
+            (ylim[0], 2.5))  # 0.95*np.min((np.min(self.ndepth_in_m/1000.0),
+        #        np.min(self.odepth_in_m/1000.0)))))
         axscatter.set_yscale('log')
+
+        # Binned stats
+        gray = 0.35 * np.ones(3)
+        plotdict_before = dict(
+            blines=dict(lw=2.0, color=gray),
+            # median=dict(ls='', marker='o', c='k', markersize=2.5),
+            # quantile=dict(ls='', markersize=3, c='k', marker='|'),
+            mean=dict(ls='', marker='o', c=gray, markersize=4.0),
+            std=dict(ls='', markersize=15, c=gray, marker='|')
+        )
+        plotdict_after = dict(
+            blines=dict(lw=3.0, color='k'),
+            # median=dict(ls='', marker='o', c='k', markersize=2.5),
+            # quantile=dict(ls='', markersize=3, c='k', marker='|'),
+            mean=dict(ls='', marker='o', c='k', markersize=6.0),
+            std=dict(ls='', markersize=20, c='k', marker='|')
+        )
+
+        bins = np.logspace(0, 2.903, 8)
+        lplt.plot_binnedstats(
+            self.odepth_in_m/1000.0, self.oeps_nu[:, 0], bins=bins,
+            plotdict=plotdict_before, orientation='vertical',
+            quantile=[0.25, 0.75],  # quantilemarkers=[9, 8]
+            log=True
+        )
+        lplt.plot_binnedstats(
+            self.ndepth_in_m/1000.0, self.neps_nu[:, 0], bins=bins,
+            plotdict=plotdict_after, orientation='vertical',
+            quantile=[0.25, 0.75],  # quantilemarkers=[9, 8]
+            log=True
+        )
 
         # Plot clvd labels
         lplt.plot_label(axscatter, "CLVD-", location=11, box=False,
@@ -1114,7 +1161,7 @@ def bin():
 
     # Filter for a minimum depth larger than zero
     CC, CC_pop = CC.filter(maxdict={"M0": 1.5, "latitude": 0.4,
-                                    "longitude": 0.4, "depth_in_m": 50000.0})
+                                    "longitude": 0.4, "depth_in_m": 30000.0})
     # for ocmt, ncmt in zip(CC.old, CC.new):
     #     print(f"\n\nOLD: {(ncmt.depth_in_m - ocmt.depth_in_m)/1000.0}")
     #     print(ocmt)

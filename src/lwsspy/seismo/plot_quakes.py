@@ -12,6 +12,39 @@ from .. import plot as lplt
 from .. import maps as lmap
 
 
+def get_level_norm_cmap(depth, cmap: str, levels: list = None):
+
+    if levels is None:
+        levels = [0.0, 10.0, 11.0, 12.5, 15.0, 20.0, 25.0,
+                  50.0, 70.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0]
+
+    # Figure out minimum index of levels for legend.
+    mindepth = np.min(depth)
+    level_minidx = np.where(levels < mindepth)[0]
+    if len(level_minidx) < 1:
+        level_minidx = 0
+    else:
+        level_minidx = int(level_minidx[-1])
+
+    # Figure out minimum index of levels for legend.
+    maxdepth = np.max(depth)
+    level_maxidx = np.where(levels > maxdepth)[0]
+    if isinstance(level_maxidx, np.ndarray):
+        level_maxidx = level_maxidx[0]
+    level_maxidx = int(level_maxidx)
+
+    # Fix levels
+    levels = levels[level_minidx:level_maxidx]
+
+    # Create
+    colormap = plt.get_cmap(cmap)
+    colors = lplt.pick_colors_from_cmap(len(levels), colormap)
+    cmap = ListedColormap(colors)
+    norm = BoundaryNorm(levels, cmap.N)
+
+    return cmap, norm, levels
+
+
 def plot_quakes(latitude, longitude, depth, moment,
                 ax: Union[matplotlib.axes.Axes, None] = None,
                 levels: Union[List[float], None] = None,
@@ -64,37 +97,12 @@ def plot_quakes(latitude, longitude, depth, moment,
 
     """
 
-    # Set default levels.
-    if levels is None:
-        # Get colors
-        levels = [0.0, 10.0, 11.0, 12.5, 15.0, 20.0, 25.0,
-                  50.0, 70.0, 200.0, 400.0, 600.0, 700.0, 800.0, 900.0]
+    # Get depth dependent cmap and norm
+    cmap, norm, levels = get_level_norm_cmap(
+        depth=depth, cmap=cmap, levels=levels)
 
+    # Sort the depth
     isort = np.argsort(depth)[::-1]
-
-    # Figure out minimum index of levels for legend.
-    mindepth = np.min(depth)
-    level_minidx = np.where(levels < mindepth)[0]
-    if len(level_minidx) < 1:
-        level_minidx = 0
-    else:
-        level_minidx = int(level_minidx[-1])
-
-    # Figure out minimum index of levels for legend.
-    maxdepth = np.max(depth)
-    level_maxidx = np.where(levels > maxdepth)[0]
-    if isinstance(level_maxidx, np.ndarray):
-        level_maxidx = level_maxidx[0]
-    level_maxidx = int(level_maxidx)
-
-    # Fix levels
-    levels = levels[level_minidx:level_maxidx]
-
-    # Create
-    colormap = plt.get_cmap(cmap)
-    colors = lplt.pick_colors_from_cmap(len(levels), colormap)
-    cmap = ListedColormap(colors)
-    norm = BoundaryNorm(levels, cmap.N)
 
     # Create figure if no axes was given
     if ax is None:
@@ -148,16 +156,19 @@ def plot_quakes(latitude, longitude, depth, moment,
         ax.add_artist(legend1)
 
         # Get Size props of the legend entries.
-        handles, _ = scatter.legend_elements(
-            num=unique_moments.size, prop="sizes", alpha=0.6)
+        # handles, _ = scatter.legend_elements(
+        #     num=unique_moments.size, prop="sizes", alpha=0.6)
 
         # Create labels
-        labels = [f"{_m:>4.1f} - {_m + 1:>4.1f}" for _m in unique_moments]
+        handles = []
+        labels = []
         for _unique_moment in unique_moments:
 
+            labels.append(
+                f"{_unique_moment:>4.1f} - {_unique_moment + 1:>4.1f}")
             # Set handles
             handle, = plt.plot(
-                [], [], 'o', markersize=sizefunc(_unique_moment),
+                [], [], 'o', markersize=np.sqrt(sizefunc(_unique_moment+0.5)),
                 markeredgecolor='k', markeredgewidth=0.1,
                 markerfacecolor='darkgray', linestyle='none')
 
