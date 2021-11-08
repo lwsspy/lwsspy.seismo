@@ -50,6 +50,7 @@ from .specfem.cmtdir2rundirs import cmtdir2rundirs  # noqa
 from .specfem.cmtdir2simdirs import cmtdir2simdirs  # noqa
 from .specfem.createsimdir import createsimdir  # noqa
 from .specfem.getsimdirSTATIONS import getsimdirSTATIONS  # noqa
+from .specfem.get_parfile_par import get_parfile_par  # noqa
 from .specfem.inv2STATIONS import inv2STATIONS  # noqa
 from .specfem.plot_csv_depth_slice import plot_csv_depth_slice  # noqa
 from .specfem.plot_specfem_xsec_depth import plot_specfem_xsec_depth  # noqa
