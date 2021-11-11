@@ -28,6 +28,7 @@ from inspect import getmembers, isfunction
 from ..plot.axes_from_axes import axes_from_axes
 from ..plot.plot_label import plot_label
 from ..plot.get_aspect import get_aspect
+from ..plot.updaterc import updaterc
 from ..plot.midpointcolornorm import MidpointNormalize
 import matplotlib.pyplot as plt
 
@@ -561,6 +562,7 @@ class CMTSource(object):
         return strike, dip
 
     def beach(self):
+        updaterc()
         plt.figure(figsize=(2, 2))
         ax = plt.axes()
 
@@ -572,7 +574,7 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.5, 0.5),
-                   width=100,
+                   width=300,
                    size=100,
                    nofill=False,
                    zorder=100,
@@ -590,7 +592,7 @@ class CMTSource(object):
         half duration
         3x3 image black 1, white 0
         """
-
+        updaterc()
         plt.figure(figsize=(5.25, 1.75))
         ax = plt.axes()
         ax.axis('off')
@@ -603,7 +605,7 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.625, 0.4),
-                   width=100,
+                   width=200,
                    size=100,
                    nofill=False,
                    zorder=100,
