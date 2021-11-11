@@ -12,6 +12,8 @@ from obspy.core.event import Event
 from obspy import Catalog
 import matplotlib.pyplot as plt
 from obspy.core.utcdatetime import UTCDateTime
+import pandas as pd
+from pandas.core.frame import DataFrame
 
 from .source import CMTSource
 from . import sourcedecomposition
@@ -148,6 +150,35 @@ class CMTCatalog:
             raise ValueError(
                 f"Value {vtype} not implemented, choose from"
                 f"{self.uniqueatt}")
+
+    @property
+    def dataframe(self) -> DataFrame:
+
+        columns = [
+            'origin_time',
+            'pde_latitude',
+            'pde_longitude',
+            'pde_depth_in_m',
+            'mb',
+            'ms',
+            'region_tag',
+            'eventname',
+            'time_shift',
+            'half_duration',
+            'latitude',
+            'longitude',
+            'depth_in_m',
+            'm_rr',
+            'm_tt',
+            'm_pp',
+            'm_rt',
+            'm_rp',
+            'm_tp'
+        ]
+        rows = []
+        for cmt in self:
+            rows.append(cmt.to_row())
+        return DataFrame(rows, columns=columns)
 
     def add(self, cmt: Union[List[Union[CMTSource, Event]],
                              CMTSource, Event, Catalog, CMTCatalog]):
