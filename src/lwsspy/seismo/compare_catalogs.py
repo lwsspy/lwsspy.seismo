@@ -1093,10 +1093,10 @@ def bin():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--old', dest='old',
-                        help='Old cmt solutions', nargs='+',
+                        help='Old Catalog',
                         required=True, type=str)
     parser.add_argument('-n', '--new', dest='new',
-                        help='New cmt solutions', nargs='+',
+                        help='New Catalog',
                         required=True, type=str)
     parser.add_argument('-d', '--outdir', dest='outdir',
                         help='Directory to place outputs in',
@@ -1116,8 +1116,8 @@ def bin():
     args = parser.parse_args()
 
     # Get catalogs
-    old = CMTCatalog.from_file_list(args.old)
-    new = CMTCatalog.from_file_list(args.new)
+    old = CMTCatalog.load(args.old)
+    new = CMTCatalog.load(args.new)
     new, newp = new.filter(mindict=dict(depth_in_m=0.0))
 
     print("Old:", len(old.cmts))
