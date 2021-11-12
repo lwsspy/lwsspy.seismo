@@ -9,17 +9,21 @@ from .get_stations import get_stations
 from ...source import CMTSource
 import lwsspy.maps as lmap
 
+
 def plot_acquisition(specfemdir, unit='d'):
 
     # Get stations
     stationtable = get_stations(specfemdir)
-    
-    # Get source
-    source = CMTSource.from_CMTSOLUTION_file(os.path.join(specfemdir, "DATA", "CMTSOLUTION"))
 
-    # 
+    # Get source
+    source = CMTSource.from_CMTSOLUTION_file(
+        os.path.join(specfemdir, "DATA", "CMTSOLUTION"))
+
+    # Get values from table
     latitudes = stationtable['latitude']
     longitudes = stationtable['longitude']
+    net = stationtable['network']
+    sta = stationtable['sta']
 
     # Set extent
     extent = [
@@ -29,25 +33,22 @@ def plot_acquisition(specfemdir, unit='d'):
         np.max(np.append(latitudes, source.latitude))
     ]
     fextent = lmap.fix_map_extent(extent, fraction=0.05)
-    
-
 
     # Plot figure
     plt.figure()
     ax = plt.subplot(111)
     ax.set_xlim(fextent[:2])
     ax.set_ylim(fextent[2:])
-    plt.plot(longitudes, latitudes, 'v', markeredgecolor='k', markerfacecolor=(0.8,0.1,0.1))
-    
-    ax.add_collection(beach(source.tensor, width=50, xy=(source.longitude, source.latitude), axes=ax))
+    plt.plot(longitudes, latitudes, 'v', markeredgecolor='k',
+             markerfacecolor=(0.8, 0.1, 0.1))
+    for _n, _s, _t, _p in zip(net, sta, latitudes, longitudes):
+        plt.text(_p, _t, f"{_s}",
+                 ha="left", va="bottom",)
+    ax.add_collection(beach(source.tensor, width=50, xy=(
+        source.longitude, source.latitude), axes=ax))
 
     plt.show()
 
 
-    
-    
-    
-    
-    
 def plot_section(specfemdir):
     pass
