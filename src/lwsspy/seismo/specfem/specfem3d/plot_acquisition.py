@@ -23,7 +23,7 @@ def plot_acquisition(specfemdir, unit='d'):
     latitudes = stationtable['latitude']
     longitudes = stationtable['longitude']
     net = stationtable['network']
-    sta = stationtable['sta']
+    sta = stationtable['station']
 
     # Set extent
     extent = [
