@@ -118,7 +118,7 @@ def plot_quakes(latitude, longitude, depth, moment,
                           sizefunc(rmoments[isort]), c=depth[isort],
                           transform=PlateCarree(), cmap=cmap, alpha=1.0,
                           norm=norm, edgecolor='k', linewidth=0.1, zorder=10,
-                          picker=10  # points
+                          picker=True  # points
                           )
 
     if legend:

@@ -120,7 +120,7 @@ class CompareCatalogs:
             get_level_norm_cmap(depth=self.odepth_in_m/1000.0,
                                 cmap='rainbow_r', levels=None)
 
-    def plot_cmts(self):
+    def plot_cmts(self, legend=True):
 
         # Get axes (must be map axes)
         ax = plt.gca()
@@ -133,11 +133,13 @@ class CompareCatalogs:
         # Plot events
         scatter, ax, l1, l2 = plot_quakes(
             self.nlatitude, self.nlongitude, self.ndepth_in_m/1000.0,
-            self.nmoment_magnitude, ax=ax, cmap='rainbow_r',
+            self.nmoment_magnitude, ax=ax, cmap='rainbow_r', legend=legend,
             yoffsetlegend2=0.09, sizefunc=sizefunc)
         ax.set_global()
         lmap.plot_map(zorder=0, fill=True)
         lplt.plot_label(ax, f"N: {self.N}", location=1, box=False, dist=0.0)
+
+        return scatter, ax, l1, l2
 
     def plot_eps_nu(self):
 
