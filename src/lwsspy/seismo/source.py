@@ -17,8 +17,8 @@ Source and Receiver classes of Instaseis.
 """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import sys
 import numpy as np
-from numpy.lib.function_base import copy
 from obspy import UTCDateTime, read_events
 from obspy.imaging.beachball import beach
 from obspy.core.event import Event
@@ -28,6 +28,7 @@ from inspect import getmembers, isfunction
 from ..plot.axes_from_axes import axes_from_axes
 from ..plot.plot_label import plot_label
 from ..plot.get_aspect import get_aspect
+from ..plot.updaterc import updaterc
 from ..plot.midpointcolornorm import MidpointNormalize
 import matplotlib.pyplot as plt
 
@@ -275,6 +276,31 @@ class CMTSource(object):
                    longitude=longitude, depth_in_m=depth_in_m,
                    m_rr=m_rr, m_tt=m_tt, m_pp=m_pp, m_rt=m_rt,
                    m_rp=m_rp, m_tp=m_tp)
+
+    def to_row(self):
+        """Returns a tuple of all parameters to append it to a 
+        dataframe."""
+        return (
+            self.origin_time.datetime,
+            self.pde_latitude,
+            self.pde_longitude,
+            self.pde_depth_in_m,
+            self.mb,
+            self.ms,
+            self.region_tag,
+            self.eventname,
+            self.time_shift,
+            self.half_duration,
+            self.latitude,
+            self.longitude,
+            self.depth_in_m,
+            self.m_rr,
+            self.m_tt,
+            self.m_pp,
+            self.m_rt,
+            self.m_rp,
+            self.m_tp
+        )
 
     def write_CMTSOLUTION_file(self, filename, mode="w"):
         """
@@ -536,6 +562,7 @@ class CMTSource(object):
         return strike, dip
 
     def beach(self):
+        updaterc()
         plt.figure(figsize=(2, 2))
         ax = plt.axes()
 
@@ -547,7 +574,7 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.5, 0.5),
-                   width=300,
+                   width=100,
                    size=100,
                    nofill=False,
                    zorder=100,
@@ -565,7 +592,7 @@ class CMTSource(object):
         half duration
         3x3 image black 1, white 0
         """
-
+        updaterc()
         plt.figure(figsize=(5.25, 1.75))
         ax = plt.axes()
         ax.axis('off')
@@ -578,7 +605,7 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.625, 0.4),
-                   width=200,
+                   width=100,
                    size=100,
                    nofill=False,
                    zorder=100,
@@ -738,3 +765,15 @@ class CMTSource(object):
 
     def __ne__(self, other):
         return self.__dict__ != other.__dict__
+
+
+def plot_beach():
+    cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
+    cmtsource.beach()
+    plt.show(block=True)
+
+
+def plot_beachfig():
+    cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
+    cmtsource.beachfig()
+    plt.show(block=True)
