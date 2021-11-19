@@ -191,7 +191,7 @@ class CompareCatalogs:
         isort = np.argsort(self.odepth_in_m)[::-1]
 
         plt.scatter(
-            self.ddepth, self.odepth_in_m[isort]/1000,
+            self.ddepth[isort], self.odepth_in_m[isort]/1000,
             c=self.depth_cmap(self.depth_norm(self.odepth_in_m[isort]/1000.0)),
             s=msize, marker='o', alpha=0.5, edgecolors='none')
 
@@ -221,7 +221,7 @@ class CompareCatalogs:
         )
         bins = np.logspace(1, 2.903, 8)
         lplt.plot_binnedstats(
-            self.odepth_in_m/1000, self.ddepth, bins=bins,
+            self.odepth_in_m[isort]/1000, self.ddepth[isort], bins=bins,
             plotdict=plotdict, orientation='vertical',
             quantile=[0.25, 0.75],  # quantilemarkers=[9, 8]
             log=True

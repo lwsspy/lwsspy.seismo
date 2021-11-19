@@ -336,7 +336,7 @@ class CatalogExplore:
             dlon, dlat, ddeg, angles=b,
             pivot='tail', cmap=cmap, norm=norm, scale=0.025,
             transform=PlateCarree(), units='xy',  # width=100,width=0.005,
-            linewidth=0.1, edgecolor='k', picker=True
+            linewidth=0.05, edgecolor='k', picker=True
         )
         km = 20
         deg = km/111.11
