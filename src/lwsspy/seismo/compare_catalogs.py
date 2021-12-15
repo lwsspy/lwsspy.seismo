@@ -1120,10 +1120,11 @@ def bin():
     # Get catalogs
     old = CMTCatalog.load(args.old)
     new = CMTCatalog.load(args.new)
-    new, newp = new.filter(mindict=dict(depth_in_m=0.0))
+    new, newp = new.filter(mindict=dict(depth_in_m=5000.0))
 
     print("Old:", len(old.cmts))
     print("New:", len(new.cmts))
+    print("New:", len(newp.cmts))
 
     # Get overlaps
     ocat, ncat = old.check_ids(new)
@@ -1138,6 +1139,7 @@ def bin():
         ncat.save(os.path.join(args.outdir, args.newlabel + ".pkl"))
 
     # Compare Catalog
+
     CC = CompareCatalogs(old=ocat, new=ncat,
                          oldlabel=args.oldlabel, newlabel=args.newlabel,
                          nbins=25)
