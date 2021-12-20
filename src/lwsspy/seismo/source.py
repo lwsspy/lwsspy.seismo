@@ -117,7 +117,7 @@ class CMTSource(object):
             longitude = float(f.readline().strip().split()[-1])
             depth_in_m = float(f.readline().strip().split()[-1]) * 1e3
 
-            # unit: N/m
+            #                                                 unit: N/m
             m_rr = float(f.readline().strip().split()[-1])  # / 1e7
             m_tt = float(f.readline().strip().split()[-1])  # / 1e7
             m_pp = float(f.readline().strip().split()[-1])  # / 1e7
@@ -363,6 +363,8 @@ class CMTSource(object):
         self.m_rp *= factor
         self.m_tp *= factor
 
+        self.update_hdur()
+
     @property
     def moment_magnitude(self):
         """
@@ -390,6 +392,21 @@ class CMTSource(object):
         return np.array([self.m_rr, self.m_tt, self.m_pp, self.m_rt, self.m_rp,
                          self.m_tp])
 
+    @tensor.setter
+    def tensor(self, tensor):
+        """
+        List of moment tensor components in r, theta, phi coordinates:
+        [m_rr, m_tt, m_pp, m_rt, m_rp, m_tp]
+        """
+        self.m_rr = tensor[0]
+        self.m_tt = tensor[1]
+        self.m_pp = tensor[2]
+        self.m_rt = tensor[3]
+        self.m_rp = tensor[4]
+        self.m_tp = tensor[5]
+
+        # self.update_hdur()
+
     @property
     def fulltensor(self):
         """
@@ -398,6 +415,12 @@ class CMTSource(object):
         return np.array([[self.m_rr, self.m_rt, self.m_rp],
                          [self.m_rt, self.m_tt, self.m_tp],
                          [self.m_rp, self.m_tp, self.m_pp]])
+
+    def update_hdur(self):
+        # Updates the half duration
+        Nm_conv = 1 / 1e7
+        self.half_duration = np.round(
+            2.26 * 10**(-6) * (self.M0 * Nm_conv)**(1/3), decimals=1)
 
     @property
     def tbp(self):

@@ -98,7 +98,10 @@ def plot_seismograms(
         ax: Optional[matplotlib.axes.Axes] = None,
         processfunc: Callable = lambda x: x,
         annotations: bool = True,
-        labelbottom: bool = False):
+        labelbottom: bool = False,
+        labelobsd: str = None,
+        labelsynt: str = None,
+        labelnewsynt: str = None):
 
     if ax is None:
         ax = plt.gca()
@@ -121,6 +124,13 @@ def plot_seismograms(
     else:
         raise ValueError("You gotta at least have a single trace, boi.")
 
+    if not labelobsd:
+        labelobsd = 'Obs'
+    if not labelsynt:
+        labelsynt = 'Syn'
+    if not labelnewsynt:
+        labelnewsynt = 'New Syn'
+
     # Create trace ID to put a label on the plot.
     trace_id = f"{network}.{station}.{location}.{channel}"
 
@@ -142,17 +152,17 @@ def plot_seismograms(
         times_obsd = [offset_obsd + obsd.stats.delta *
                       i for i in range(obsd.stats.npts)]
         ax.plot(times_obsd, processfunc(obsd.data), color="black",
-                linewidth=0.75, label="Obs")
+                linewidth=0.75, label=labelobsd)
     if isinstance(synt, Trace):
         times_synt = [offset_synt + synt.stats.delta * i
                       for i in range(synt.stats.npts)]
         ax.plot(times_synt, processfunc(synt.data), color="red",
-                linewidth=0.75, label="Syn")
+                linewidth=0.75, label=labelsynt)
     if isinstance(syntf, Trace):
         times_syntf = [offset_syntf + syntf.stats.delta * i
                        for i in range(syntf.stats.npts)]
         ax.plot(times_syntf, processfunc(syntf.data), color="blue",
-                linewidth=0.75, label="New Syn")
+                linewidth=0.75, label=labelnewsynt)
 
     ax.legend(loc='upper right', frameon=False, ncol=3, prop={'size': 11})
     ax.tick_params(labelbottom=labelbottom, labeltop=False)
@@ -207,7 +217,10 @@ def plot_seismogram_by_station(
         compsystem: str = "ZRT",
         logger: Callable = print,
         processfunc: Callable = lambda x: x,
-        annotations: bool = False):
+        annotations: bool = False,
+        labelobsd: str = None,
+        labelsynt: str = None,
+        labelnewsynt: str = None):
 
     if obsd is not None:
         obs = obsd.select(network=network, station=station)
@@ -234,10 +247,17 @@ def plot_seismogram_by_station(
     else:
         newsyn = None
 
+    if not labelobsd:
+        labelobsd = 'Obs'
+    if not labelsynt:
+        labelsynt = 'Syn'
+    if not labelnewsynt:
+        labelnewsynt = 'New Syn'
+
     # Figure Setup
     components = [x for x in compsystem]
 
-    fig = plt.figure(figsize=(15, 10))
+    fig = plt.figure(figsize=(12, 8))
     # get the first line, there might be more
     axes = []
     for _i, _component in enumerate(components):
@@ -280,7 +300,8 @@ def plot_seismogram_by_station(
         plot_seismograms(obsd=obstrace, synt=syntrace, syntf=newsyntrace,
                          cmtsource=cmtsource, tag=tag, processfunc=processfunc,
                          ax=axes[_i], labelbottom=labelbottom,
-                         annotations=annotations)
+                         annotations=annotations, labelobsd=labelobsd,
+                         labelsynt=labelsynt, labelnewsynt=labelnewsynt)
 
         # Get limits for seismograms
         # Need some escape for envelope eventually

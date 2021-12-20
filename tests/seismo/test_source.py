@@ -119,6 +119,22 @@ def test_M0_getter_setter(cmt):
             assert factor == np.abs(getattr(cmt, _par)/check_params[_i])
 
 
+def test_M0_update_hdur(cmt):
+
+    # Half duration factor
+    M0_0 = 2.19370668048397e+27
+    hdur_0 = 13.6
+    M0_1 = 1.710498757672744e+25
+    hdur_1 = 2.7
+
+    # compute actual half duration
+    cmt.M0 = M0_0
+    np.testing.assert_almost_equal(hdur_0, cmt.half_duration)
+
+    cmt.M0 = M0_1
+    np.testing.assert_almost_equal(hdur_1, cmt.half_duration)
+
+
 def test_tbp(cmt):
 
     # Test eigenvalue decomposition
