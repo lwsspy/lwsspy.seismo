@@ -12,6 +12,7 @@ from .download_gcmt_catalog import download_gcmt_catalog  # noqa
 from .download_waveforms_cmt2storage import download_waveforms_cmt2storage  # noqa
 from .download_waveforms_to_storage import download_waveforms_to_storage  # noqa
 from .filterstationxml import filterstationxml  # noqa
+from .gaussiant import gaussiani  # noqa
 from .gaussiant import gaussiant  # noqa
 from .gaussiant import dgaussiant  # noqa
 from .get_inv_aspect_extent import get_inv_aspect_extent  # noqa
@@ -50,6 +51,7 @@ from .specfem.cmtdir2rundirs import cmtdir2rundirs  # noqa
 from .specfem.cmtdir2simdirs import cmtdir2simdirs  # noqa
 from .specfem.createsimdir import createsimdir  # noqa
 from .specfem.getsimdirSTATIONS import getsimdirSTATIONS  # noqa
+from .specfem.get_parfile_par import get_parfile_par  # noqa
 from .specfem.inv2STATIONS import inv2STATIONS  # noqa
 from .specfem.plot_csv_depth_slice import plot_csv_depth_slice  # noqa
 from .specfem.plot_specfem_xsec_depth import plot_specfem_xsec_depth  # noqa

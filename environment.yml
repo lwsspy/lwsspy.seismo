@@ -23,5 +23,6 @@ dependencies:
     - pyasdf
     - pyyaml
     - sphinx
-    - sphinx_book_theme
+    - pydata_sphinx_theme
+    - sphinx_copybutton
     - git+git://github.com/wjlei1990/pyflex.git@merge

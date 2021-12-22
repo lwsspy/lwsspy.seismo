@@ -15,13 +15,15 @@ def download_waveforms_to_storage(
         reject_channels_with_gaps: bool = True,
         network: Union[str, None] = "IU,II,G",
         station: Union[str, None] = None,
-        channel: Union[str, None] = "BH*",
-        location: Union[str, None] = "00",
+        channel: Union[str, None] = None,
+        location: Union[str, None] = None,
         providers: Union[List[str], None] = ["IRIS"],
         minlatitude: float = -90.0,
         maxlatitude: float = 90.0,
         minlongitude: float = -180.0,
         maxlongitude: float = 180.0,
+        location_priorities=None,
+        channel_priorities=None,
         limit_stations_to_inventory: Union[Inventory, None] = None):
 
     domain = RectangularDomain(minlatitude=minlatitude,
@@ -29,7 +31,8 @@ def download_waveforms_to_storage(
                                minlongitude=minlongitude,
                                maxlongitude=maxlongitude)
 
-    restrictions = Restrictions(
+    # Create Dictionary with the settings
+    rdict = dict(
         starttime=starttime,
         endtime=endtime,
         reject_channels_with_gaps=True,
@@ -38,7 +41,18 @@ def download_waveforms_to_storage(
         network=network,
         channel=channel,
         location=location,
-        limit_stations_to_inventory=limit_stations_to_inventory)
+        location_priorities=location_priorities,
+        channel_priorities=channel_priorities,
+        limit_stations_to_inventory=limit_stations_to_inventory
+    )
+
+    # Remove unset settings
+    if not location_priorities:
+        rdict.pop('location_priorities')
+    if not channel_priorities:
+        rdict.pop('channel_priorities')
+
+    restrictions = Restrictions(**rdict)
 
     # Datastorage:
     waveform_storage = os.path.join(datastorage, 'waveforms')

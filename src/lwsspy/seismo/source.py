@@ -17,8 +17,8 @@ Source and Receiver classes of Instaseis.
 """
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+import sys
 import numpy as np
-from numpy.lib.function_base import copy
 from obspy import UTCDateTime, read_events
 from obspy.imaging.beachball import beach
 from obspy.core.event import Event
@@ -28,6 +28,7 @@ from inspect import getmembers, isfunction
 from ..plot.axes_from_axes import axes_from_axes
 from ..plot.plot_label import plot_label
 from ..plot.get_aspect import get_aspect
+from ..plot.updaterc import updaterc
 from ..plot.midpointcolornorm import MidpointNormalize
 import matplotlib.pyplot as plt
 
@@ -116,7 +117,7 @@ class CMTSource(object):
             longitude = float(f.readline().strip().split()[-1])
             depth_in_m = float(f.readline().strip().split()[-1]) * 1e3
 
-            # unit: N/m
+            #                                                 unit: N/m
             m_rr = float(f.readline().strip().split()[-1])  # / 1e7
             m_tt = float(f.readline().strip().split()[-1])  # / 1e7
             m_pp = float(f.readline().strip().split()[-1])  # / 1e7
@@ -276,6 +277,31 @@ class CMTSource(object):
                    m_rr=m_rr, m_tt=m_tt, m_pp=m_pp, m_rt=m_rt,
                    m_rp=m_rp, m_tp=m_tp)
 
+    def to_row(self):
+        """Returns a tuple of all parameters to append it to a 
+        dataframe."""
+        return (
+            self.origin_time.datetime,
+            self.pde_latitude,
+            self.pde_longitude,
+            self.pde_depth_in_m,
+            self.mb,
+            self.ms,
+            self.region_tag,
+            self.eventname,
+            self.time_shift,
+            self.half_duration,
+            self.latitude,
+            self.longitude,
+            self.depth_in_m,
+            self.m_rr,
+            self.m_tt,
+            self.m_pp,
+            self.m_rt,
+            self.m_rp,
+            self.m_tp
+        )
+
     def write_CMTSOLUTION_file(self, filename, mode="w"):
         """
         Initialize a source object from a CMTSOLUTION file.
@@ -337,6 +363,8 @@ class CMTSource(object):
         self.m_rp *= factor
         self.m_tp *= factor
 
+        self.update_hdur()
+
     @property
     def moment_magnitude(self):
         """
@@ -364,6 +392,21 @@ class CMTSource(object):
         return np.array([self.m_rr, self.m_tt, self.m_pp, self.m_rt, self.m_rp,
                          self.m_tp])
 
+    @tensor.setter
+    def tensor(self, tensor):
+        """
+        List of moment tensor components in r, theta, phi coordinates:
+        [m_rr, m_tt, m_pp, m_rt, m_rp, m_tp]
+        """
+        self.m_rr = tensor[0]
+        self.m_tt = tensor[1]
+        self.m_pp = tensor[2]
+        self.m_rt = tensor[3]
+        self.m_rp = tensor[4]
+        self.m_tp = tensor[5]
+
+        # self.update_hdur()
+
     @property
     def fulltensor(self):
         """
@@ -372,6 +415,12 @@ class CMTSource(object):
         return np.array([[self.m_rr, self.m_rt, self.m_rp],
                          [self.m_rt, self.m_tt, self.m_tp],
                          [self.m_rp, self.m_tp, self.m_pp]])
+
+    def update_hdur(self):
+        # Updates the half duration
+        Nm_conv = 1 / 1e7
+        self.half_duration = np.round(
+            2.26 * 10**(-6) * (self.M0 * Nm_conv)**(1/3), decimals=1)
 
     @property
     def tbp(self):
@@ -536,6 +585,7 @@ class CMTSource(object):
         return strike, dip
 
     def beach(self):
+        updaterc()
         plt.figure(figsize=(2, 2))
         ax = plt.axes()
 
@@ -565,7 +615,7 @@ class CMTSource(object):
         half duration
         3x3 image black 1, white 0
         """
-
+        updaterc()
         plt.figure(figsize=(5.25, 1.75))
         ax = plt.axes()
         ax.axis('off')
@@ -578,7 +628,7 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.625, 0.4),
-                   width=200,
+                   width=300,
                    size=100,
                    nofill=False,
                    zorder=100,
@@ -738,3 +788,15 @@ class CMTSource(object):
 
     def __ne__(self, other):
         return self.__dict__ != other.__dict__
+
+
+def plot_beach():
+    cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
+    cmtsource.beach()
+    plt.show(block=True)
+
+
+def plot_beachfig():
+    cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
+    cmtsource.beachfig()
+    plt.show(block=True)

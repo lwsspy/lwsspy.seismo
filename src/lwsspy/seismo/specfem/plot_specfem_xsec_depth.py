@@ -50,8 +50,8 @@ def plot_specfem_xsec_depth(infile, outfile=None, ax=None, cax=None,
     lmap.plot_map(fill=False, zorder=1)
 
     im = ax.imshow(val[::-1, :], extent=extent,
-                   transform=cartopy.crs.PlateCarree(), zorder=-15,
-                   cmap='rainbow_r', alpha=0.9)
+                   transform=cartopy.crs.PlateCarree(), zorder=0,
+                   cmap='rainbow_r', alpha=0.9, rasterized=True)
 
     lplt.plot_label(ax, f"{depth:.1f} km", aspect=2.0,
                         location=2, dist=0.0, box=False)

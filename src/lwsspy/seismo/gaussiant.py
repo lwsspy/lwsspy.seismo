@@ -1,4 +1,35 @@
 import numpy as np
+from scipy.integrate import cumtrapz
+
+
+def gaussiani(t, t0=0.0, f0=20.0, dt=1.0):
+    """Integrated Gaussian curve with dominant frequency and time-shift
+
+    Parameters
+    ----------
+    t : Array-like
+        time vector
+    t0 : float, optional
+        timeshift, by default 0.0
+    f0 : float, optional
+        dominant frequenncy in Hz, by default 20.0
+
+    Returns
+    -------
+    Arraylike
+        output gaussian
+
+    Notes
+    -----
+
+    :Author:
+        Lucas Sawade (lsawade@princeton.edu)
+
+    :Last Modified:
+        2021.03.02 23.30
+
+    """
+    return cumtrapz(np.exp(-(4*f0)**2 * (t-t0)**2), t)
 
 
 def gaussiant(t, t0=0.0, f0=20.0):
@@ -23,7 +54,7 @@ def gaussiant(t, t0=0.0, f0=20.0):
 
     :Author:
         Lucas Sawade (lsawade@princeton.edu)
- 
+
     :Last Modified:
         2021.03.02 23.30
 

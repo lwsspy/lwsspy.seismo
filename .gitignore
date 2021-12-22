@@ -1,6 +1,6 @@
 .mypy_cache
 environment.yml
-lwsspy.egg-info
+*.egg-info
 __pycache__
 *.pyc
 .DS_Store
@@ -13,9 +13,11 @@ docs/build
 
 _build
 rivers
-docs/source/chapters/figures/scripts/data/C201711191509A.1D.sac
-docs/source/chapters/figures/dem_animation
+docs/chapters/figures/scripts/data/C201711191509A.1D.sac
+docs/chapters/figures/dem_animation
 .ipynb_checkpoints
-*.png
-*.pdf
-*.svg
+
+# Don't ignore these
+!docs/chapters/figures/*.png
+!docs/chapters/figures/*.pdf
+!docs/chapters/figures/*.svg
