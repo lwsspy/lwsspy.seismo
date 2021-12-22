@@ -4,7 +4,7 @@ import numpy as np
 import sys
 import cartopy
 
-from ... import math as lmat
+import lwsspy.math as lmat
 
 
 def read_specfem_xsec_depth(filename: str, res: float = 0.25,
@@ -51,7 +51,9 @@ def read_specfem_xsec_depth(filename: str, res: float = 0.25,
     # Creating a kdtree, and use it to interp
     SNN = lmat.SphericalNN(lat, lon)
     interpolator = SNN.interpolator(llat, llon, no_weighting=no_weighting,
-                                    maximum_distance=maximum_distance)
+                                    maximum_distance=maximum_distance,
+                                    k=10)
+
     rad = interpolator(rad)
     val = interpolator(val)
     per = interpolator(per)
