@@ -536,7 +536,7 @@ class CMTCatalog:
 
         # End print
         t1 = time.time()
-        print(f"     Done. Elapsed Time: {sec2hhmmss(t1-t0)}")
+        print(f"     Done. Elapsed Time: {sec2hhmmss(t1-t0)[-1]}")
 
     def cmts2file(self, outfile: str = "./catalog.txt"):
 
@@ -553,7 +553,7 @@ class CMTCatalog:
 
         # End print
         t1 = time.time()
-        print(f"     Done. Elapsed Time: {sec2hhmmss(t1-t0)}")
+        print(f"     Done. Elapsed Time: {sec2hhmmss(t1-t0)[-1]}")
 
     def printcmts(self, outfile: Optional[str] = None):
         """Prints the ids or writes them to a file"""
