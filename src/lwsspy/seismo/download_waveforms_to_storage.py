@@ -39,8 +39,9 @@ def download_waveforms_to_storage(
         # Trace needs to be almost full length
         minimum_length=minimum_length,
         network=network,
-        channel=channel,
+        station=station,
         location=location,
+        channel=channel,
         location_priorities=location_priorities,
         channel_priorities=channel_priorities,
         limit_stations_to_inventory=limit_stations_to_inventory

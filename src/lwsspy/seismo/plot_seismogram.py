@@ -311,3 +311,5 @@ def plot_seismogram_by_station(
         axes[_i].set_ylim(-yscale_max, yscale_max)
 
     axes[-1].set_xlabel("Time [s]")
+
+    return fig, axes
