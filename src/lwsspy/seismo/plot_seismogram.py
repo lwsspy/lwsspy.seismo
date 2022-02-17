@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
 from obspy import Trace, Stream
+from obspy.geodetics.base import gps2dist_azimuth
 from .source import CMTSource
-from ..plot.plot_label import plot_label
-from ..plot.get_limits import get_limits
-from ..math.envelope import envelope
+from lwsspy.plot.plot_label import plot_label
+from lwsspy.plot.get_limits import get_limits
+from lwsspy.math.envelope import envelope
+from lwsspy.signal.xcorr import xcorr
 
 
 def plot_seismogram(obsd: Trace,
@@ -101,22 +103,28 @@ def plot_seismograms(
         labelbottom: bool = False,
         labelobsd: str = None,
         labelsynt: str = None,
-        labelnewsynt: str = None):
+        labelnewsynt: str = None,
+        legend: bool = True,
+        windows: bool = True,
+        timescale: float = 1.0):
 
     if ax is None:
         ax = plt.gca()
 
-    if isinstance(obsd, Trace):
+    plotobsd = isinstance(obsd, Trace)
+    plotsynt = isinstance(synt, Trace)
+    plotsyntf = isinstance(syntf, Trace)
+    if plotobsd:
         station = obsd.stats.station
         network = obsd.stats.network
         channel = obsd.stats.channel
         location = obsd.stats.location
-    elif isinstance(synt, Trace):
+    elif plotsynt:
         station = synt.stats.station
         network = synt.stats.network
         channel = synt.stats.channel
         location = synt.stats.location
-    elif isinstance(syntf, Trace):
+    elif plotsyntf:
         station = syntf.stats.station
         network = syntf.stats.network
         channel = syntf.stats.channel
@@ -141,40 +149,55 @@ def plot_seismograms(
         offset_synt = 0
         offset_syntf = 0
     else:
-        if isinstance(obsd, Trace):
+        if plotobsd:
             offset_obsd = obsd.stats.starttime - cmtsource.cmt_time
-        if isinstance(synt, Trace):
+        if plotsynt:
             offset_synt = synt.stats.starttime - cmtsource.cmt_time
-        if isinstance(syntf, Trace):
+        if plotsyntf:
             offset_syntf = syntf.stats.starttime - cmtsource.cmt_time
 
-    if isinstance(obsd, Trace):
+    maxdisp = 0.0
+    if plotobsd:
         times_obsd = [offset_obsd + obsd.stats.delta *
                       i for i in range(obsd.stats.npts)]
-        ax.plot(times_obsd, processfunc(obsd.data), color="black",
+        pobsd = processfunc(obsd.data)
+        ax.plot(np.array(times_obsd)/timescale, pobsd, color="black",
                 linewidth=0.75, label=labelobsd)
-    if isinstance(synt, Trace):
+        obsdmax = np.max(np.abs(pobsd))
+        maxdisp = obsdmax if obsdmax > maxdisp else maxdisp
+
+    if plotsynt:
         times_synt = [offset_synt + synt.stats.delta * i
                       for i in range(synt.stats.npts)]
-        ax.plot(times_synt, processfunc(synt.data), color="red",
+        psynt = processfunc(synt.data)
+        ax.plot(np.array(times_synt)/timescale, psynt, color="red",
                 linewidth=0.75, label=labelsynt)
-    if isinstance(syntf, Trace):
+        syntmax = np.max(np.abs(psynt))
+        maxdisp = syntmax if syntmax > maxdisp else maxdisp
+
+    if plotsyntf:
         times_syntf = [offset_syntf + syntf.stats.delta * i
                        for i in range(syntf.stats.npts)]
-        ax.plot(times_syntf, processfunc(syntf.data), color="blue",
+        psyntf = processfunc(syntf.data)
+        ax.plot(np.array(times_syntf)/timescale, processfunc(syntf.data), color="blue",
                 linewidth=0.75, label=labelnewsynt)
+        syntfmax = np.max(np.abs(psyntf))
+        maxdisp = syntfmax if syntfmax > maxdisp else maxdisp
 
-    ax.legend(loc='upper right', frameon=False, ncol=3, prop={'size': 11})
+    if legend:
+        ax.legend(loc='lower right', frameon=False, ncol=2,
+                  prop=dict(size=11, family='monospace'),
+                  bbox_to_anchor=(1., 1.), borderaxespad=0.0)
     ax.tick_params(labelbottom=labelbottom, labeltop=False)
 
     # Setting top left corner text manually
-    if isinstance(tag, str):
-        label = f"{trace_id}\n{tag.capitalize()}"
-    else:
-        label = f"{trace_id}"
-    plot_label(ax, label, location=1, dist=0.005, box=False)
+    # if isinstance(tag, str):
+    #     label = f"{trace_id}\n{tag.capitalize()}"
+    # else:
+    #     label = f"{trace_id}"
+    # plot_label(ax, label, location=1, dist=0.005, box=False)
 
-    if isinstance(obsd, Trace) and isinstance(synt, Trace):
+    if plotobsd and plotsynt and (windows):
         try:
             scaleabsmax = 2 * np.max(np.abs(obsd.data))
             for _i, win in enumerate(obsd.stats.windows):
@@ -205,6 +228,74 @@ def plot_seismograms(
         except Exception as e:
             print(e)
 
+    # Change fontsize
+    fontsizech = 'medium'
+    fontsize = 'x-small'
+
+    # Create infostring
+    channelstring = f"{channel}-{location}"
+    dispstring = f"{maxdisp*1e6:.2f}$\mu$"
+
+    # Plot base info
+    plot_label(ax, channelstring, location=8, box=False, fontfamily='monospace',
+               dist=0.01, fontsize=fontsizech)
+
+    plot_label(ax, "\n\n" + dispstring, location=8, box=False,
+               fontfamily='monospace', dist=0.01, fontsize=fontsize)
+
+    # Add Measurements
+    if plotobsd and plotsynt and plotsyntf:
+        # Misfit and Cross correlation
+        FS = 0.5 * np.sum((psynt-pobsd)**2)/np.sum(pobsd**2)
+        CS, TS = xcorr(pobsd, psynt)
+        SS = np.sum(np.roll(psynt, TS) * pobsd)/np.sum(psynt**2)
+
+        FF = 0.5 * np.sum((psyntf-pobsd)**2)/np.sum(pobsd**2)
+        CF, TF = xcorr(pobsd, psyntf)
+        SF = np.sum(np.roll(psyntf, TF) * pobsd)/np.sum(psyntf**2)
+        plot_label(ax, "\n\n\nM:\n\nC:\n\nS:", location=8, box=False,
+                   fontfamily='monospace', dist=0.01, fontsize=fontsize)
+
+        # Create strings
+        addstring0 = (
+            f"\n\n\n   {FS:.3f}"
+            f"\n\n   {CS:.3f}"
+            f"\n\n   {SS:.3f}"
+        )
+        addstring1 = (
+            f"\n\n\n\n   {FF:.3f}"
+            f"\n\n   {CF:.3f}"
+            f"\n\n   {SF:.3f}"
+        )
+
+        plot_label(ax, addstring0, location=8, box=False,
+                   fontfamily='monospace', fontsize=fontsize,
+                   dist=0.01, color='r')
+
+        plot_label(ax, addstring1, location=8, box=False,
+                   fontfamily='monospace', fontsize=fontsize,
+                   dist=0.01, color='b')
+
+    elif plotobsd and plotsynt and (plotsyntf is False):
+        # Misfit and Cross correlation
+        FS = 0.5 * np.sum((psynt-pobsd)**2)/np.sum(pobsd**2)
+        CS, TS = xcorr(pobsd, psynt)
+        SS = np.sum(np.roll(psynt, TS) * pobsd)/np.sum(psynt**2)
+
+        plot_label(ax, "\n\nM:\nC:\nS:", location=8, box=False,
+                   fontfamily='monospace', dist=0.01, fontsize=fontsize)
+
+        # Create strings
+        addstring0 = (
+            f"\n\n   {FS:.3f}"
+            f"\n   {CS:.3f}"
+            f"\n   {SS:.3f}"
+        )
+
+        plot_label(ax, addstring0, location=8, box=False,
+                   fontfamily='monospace',
+                   dist=0.01, color='r')
+
 
 def plot_seismogram_by_station(
         network: str,
@@ -220,7 +311,10 @@ def plot_seismogram_by_station(
         annotations: bool = False,
         labelobsd: str = None,
         labelsynt: str = None,
-        labelnewsynt: str = None):
+        labelnewsynt: str = None,
+        periodrange: list = None):
+
+    Ncomp = len(compsystem)
 
     if obsd is not None:
         obs = obsd.select(network=network, station=station)
@@ -257,19 +351,24 @@ def plot_seismogram_by_station(
     # Figure Setup
     components = [x for x in compsystem]
 
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(10, 1.0 + 1.3*Ncomp))
+    plt.subplots_adjust(top=0.85 - 0.05 * (3-Ncomp),
+                        bottom=0.1 + 0.05 * (3-Ncomp))
     # get the first line, there might be more
     axes = []
+    abc = "abc"
     for _i, _component in enumerate(components):
 
-        axes.append(plt.subplot(311 + _i))
+        axes.append(plt.subplot(Ncomp*100 + 11 + _i))
 
         if obs is not None:
             try:
                 obstrace = obs.select(component=_component)[0]
-            except Exception:
+
+            except Exception as e:
                 logger(
                     f"Observed {_component} not available for {network}.{station}")
+                print(e)
                 obstrace = None
         else:
             obstrace = None
@@ -296,20 +395,81 @@ def plot_seismogram_by_station(
         else:
             newsyntrace = None
 
-        labelbottom = True if _i == 2 else False
+        # Set some plotting parameters
+        legend = True if _i == 0 else False
+        labelbottom = True if _i == Ncomp-1 else False
+
+        # Plot the seismograms for compoenent _comp
         plot_seismograms(obsd=obstrace, synt=syntrace, syntf=newsyntrace,
                          cmtsource=cmtsource, tag=tag, processfunc=processfunc,
                          ax=axes[_i], labelbottom=labelbottom,
                          annotations=annotations, labelobsd=labelobsd,
-                         labelsynt=labelsynt, labelnewsynt=labelnewsynt)
+                         labelsynt=labelsynt, labelnewsynt=labelnewsynt,
+                         legend=legend, timescale=3600.0, windows=False)
 
         # Get limits for seismograms
         # Need some escape for envelope eventually
+        axes[_i].set_yticklabels([])
+
         xmin, xmax, ymin, ymax = get_limits(axes[_i])
-        yscale_max = 1.25 * np.max(np.abs([ymin, ymax]))
+        yscale_max = np.max(np.abs([ymin, ymax]))
         axes[_i].set_xlim(xmin, xmax)
         axes[_i].set_ylim(-yscale_max, yscale_max)
 
-    axes[-1].set_xlabel("Time [s]")
+        if _i == Ncomp-1:
+            axes[_i].spines.left.set_visible(False)
+            axes[_i].spines.right.set_visible(False)
+            axes[_i].spines.top.set_visible(False)
+            axes[_i].spines.bottom.set_visible(True)
+            axes[_i].spines.bottom.set_position(('outward', 5))
+            axes[_i].yaxis.set_ticks([])
+            axes[_i].tick_params(axis='x', which='both', bottom=True,
+                                 top=False, direction='in')
+        else:
+            axes[_i].spines.left.set_visible(False)
+            axes[_i].spines.right.set_visible(False)
+            axes[_i].spines.top.set_visible(False)
+            axes[_i].spines.bottom.set_visible(False)
+            axes[_i].xaxis.set_ticks([])
+            axes[_i].yaxis.set_ticks([])
+
+        # Plot figure label
+        plot_label(
+            axes[_i], abc[_i] + ")", location=5, box=False,
+            fontfamily='monospace')
+
+        if _i == 0:
+
+            # Get filter
+            if not periodrange:
+                periodstr = ""
+            else:
+                periodstr = f"P: {int(periodrange[0]):d}-{int(periodrange[1]):d}s"
+
+            # Get some geographical data
+            dist, az, baz = gps2dist_azimuth(
+                cmtsource.latitude, cmtsource.longitude,
+                obstrace.stats.latitude, obstrace.stats.longitude)
+            m2deg = 360/(2*np.pi*6371000.0)
+
+            # Create String
+            station_string = (
+                f"{cmtsource.cmt_time.strftime('%Y/%m/%d %H:%M:%S')}, "
+                f"$\\theta$={cmtsource.latitude:6.2f}, "
+                f"$\\phi$={cmtsource.longitude:7.2f}, "
+                f"$h$={cmtsource.depth_in_m/1000.0:5.1f}\n"
+                f"{station}-{network}   "
+                f"$\\Delta$={m2deg*dist:6.2f}, "
+                f"$\\alpha$={az:6.2f}, "
+                f"$\\beta$={baz:6.2f}, "
+                f"{periodstr}"
+            )
+
+            # Plot the label
+            plot_label(
+                axes[0], station_string, location=6, box=False,
+                fontfamily='monospace', dist=0.0)
+
+    axes[-1].set_xlabel("Time [h]")
 
     return fig, axes

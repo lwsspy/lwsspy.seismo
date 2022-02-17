@@ -24,7 +24,9 @@ def download_waveforms_to_storage(
         maxlongitude: float = 180.0,
         location_priorities=None,
         channel_priorities=None,
-        limit_stations_to_inventory: Union[Inventory, None] = None):
+        limit_stations_to_inventory: Union[Inventory, None] = None,
+        waveform_storage: str = None,
+        station_storage: str = None,):
 
     domain = RectangularDomain(minlatitude=minlatitude,
                                maxlatitude=maxlatitude,
@@ -56,8 +58,10 @@ def download_waveforms_to_storage(
     restrictions = Restrictions(**rdict)
 
     # Datastorage:
-    waveform_storage = os.path.join(datastorage, 'waveforms')
-    station_storage = os.path.join(datastorage, 'stations')
+    if waveform_storage is None:
+        waveform_storage = os.path.join(datastorage, 'waveforms')
+    if station_storage is None:
+        station_storage = os.path.join(datastorage, 'stations')
 
     # Create massdownloader
     mdl = MassDownloader(providers=providers)

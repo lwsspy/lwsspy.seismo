@@ -23,7 +23,9 @@ good.
 """
 
 from os import path, environ
+from re import M
 from sys import argv, exit
+from matplotlib import rcParams
 from obspy import read, Inventory
 from obspy.geodetics.base import gps2dist_azimuth
 from numpy import pi
@@ -32,6 +34,7 @@ from lwsspy.seismo.source import CMTSource
 from lwsspy.seismo.read_inventory import flex_read_inventory as read_inventory
 from lwsspy.seismo.process.process import process_stream
 from lwsspy.seismo.plot_seismogram import plot_seismogram_by_station
+from lwsspy.seismo import PROCD
 from lwsspy.plot.updaterc import updaterc
 
 
@@ -195,45 +198,67 @@ def plotstation(event, network, station, periodmin, periodmax):
     sf25 = read(semfiles)
 
     # Observed processing parameters:
+    fmin, fmax = 1/periodmax, 1/periodmin
+    fminn = fmin - 0.01*fmin
+    fmaxx = fmax + 0.01*fmax
     procdict = dict(
         starttime=cmt.cmt_time,
-        endtime=cmt.cmt_time + 100 * 55.0,
-        periodmin=periodmin,
-        periodmax=periodmax,
-        rr=True,
-        rs=True,
-        rotate=True,
-        sampling_rate=1.0
+        endtime=cmt.cmt_time + 3 * 3600.0,
+        pre_filt=[fminn, fmin, fmax, fmaxx],
+        remove_response_flag=True,
+        rotate_flag=True,
+        resample_flag=True,
+        sampling_rate=1.0,
+        sanity_check=True,
+        event_latitude=cmt.latitude,
+        event_longitude=cmt.longitude
     )
 
+    PROCD.pop("relative_starttime")
+    PROCD.pop("relative_endtime")
+    PROCD.update(procdict)
+
     # Process all data
-    pdata = proc(data, inv, cmt, **procdict)
+    pdata = process_stream(data, inv, **PROCD, geodata=True)
 
     # Set remove response flag to False for synthetic processing
-    procdict['rr'] = False
+    PROCD['remove_response_flag'] = False
+    # False
 
-    # Modify the inventory for synthetics
-    minv = synth_inv(inv, mode="mode")
-    sinv = synth_inv(inv, mode="sem")
+    # # Modify the inventory for synthetics
+    # minv = synth_inv(inv, mode="mode")
+    # sinv = synth_inv(inv, mode="sem")
 
     # Process modes
-    pmode = proc(mode, minv, cmt, **procdict)
+    pmode = process_stream(mode, inv, **PROCD)
 
     # Process SEM synthetics
-    psf25 = proc(sf25, sinv, cmt, **procdict)
+    psf25 = process_stream(sf25, inv, **PROCD)
 
     # Update plotting options
     updaterc()
+    rcParams['font.family'] = 'monospace'
 
     # Plot Seismograms
-    plot_seismogram_by_station(
+    compsystem = "ZRT"
+    fig, axes = plot_seismogram_by_station(
         network, station,
         obsd=pdata, synt=pmode, newsynt=psf25,
         cmtsource=cmt,
         labelobsd="Data",
         labelsynt="Modes",
         labelnewsynt="SEM3D",
+        compsystem=compsystem,
+        periodrange=[periodmin, periodmax]
     )
+
+    rect = plt.Rectangle((1.75, 0), width=0.75,
+                         height=len(compsystem) +
+                         fig.subplotpars.hspace*(len(compsystem)-1),
+                         transform=axes[-1].get_xaxis_transform(),
+                         clip_on=False, edgecolor="none", facecolor="gray",
+                         linewidth=3, alpha=0.2, zorder=-1)
+    axes[-1].add_patch(rect)
 
     plt.show(block=True)
 
