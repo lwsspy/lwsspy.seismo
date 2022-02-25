@@ -12,7 +12,7 @@ def queue_multiprocess_stream(
         st: Stream,
         processdict,
         nproc: int = 4,
-        verbose: bool = False):
+        verbose: bool = False) -> Stream:
     """Uses the multiprocessing module to multiprocess your python stream.
     Extremely simple:
     1. Split stream into chunks for each processor, where each chunk contains 
