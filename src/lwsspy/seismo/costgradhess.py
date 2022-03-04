@@ -2,6 +2,7 @@ from typing import Union, List, Tuple
 from obspy import Stream
 import numpy as np
 
+
 class CostGradHess:
 
     def __init__(self,
@@ -253,6 +254,89 @@ class CostGradHess:
                         f"Error - Gradient - {network}.{station}.{component}: {e}")
 
         return g
+
+    def hess(self) -> np.ndarray:
+        """Computes the gradient and the approximate hessian of the cost function
+        using the Frechet derivative of the forward modelled data.
+        The stats object of the Traces in the stream _*must*_ contain both
+        `windows` and the `tapers` attributes!
+
+        Parameters
+        ----------
+        data : Stream
+            data
+        synt : Stream
+            synthetics
+        dsyn : Stream
+            frechet derivatives
+
+        Returns
+        -------
+        Tuple[float, float]
+            Gradient, Approximate Hessian
+
+        Last modified: Lucas Sawade, 2020.09.28 19.00 (lsawade@princeton.edu)
+        """
+
+        if self.dsyn is None:
+            raise ValueError(
+                "List of Frechet derivatives is needed for the gradient\n"
+                "and hessian computation.")
+
+        h = np.zeros((len(self.dsyn), len(self.dsyn)))
+
+        for tr in self.data:
+            network, station, component = (
+                tr.stats.network, tr.stats.station, tr.stats.component)
+
+            # Get the trace sampling time
+            dt = tr.stats.delta
+            d = tr.data
+
+            try:
+                s = self.synt.select(network=network, station=station,
+                                     component=component)[0].data
+
+                # Create trace list for the Frechet derivatives
+                dsdm = []
+                for ds in self.dsyn:
+                    dsdm.append(ds.select(network=network, station=station,
+                                          component=component)[0].data)
+
+                ht = np.zeros((len(self.dsyn), len(self.dsyn)))
+                fnorm = 0
+
+                # Loop over windows
+                for win, tap in zip(tr.stats.windows, tr.stats.tapers):
+                    wsyn = s[win.left:win.right]
+                    wobs = d[win.left:win.right]
+                    fnorm += np.sum(tap * wobs ** 2) * dt
+
+                    # Compute Gradient
+                    for _i, _dsdm_i in enumerate(dsdm):
+                        # Get derivate with respect to model parameter i
+                        wdsdm_i = _dsdm_i[win.left:win.right]
+
+                        for _j, _dsdm_j in enumerate(dsdm):
+                            # Get derivate with respect to model parameter j
+                            wdsdm_j = _dsdm_j[win.left:win.right]
+                            ht[_i, _j] += ((wdsdm_i * tap) @
+                                           (wdsdm_j * tap)) * dt
+
+                if self.weight:
+                    ht *= tr.stats.weights
+
+                if self.normalize and fnorm != 0:
+                    ht /= fnorm
+
+                h += ht
+
+            except Exception as e:
+                if self.verbose:
+                    print(f"When accessing {network}.{station}.{component}")
+                    print(e)
+
+        return h
 
     def grad_and_hess(self) -> Tuple[np.ndarray, np.ndarray]:
         """Computes the gradient and the approximate hessian of the cost function
