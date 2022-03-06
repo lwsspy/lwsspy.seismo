@@ -1,31 +1,31 @@
 """
-
-Usage: 
-
-    seismo-print-events <path/to/eventdir>
-
-This script calls a python function that just prints all events in a directory 
-to the terminal. Just for info 
-
---- 
-
 :Author:
     Lucas Sawade (lsawade-at-princeton.edu)
 
 :Last Modified:
-    2022.03.04 11.00
+    2022.03.06 16.00
 
 """
+
 from os import path, listdir
 from sys import argv
 from ..source import CMTSource
 
 
 def bin():
+    """
 
+    Usage:
+
+        seismo-print-events <path/to/eventdir>
+
+    This script calls a python function that just prints all events in a 
+    directory to the terminal. Just for info.
+
+    """
     # Get args or print usage statement
     if (len(argv) != 2) or (argv[1] == '-h') or (argv[1] == '--help'):
-        print(__doc__)
+        print(bin.__doc__)
         exit()
     else:
         eventdir = argv[1]
