@@ -760,7 +760,7 @@ class CMTSource(object):
             self.depth_in_m / 1e3,)
         return_str += 'half duration: %f\n' % self.half_duration
         return_str += 'Moment Tensor [Mrr, Mtt, Mpp, Mrt, Mrp, Mtp]: \n'
-        return_str += '              %s\n' % self.tensor
+        return_str += '              %s\n' % np.array2string(self.tensor, max_line_width=1e10)
         return_str += 'Magnitude: %4.2f(mw), %4.2f(mb), %4.2f(ms)\n' % (
             self.moment_magnitude, self.mb, self.ms)
         return_str += 'region tag: %s' % self.region_tag
