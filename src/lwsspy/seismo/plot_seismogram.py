@@ -350,7 +350,7 @@ def plot_seismograms(
 
     if plotobsd:
         if hasattr(obsd.stats, 'weights'):
-            dispstring = f"\nW: {obsd.stats.weights:7.4f}" + dispstring
+            dispstring = "\n" + dispstring + "\n" + f"W: {obsd.stats.weights:6.4f}" 
         else:
             dispstring = "\n\n" + dispstring
 
