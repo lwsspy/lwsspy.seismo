@@ -78,7 +78,7 @@ class CostGradHess:
                 T=dict(res=[], dlnA=[],  dt=[]),
                 Z=dict(res=[], dlnA=[],  dt=[])
             )
-
+        
         for _component, _compdict in residuals.items():
             compstream = self.data.select(component=_component)
             for tr in compstream:

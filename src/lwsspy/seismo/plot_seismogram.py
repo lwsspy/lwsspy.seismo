@@ -348,11 +348,17 @@ def plot_seismograms(
     channelstring = f"{channel}-{location}"
     dispstring = f"{maxdisp*1e6:.2f}$\mu$"
 
+    if plotobsd:
+        if hasattr(obsd.stats, 'weights'):
+            dispstring = f"\nW: {obsd.stats.weights:7.4f}" + dispstring
+        else:
+            dispstring = "\n\n" + dispstring
+
     # Plot base info
     plot_label(ax, channelstring, location=8, box=False, fontfamily='monospace',
                dist=0.01, fontsize=fontsizech)
 
-    plot_label(ax, "\n\n" + dispstring, location=8, box=False,
+    plot_label(ax, dispstring, location=8, box=False,
                fontfamily='monospace', dist=0.01, fontsize=fontsize)
 
     # Add Measurements
