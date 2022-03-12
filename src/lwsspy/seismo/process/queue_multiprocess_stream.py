@@ -3,8 +3,8 @@ import multiprocessing as mp
 from functools import partial
 from obspy import Stream, Inventory
 from .process import process_stream
-from ...utils.timer import Timer
-from ...utils.multiqueue import multiwrapper
+from lwsspy.utils.timer import Timer
+from lwsspy.utils.multiqueue import multiwrapper
 from .split_stream_inv import split_stream_inv
 
 
