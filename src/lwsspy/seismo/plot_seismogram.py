@@ -7,11 +7,74 @@ from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
 from obspy import Trace, Stream
 from obspy.geodetics.base import gps2dist_azimuth
+from pandas import period_range
 from .source import CMTSource
 from lwsspy.plot.plot_label import plot_label
 from lwsspy.plot.get_limits import get_limits
 from lwsspy.math.envelope import envelope
-from lwsspy.signal.xcorr import xcorr
+from lwsspy.signal.xcorr import xcorr, correct_window_index
+from lwsspy.signal.norm import dnorm2, norm2
+from lwsspy.signal.dlna import dlna
+
+
+# def get_toffset(
+#         tsample: int, dt: float, t0: UTCDateTime, origin: UTCDateTime) -> float:
+#     """Computes the time of a sample with respect to origin time
+
+#     Parameters
+#     ----------
+#     tsample : int
+#         sample on trace
+#     dt : float
+#         sample spacing
+#     t0 : UTCDateTime
+#         time of the first sample
+#     origin : UTCDateTime
+#         origin time
+
+#     Returns
+#     -------
+#     float
+#         Time relative to origin time
+#     """
+
+#     # Second on trace
+#     trsec = (tsample*dt)
+#     return (t0 + trsec) - origin
+
+
+def get_mcsta(d, s, dt, npts, win, taper=1.0):
+
+    # Get left and right indeces
+    l, r = win.left, win.right
+
+    # Get window data
+    wd = d[l:r]
+    ws = s[l:r]
+
+    # winleft = get_toffset(
+    #     l, dt, win.time_of_first_sample, event.origin_time)
+    # winright = get_toffset(
+    #     win.right, dt, win.time_of_first_sample, event.origin_time)
+
+    # Measurements
+    max_cc_value, nshift = xcorr(wd*taper, ws*taper)
+
+    # Get fixed window indeces.
+    istart, iend = l, r
+    istart_d, iend_d, istart_s, iend_s = correct_window_index(
+        istart, iend, nshift, npts)
+    wd_fix = d[istart_d:iend_d]
+    ws_fix = s[istart_s:iend_s]
+
+    # Get measurements
+    m = dnorm2(wd, ws, w=taper)/norm2(wd, w=taper)
+    c = max_cc_value
+    s = np.sum(taper * wd_fix * ws_fix)/np.sum(taper * ws_fix ** 2)
+    t = nshift * dt
+    a = dlna(wd_fix, ws_fix, w=taper)
+
+    return m, c, s, t, a
 
 
 def plot_seismogram(obsd: Trace,
@@ -158,8 +221,8 @@ def plot_seismograms(
 
     maxdisp = 0.0
     if plotobsd:
-        times_obsd = [offset_obsd + obsd.stats.delta *
-                      i for i in range(obsd.stats.npts)]
+        times_obsd = offset_obsd + obsd.stats.delta * \
+            np.arange(obsd.stats.npts)
         pobsd = processfunc(obsd.data)
         ax.plot(np.array(times_obsd)/timescale, pobsd, color="black",
                 linewidth=0.75, label=labelobsd)
@@ -167,8 +230,8 @@ def plot_seismograms(
         maxdisp = obsdmax if obsdmax > maxdisp else maxdisp
 
     if plotsynt:
-        times_synt = [offset_synt + synt.stats.delta * i
-                      for i in range(synt.stats.npts)]
+        times_synt = offset_synt + synt.stats.delta * \
+            np.arange(synt.stats.npts)
         psynt = processfunc(synt.data)
         ax.plot(np.array(times_synt)/timescale, psynt, color="red",
                 linewidth=0.75, label=labelsynt)
@@ -176,8 +239,8 @@ def plot_seismograms(
         maxdisp = syntmax if syntmax > maxdisp else maxdisp
 
     if plotsyntf:
-        times_syntf = [offset_syntf + syntf.stats.delta * i
-                       for i in range(syntf.stats.npts)]
+        times_syntf = offset_syntf + syntf.stats.delta * \
+            np.arange(syntf.stats.npts)
         psyntf = processfunc(syntf.data)
         ax.plot(np.array(times_syntf)/timescale, processfunc(syntf.data), color="blue",
                 linewidth=0.75, label=labelnewsynt)
@@ -197,33 +260,82 @@ def plot_seismograms(
     #     label = f"{trace_id}"
     # plot_label(ax, label, location=1, dist=0.005, box=False)
 
-    if plotobsd and plotsynt and (windows):
+    if plotobsd and (plotsynt or plotsyntf) and (windows):
+
+        # print("trying to print windows")
         try:
-            scaleabsmax = 2 * np.max(np.abs(obsd.data))
             for _i, win in enumerate(obsd.stats.windows):
-                left = times_obsd[win.left]
-                right = times_obsd[win.right]
-                re1 = Rectangle((left, -scaleabsmax),
-                                right - left, 2*scaleabsmax,
-                                color="blue", alpha=0.10, zorder=-1)
+
+                # Get window length
+                left = times_obsd[win.left]/timescale
+                right = times_obsd[win.right]/timescale
+
+                # Create Rectangle
+                re1 = Rectangle((left, -maxdisp),
+                                right - left, + 2*maxdisp,
+                                color="blue", alpha=0.1, zorder=-1)
+
+                # Add rectangle to Axes
                 ax.add_patch(re1)
 
+                # Add annotations
                 if annotations:
                     trans = transforms.blended_transform_factory(
                         ax.transData, ax.transAxes)
 
-                    string = \
-                        f"dlnA = {win.dlnA:6.2f}\n" \
-                        f" mCC = {win.max_cc_value:6.2f}\n" \
-                        f"  CC = {win.cc_shift*win.dt:6.2f}"
+                    if hasattr(obsd.stats, 'tapers'):
+                        taper = obsd.stats.tapers[_i]
+                    else:
+                        taper = 1.0
 
-                    va = 'top' if (_i % 2) == 0 else 'bottom'
-                    y = 0.98 if (_i % 2) == 0 else 0.02
+                    m, c, s, t, a = get_mcsta(
+                        pobsd, psynt, obsd.stats.delta, obsd.stats.npts,
+                        win, taper=taper)
 
-                    ax.text(left, y, string, transform=trans,
-                            fontdict=dict(size="x-small", family='monospace'),
+                    # Create strings
+                    addstring0 = (
+                        f"  {m:5.2f}"
+                        f"\n  {c:5.2f}"
+                        f"\n  {s:5.2f}"
+                        f"\n  {t:5.2f}"
+                        f"\n  {a:5.2f}"
+                    )
+
+                    # va = 'top' if (_i % 2) == 0 else 'bottom'
+                    # y = 0.98 if (_i % 2) == 0 else 0.02
+                    va = 'top'
+                    y = 0.15
+
+                    ax.text(left, y, "M:\nC:\nS:\nT:\nA:", transform=trans,
+                            fontdict=dict(size="xx-small", family='monospace'),
                             horizontalalignment='left',
                             verticalalignment=va)
+
+                    ax.text(left, y, addstring0, transform=trans,
+                            fontdict=dict(size="xx-small", family='monospace'),
+                            horizontalalignment='left',
+                            verticalalignment=va, color='r')
+
+                    if plotsyntf:
+                        m, c, s, t, a = get_mcsta(
+                            pobsd, psyntf, obsd.stats.delta, obsd.stats.npts,
+                            win, taper=taper)
+
+                        # Create strings
+                        addstring1 = (
+                            f"        {m:5.2f}"
+                            f"\n        {c:5.2f}"
+                            f"\n        {s:5.2f}"
+                            f"\n        {t:5.2f}"
+                            f"\n        {a:5.2f}"
+                        )
+
+                        # Print second string
+                        ax.text(left, y, addstring1, transform=trans,
+                                fontdict=dict(size="xx-small",
+                                              family='monospace'),
+                                horizontalalignment='left',
+                                verticalalignment=va, color='b')
 
         except Exception as e:
             print(e)
@@ -234,23 +346,31 @@ def plot_seismograms(
 
     # Create infostring
     channelstring = f"{channel}-{location}"
-    dispstring = f"{maxdisp*1e6:.2f}$\mu$"
+    dispstring = "\n\n" + f"{maxdisp*1e6:.2f}$\mu$"
 
     # Plot base info
     plot_label(ax, channelstring, location=8, box=False, fontfamily='monospace',
                dist=0.01, fontsize=fontsizech)
 
-    plot_label(ax, "\n\n" + dispstring, location=8, box=False,
+    plot_label(ax, dispstring, location=8, box=False,
                fontfamily='monospace', dist=0.01, fontsize=fontsize)
+
+    if plotobsd:
+        if hasattr(obsd.stats, 'weights'):
+            weightstring = f"W: {obsd.stats.weights:6.4f}" 
+
+            plot_label(ax, weightstring, location=8, box=False,
+               fontfamily='monospace', dist=0.01, fontsize=fontsize)
+
 
     # Add Measurements
     if plotobsd and plotsynt and plotsyntf:
         # Misfit and Cross correlation
-        FS = 0.5 * np.sum((psynt-pobsd)**2)/np.sum(pobsd**2)
+        FS = np.sum((psynt-pobsd)**2)/np.sum(pobsd**2)
         CS, TS = xcorr(pobsd, psynt)
         SS = np.sum(np.roll(psynt, TS) * pobsd)/np.sum(psynt**2)
 
-        FF = 0.5 * np.sum((psyntf-pobsd)**2)/np.sum(pobsd**2)
+        FF = np.sum((psyntf-pobsd)**2)/np.sum(pobsd**2)
         CF, TF = xcorr(pobsd, psyntf)
         SF = np.sum(np.roll(psyntf, TF) * pobsd)/np.sum(psyntf**2)
         plot_label(ax, "\n\n\nM:\n\nC:\n\nS:", location=8, box=False,
@@ -278,23 +398,23 @@ def plot_seismograms(
 
     elif plotobsd and plotsynt and (plotsyntf is False):
         # Misfit and Cross correlation
-        FS = 0.5 * np.sum((psynt-pobsd)**2)/np.sum(pobsd**2)
+        FS = np.sum((psynt-pobsd)**2)/np.sum(pobsd**2)
         CS, TS = xcorr(pobsd, psynt)
         SS = np.sum(np.roll(psynt, TS) * pobsd)/np.sum(psynt**2)
 
-        plot_label(ax, "\n\nM:\nC:\nS:", location=8, box=False,
+        plot_label(ax, "\n\n\nM:\nC:\nS:", location=8, box=False,
                    fontfamily='monospace', dist=0.01, fontsize=fontsize)
 
         # Create strings
         addstring0 = (
-            f"\n\n   {FS:.3f}"
+            f"\n\n\n   {FS:.3f}"
             f"\n   {CS:.3f}"
             f"\n   {SS:.3f}"
         )
 
         plot_label(ax, addstring0, location=8, box=False,
-                   fontfamily='monospace',
-                   dist=0.01, color='r')
+                   fontfamily='monospace', dist=0.01, color='r',
+                   fontsize=fontsize)
 
 
 def plot_seismogram_by_station(
@@ -312,7 +432,16 @@ def plot_seismogram_by_station(
         labelobsd: str = None,
         labelsynt: str = None,
         labelnewsynt: str = None,
-        periodrange: list = None):
+        periodrange: list = None,
+        windows: bool = True):
+
+    # Get and set font family
+    defff = matplotlib.rcParams['font.family']
+    matplotlib.rcParams.update({'font.family': 'monospace'})
+
+    # Some flag corrections
+    # Annotations can only be printed if windows are to be printed as well
+    annotations = annotations if windows else False
 
     Ncomp = len(compsystem)
 
@@ -351,9 +480,12 @@ def plot_seismogram_by_station(
     # Figure Setup
     components = [x for x in compsystem]
 
-    fig = plt.figure(figsize=(10, 1.0 + 1.3*Ncomp))
-    plt.subplots_adjust(top=0.85 - 0.05 * (3-Ncomp),
-                        bottom=0.1 + 0.05 * (3-Ncomp))
+    figfactor = 1.6 if annotations else 1.3
+    hspace = 0.3 if annotations else 0.1
+    bottom = 0.2 if annotations else 0.1
+    fig = plt.figure(figsize=(10, 1.0 + figfactor*Ncomp))
+    plt.subplots_adjust(top=0.85 - 0.05 * (3-Ncomp), hspace=hspace,
+                        bottom=bottom + 0.05 * (3-Ncomp))
     # get the first line, there might be more
     axes = []
     abc = "abc"
@@ -405,14 +537,19 @@ def plot_seismogram_by_station(
                          ax=axes[_i], labelbottom=labelbottom,
                          annotations=annotations, labelobsd=labelobsd,
                          labelsynt=labelsynt, labelnewsynt=labelnewsynt,
-                         legend=legend, timescale=3600.0, windows=False)
+                         legend=legend, timescale=3600.0, windows=windows)
 
         # Get limits for seismograms
         # Need some escape for envelope eventually
         axes[_i].set_yticklabels([])
+        axes[_i].set_facecolor('none')
 
         xmin, xmax, ymin, ymax = get_limits(axes[_i])
         yscale_max = np.max(np.abs([ymin, ymax]))
+
+        if annotations:
+            yscale_max *= 1.5
+
         axes[_i].set_xlim(xmin, xmax)
         axes[_i].set_ylim(-yscale_max, yscale_max)
 
@@ -421,7 +558,8 @@ def plot_seismogram_by_station(
             axes[_i].spines.right.set_visible(False)
             axes[_i].spines.top.set_visible(False)
             axes[_i].spines.bottom.set_visible(True)
-            axes[_i].spines.bottom.set_position(('outward', 5))
+            outward = 35 if annotations else 5
+            axes[_i].spines.bottom.set_position(('outward', outward))
             axes[_i].yaxis.set_ticks([])
             axes[_i].tick_params(axis='x', which='both', bottom=True,
                                  top=False, direction='in')
@@ -441,10 +579,10 @@ def plot_seismogram_by_station(
         if _i == 0:
 
             # Get filter
-            if not periodrange:
+            if periodrange is None:
                 periodstr = ""
             else:
-                periodstr = f"P: {int(periodrange[0]):d}-{int(periodrange[1]):d}s"
+                periodstr = f", P: {int(periodrange[0]):d}-{int(periodrange[1]):d}s"
 
             # Get some geographical data
             dist, az, baz = gps2dist_azimuth(
@@ -461,7 +599,7 @@ def plot_seismogram_by_station(
                 f"{station}-{network}   "
                 f"$\\Delta$={m2deg*dist:6.2f}, "
                 f"$\\alpha$={az:6.2f}, "
-                f"$\\beta$={baz:6.2f}, "
+                f"$\\beta$={baz:6.2f}"
                 f"{periodstr}"
             )
 
@@ -471,5 +609,7 @@ def plot_seismogram_by_station(
                 fontfamily='monospace', dist=0.0)
 
     axes[-1].set_xlabel("Time [h]")
+
+    matplotlib.rcParams.update({'font.family': defff})
 
     return fig, axes

@@ -748,24 +748,59 @@ class CMTSource(object):
         return decompfunc(M1, M2, M3)
 
     def __str__(self):
-        return_str = 'CMT Source -- %s\n' % self.eventname
-        return_str += 'origin time(pde): %s\n' % self.origin_time
-        return_str += 'pde location(lat, lon): %f, %f deg\n' % (
-            self.pde_latitude, self.pde_longitude)
-        return_str += 'pde depth: %f\n' % self.pde_depth_in_m
-        return_str += 'CMT time: %s\n' % self.cmt_time
-        return_str += 'CMT location(lat, lon): %f, %f deg\n' % (
-            self.latitude, self.longitude)
-        return_str += 'CMT depth: %6.1e km\n' % (
-            self.depth_in_m / 1e3,)
-        return_str += 'half duration: %f\n' % self.half_duration
-        return_str += 'Moment Tensor [Mrr, Mtt, Mpp, Mrt, Mrp, Mtp]: \n'
-        return_str += '              %s\n' % self.tensor
-        return_str += 'Magnitude: %4.2f(mw), %4.2f(mb), %4.2f(ms)\n' % (
-            self.moment_magnitude, self.mb, self.ms)
-        return_str += 'region tag: %s' % self.region_tag
 
+        # Reconstruct the first line as well as possible. All
+        # hypocentral information is missing.
+        return_str = \
+            " PDE %4i %2i %2i %2i %2i %5.2f %8.4f %9.4f %5.1f %.1f %.1f" \
+            " %s\n" % (
+                self.origin_time.year,
+                self.origin_time.month,
+                self.origin_time.day,
+                self.origin_time.hour,
+                self.origin_time.minute,
+                self.origin_time.second
+                + self.origin_time.microsecond / 1E6,
+                self.pde_latitude,
+                self.pde_longitude,
+                self.pde_depth_in_m / 1e3,
+                self.mb,
+                self.ms,
+                str(self.region_tag))
+        return_str += 'event name:     %s\n' % (str(self.eventname),)
+        return_str += 'time shift:%12.4f\n' % (self.time_shift,)
+        return_str += 'half duration:%9.4f\n' % (self.half_duration,)
+        return_str += 'latitude:%14.4f\n' % (self.latitude,)
+        return_str += 'longitude:%13.4f\n' % (self.longitude,)
+        return_str += 'depth:%17.4f\n' % (self.depth_in_m / 1e3,)
+        return_str += 'Mrr:%19.6e\n' % self.m_rr  # * 1e7,))
+        return_str += 'Mtt:%19.6e\n' % self.m_tt  # * 1e7,))
+        return_str += 'Mpp:%19.6e\n' % self.m_pp  # * 1e7,))
+        return_str += 'Mrt:%19.6e\n' % self.m_rt  # * 1e7,))
+        return_str += 'Mrp:%19.6e\n' % self.m_rp  # * 1e7,))
+        return_str += 'Mtp:%19.6e\n' % self.m_tp  # * 1e7,))
+    
         return return_str
+        
+    # def __str__(self):
+    #     return_str = 'CMT Source -- %s\n' % self.eventname
+    #     return_str += 'origin time(pde): %s\n' % self.origin_time
+    #     return_str += 'pde location(lat, lon): %f, %f deg\n' % (
+    #         self.pde_latitude, self.pde_longitude)
+    #     return_str += 'pde depth: %f\n' % self.pde_depth_in_m
+    #     return_str += 'CMT time: %s\n' % self.cmt_time
+    #     return_str += 'CMT location(lat, lon): %f, %f deg\n' % (
+    #         self.latitude, self.longitude)
+    #     return_str += 'CMT depth: %6.1e km\n' % (
+    #         self.depth_in_m / 1e3,)
+    #     return_str += 'half duration: %f\n' % self.half_duration
+    #     return_str += 'Moment Tensor [Mrr, Mtt, Mpp, Mrt, Mrp, Mtp]: \n'
+    #     return_str += '              %s\n' % np.array2string(self.tensor, max_line_width=1e10)
+    #     return_str += 'Magnitude: %4.2f(mw), %4.2f(mb), %4.2f(ms)\n' % (
+    #         self.moment_magnitude, self.mb, self.ms)
+    #     return_str += 'region tag: %s' % self.region_tag
+
+    #     return return_str
 
     def __len__(self):
         return len(self.__dict__)

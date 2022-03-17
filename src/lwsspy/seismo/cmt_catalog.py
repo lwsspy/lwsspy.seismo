@@ -93,6 +93,12 @@ class CMTCatalog:
         for _file in filelist:
             cmtfilelist.extend(glob(_file))
 
+        # Raise error if no files matching can be found!
+        if len(cmtfilelist) == 0:
+            print("\nFiles can't be found.\n")
+            print(file)
+            raise ValueError()
+                
         cmtlist = []
         for _cmtfile in cmtfilelist:
             cmtlist.append(CMTSource.from_CMTSOLUTION_file(_cmtfile))

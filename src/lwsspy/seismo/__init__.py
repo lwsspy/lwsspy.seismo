@@ -1,5 +1,6 @@
 
 # Seismology
+from .constants import PROCD
 from .cmt2inv import cmt2inv  # noqa
 from .cmt2stationxml import cmt2stationxml  # noqa
 from .cmtdir2stationxmldir import cmtdir2stationxmldir  # noqa
@@ -71,12 +72,3 @@ from .read_gcmt_data import load_1976_2004_mag  # noqa
 from .read_gcmt_data import load_2004_2010_mag  # noqa
 from .read_gcmt_data import load_num_events  # noqa
 from .read_gcmt_data import load_cum_mag  # noqa
-
-from os import path
-import yaml
-
-
-PROCF = path.join(path.dirname(path.abspath(__file__)),
-                  'process', 'process.yml')
-with open(PROCF, "rb") as fh:
-    PROCD = yaml.load(fh, Loader=yaml.FullLoader)

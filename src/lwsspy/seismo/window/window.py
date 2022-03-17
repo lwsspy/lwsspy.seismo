@@ -280,6 +280,7 @@ def merge_trace_windows(obs: obspy.Trace, syn: obspy.Trace):
     for win in windows:
         # Recenter windows
         win.center = int(win.left + (win.right - win.left) / 2.0)
+
         # Recalculate criteria.
         win._calc_criteria(obs.data, syn.data)
 

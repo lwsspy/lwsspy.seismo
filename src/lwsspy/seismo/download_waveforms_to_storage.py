@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 from typing import Union, List
 from obspy import Inventory
@@ -26,7 +27,8 @@ def download_waveforms_to_storage(
         channel_priorities=None,
         limit_stations_to_inventory: Union[Inventory, None] = None,
         waveform_storage: str = None,
-        station_storage: str = None,):
+        station_storage: str = None,
+        logfile: str = None):
 
     domain = RectangularDomain(minlatitude=minlatitude,
                                maxlatitude=maxlatitude,
@@ -63,18 +65,34 @@ def download_waveforms_to_storage(
     if station_storage is None:
         station_storage = os.path.join(datastorage, 'stations')
 
+    # Get the logger from the obspy package
+    logger = logging.getLogger("obspy.clients.fdsn.mass_downloader")
+
+    # Setup the logger to print to file instead of stdout/-err
+    if logfile is not None:
+        # Remove Stream handler (prints stuff to stdout)
+        logger.handlers = []
+
+        # Add File handler (prints stuff to file)
+        fh = logging.FileHandler(logfile, mode='w')
+        fh.setLevel(logging.DEBUG)
+
+        # Add file handler
+        logger.addHandler(fh)
+
     # Create massdownloader
     mdl = MassDownloader(providers=providers)
-    print(f"\n")
-    print(f"{' Downloading data to: ':*^72}")
-    print(f"MSEEDs: {waveform_storage}")
-    print(f"XMLs:   {station_storage}")
+    logger.debug(f"\n")
+    logger.debug(f"{' Downloading data to: ':*^72}")
+    logger.debug(f"MSEEDs: {waveform_storage}")
+    logger.debug(f"XMLs:   {station_storage}")
 
     mdl.download(domain, restrictions, mseed_storage=waveform_storage,
                  stationxml_storage=station_storage)
-    print("\n")
-    print(72 * "*")
-    print("\n")
+                 
+    logger.debug("\n")
+    logger.debug(72 * "*")
+    logger.debug("\n")
 
 
 def bin():
