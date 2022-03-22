@@ -766,7 +766,7 @@ class CMTSource(object):
                 self.pde_depth_in_m / 1e3,
                 self.mb,
                 self.ms,
-                str(self.region_tag))
+                self.region_tag)
         return_str += 'event name:     %s\n' % (str(self.eventname),)
         return_str += 'time shift:%12.4f\n' % (self.time_shift,)
         return_str += 'half duration:%9.4f\n' % (self.half_duration,)
