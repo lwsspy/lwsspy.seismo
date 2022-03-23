@@ -29,7 +29,7 @@ def download_waveforms_to_storage(
         waveform_storage: str = None,
         station_storage: str = None,
         logfile: str = None,
-        threads: int = 3):
+        **kwargs):
 
     domain = RectangularDomain(minlatitude=minlatitude,
                                maxlatitude=maxlatitude,
@@ -89,7 +89,7 @@ def download_waveforms_to_storage(
     logger.debug(f"XMLs:   {station_storage}")
 
     mdl.download(domain, restrictions, mseed_storage=waveform_storage,
-                 stationxml_storage=station_storage, threads_per_client=threads)
+                 stationxml_storage=station_storage, **kwargs)
                  
     logger.debug("\n")
     logger.debug(72 * "*")

@@ -95,8 +95,8 @@ class CMTSource(object):
         with open(filename, "rt") as f:
             line = f.readline()
             origin_time = line[5:].strip().split()[:6]
-            values = list(map(int, origin_time[:-1])) + \
-                [float(origin_time[-1])]
+            values = list(map(int, origin_time[:-1])) \
+                + [float(origin_time[-1])]
             try:
                 origin_time = UTCDateTime(*values)
             except (TypeError, ValueError):
@@ -608,7 +608,8 @@ class CMTSource(object):
         ax.axis('off')
 
     def axbeach(
-        self, ax, x, y, width=50, facecolor='k', linewidth=2, alpha=1.0):
+        self, ax, x, y, width=50, facecolor='k', linewidth=2, alpha=1.0, 
+        **kwargs):
         """Plots beach ball into given axes.
         Note that width heavily depends on the given screen size/dpi. Therefore
         often does not work."""
@@ -621,9 +622,10 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=alpha,
                    xy=(x, y),
-                   width=200,
+                   width=width,
                    size=100, # Defines number of interpolation points 
-                   axes=ax)
+                   axes=ax,
+                   **kwargs)
         ax.add_collection(bb)
 
     def beachfig(self):
