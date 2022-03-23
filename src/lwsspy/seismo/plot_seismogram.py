@@ -1,11 +1,12 @@
 
-from typing import Callable, Optional, Union
+from curses import has_key
+from typing import Callable, Optional, Union, List
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
-from obspy import Trace, Stream
+from obspy import Trace, Stream, UTCDateTime
 from obspy.geodetics.base import gps2dist_azimuth
 from pandas import period_range
 from .source import CMTSource
@@ -169,6 +170,7 @@ def plot_seismograms(
         labelnewsynt: str = None,
         legend: bool = True,
         windows: bool = True,
+        window_list: List[dict] = None,
         timescale: float = 1.0):
 
     if ax is None:
@@ -262,13 +264,38 @@ def plot_seismograms(
 
     if plotobsd and (plotsynt or plotsyntf) and (windows):
 
+        # If custom windows are given check those first,
+        # if not check whether obsd.stats are given
+        # finally accept that there aren't any window :(
+        if (window_list is not None) and (cmtsource is not None):
+            customwindows = True
+            window_list = window_list
+        elif hasattr(obsd.stats, 'windows'):
+            customwindows = False
+            window_list = obsd.stats.windows
+        else:
+            customwindows = False
+            window_list = []
         # print("trying to print windows")
         try:
-            for _i, win in enumerate(obsd.stats.windows):
+            for _i, win in enumerate(window_list):
 
-                # Get window length
-                left = times_obsd[win.left]/timescale
-                right = times_obsd[win.right]/timescale
+                # Get window length from custom or trace attached window
+                if customwindows:
+                    
+                    # Compute actual startime
+                    left = UTCDateTime(win['absolute_starttime']) \
+                        - cmtsource.cmt_time
+                    right = UTCDateTime(win['absolute_endtime']) \
+                        - cmtsource.cmt_time
+                    
+                    # Scale the time from cmt_time
+                    left /= timescale
+                    right /= timescale
+
+                else:
+                    left = times_obsd[win.left]/timescale
+                    right = times_obsd[win.right]/timescale
 
                 # Create Rectangle
                 re1 = Rectangle((left, -maxdisp),
@@ -333,7 +360,7 @@ def plot_seismograms(
                         # Print second string
                         ax.text(left, y, addstring1, transform=trans,
                                 fontdict=dict(size="xx-small",
-                                              family='monospace'),
+                                            family='monospace'),
                                 horizontalalignment='left',
                                 verticalalignment=va, color='b')
 
@@ -426,14 +453,18 @@ def plot_seismogram_by_station(
         cmtsource: Optional[CMTSource] = None,
         tag: Optional[str] = None,
         compsystem: str = "ZRT",
+        location: str = "00",
         logger: Callable = print,
         processfunc: Callable = lambda x: x,
         annotations: bool = False,
-        labelobsd: str = None,
-        labelsynt: str = None,
-        labelnewsynt: str = None,
-        periodrange: list = None,
-        windows: bool = True):
+        labelobsd: Optional[str] = None,
+        labelsynt: Optional[str] = None,
+        labelnewsynt: Optional[str] = None,
+        periodrange: Optional[list] = None,
+        windows: bool = True,
+        latitude: Optional[float] = None,
+        longitude: Optional[float] = None,
+        window_dict: Optional[dict] = None):
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
@@ -527,6 +558,16 @@ def plot_seismogram_by_station(
         else:
             newsyntrace = None
 
+        # Read custom windows
+        if window_dict is not None:
+            if obstrace.id in window_dict:
+                window_list = window_dict[obstrace.id]
+            else: 
+                window_list = None
+        else:
+            window_list = None
+
+
         # Set some plotting parameters
         legend = True if _i == 0 else False
         labelbottom = True if _i == Ncomp-1 else False
@@ -537,7 +578,8 @@ def plot_seismogram_by_station(
                          ax=axes[_i], labelbottom=labelbottom,
                          annotations=annotations, labelobsd=labelobsd,
                          labelsynt=labelsynt, labelnewsynt=labelnewsynt,
-                         legend=legend, timescale=3600.0, windows=windows)
+                         legend=legend, timescale=3600.0, windows=windows,
+                         window_list=window_list)
 
         # Get limits for seismograms
         # Need some escape for envelope eventually
@@ -578,18 +620,6 @@ def plot_seismogram_by_station(
 
         if _i == 0:
 
-            # Get filter
-            if periodrange is None:
-                periodstr = ""
-            else:
-                periodstr = f", P: {int(periodrange[0]):d}-{int(periodrange[1]):d}s"
-
-            # Get some geographical data
-            dist, az, baz = gps2dist_azimuth(
-                cmtsource.latitude, cmtsource.longitude,
-                obstrace.stats.latitude, obstrace.stats.longitude)
-            m2deg = 360/(2*np.pi*6371000.0)
-
             # Create String
             station_string = (
                 f"{cmtsource.cmt_time.strftime('%Y/%m/%d %H:%M:%S')}, "
@@ -597,11 +627,44 @@ def plot_seismogram_by_station(
                 f"$\\phi$={cmtsource.longitude:7.2f}, "
                 f"$h$={cmtsource.depth_in_m/1000.0:5.1f}\n"
                 f"{station}-{network}   "
-                f"$\\Delta$={m2deg*dist:6.2f}, "
-                f"$\\alpha$={az:6.2f}, "
-                f"$\\beta$={baz:6.2f}"
-                f"{periodstr}"
             )
+            # Get filter
+            if periodrange is None:
+                periodstr = ""
+            else:
+                periodstr = f", P: {int(periodrange[0]):d}-{int(periodrange[1]):d}s"
+
+            m2deg = 360/(2*np.pi*6371000.0)
+
+            # Add location specific labels dist, az, baz
+            if (latitude is not None) and (latitude is not None):
+                # Get some geographical data
+                dist, az, baz = gps2dist_azimuth(
+                    cmtsource.latitude, cmtsource.longitude,
+                    latitude, longitude)
+                locstr = (
+                    f"$\\Delta$={m2deg*dist:6.2f}, "
+                    f"$\\alpha$={az:6.2f}, "
+                    f"$\\beta$={baz:6.2f}"
+                )
+            elif hasattr(obstrace.stats, 'latitude') \
+                and hasattr(obstrace.stats, 'longitude'):
+                
+                # Get some geographical data
+                dist, az, baz = gps2dist_azimuth(
+                    cmtsource.latitude, cmtsource.longitude,
+                    obstrace.stats.latitude, obstrace.stats.longitude)
+
+                locstr = (
+                    f"$\\Delta$={m2deg*dist:6.2f}, "
+                    f"$\\alpha$={az:6.2f}, "
+                    f"$\\beta$={baz:6.2f}"
+                )
+            else:
+                locstr = ""
+
+            station_string += locstr
+            station_string += f"{periodstr}"
 
             # Plot the label
             plot_label(
