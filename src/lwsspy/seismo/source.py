@@ -826,6 +826,14 @@ class CMTSource(object):
     def __ne__(self, other):
         return self.__dict__ != other.__dict__
 
+    @staticmethod
+    def check_eventids(id1, id2):
+
+        id1 = id1 if not id1[0].isalpha() else id1[1:]
+        id2 = id2 if not id2[0].isalpha() else id2[1:]
+
+        return id1 == id2
+
     def __sub__(self, other):
         """ USE WITH CAUTION!! 
         -> Origin time becomes float of delta t
@@ -834,8 +842,8 @@ class CMTSource(object):
         -> the other class will be subtracted from this one and the resulting 
            instance will keep the eventname and the region tag from this class
         """
-
-        if (self.eventname[1:] != other.eventname[1:]):
+        
+        if self.check_eventids(self.eventname, other.eventname):
             raise ValueError('CMTSource.eventname must be equal to compare the events')
         
         # The origin time is the most problematic part
