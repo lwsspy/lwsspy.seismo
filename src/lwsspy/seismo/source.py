@@ -835,7 +835,7 @@ class CMTSource(object):
            instance will keep the eventname and the region tag from this class
         """
 
-        if (self.eventname != other.eventname):
+        if (self.eventname[1:] != other.eventname[1:]):
             raise ValueError('CMTSource.eventname must be equal to compare the events')
         
         # The origin time is the most problematic part
