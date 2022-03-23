@@ -19,6 +19,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
 import numpy as np
+import typing as tp
 from obspy import UTCDateTime, read_events
 from obspy.imaging.beachball import beach
 from obspy.core.event import Event
@@ -39,12 +40,13 @@ class CMTSource(object):
     function.
     """
 
-    def __init__(self, origin_time=UTCDateTime(0),
-                 pde_latitude=0.0, pde_longitude=0.0, mb=0.0, ms=0.0,
-                 pde_depth_in_m=0.0, region_tag='', eventname='',
-                 cmt_time=UTCDateTime(0), half_duration=0.0, latitude=0.0,
-                 longitude=0.0, depth_in_m=0.0, m_rr=0.0, m_tt=0.0, m_pp=0.0,
-                 m_rt=0.0, m_rp=0.0, m_tp=0.0):
+    def __init__(
+            self, origin_time: tp.Union[UTCDateTime, float] = UTCDateTime(0),
+            pde_latitude=0.0, pde_longitude=0.0, mb=0.0, ms=0.0,
+            pde_depth_in_m=0.0, region_tag='', eventname='',
+            cmt_time: tp.Union[UTCDateTime, float] = UTCDateTime(0), 
+            half_duration=0.0, latitude=0.0, longitude=0.0, depth_in_m=0.0, 
+            m_rr=0.0, m_tt=0.0, m_pp=0.0, m_rt=0.0, m_rp=0.0, m_tp=0.0):
         """
         :param latitude: latitude of the source in degree
         :param longitude: longitude of the source in degree
@@ -824,6 +826,43 @@ class CMTSource(object):
     def __ne__(self, other):
         return self.__dict__ != other.__dict__
 
+    def __sub__(self, other):
+        """ USE WITH CAUTION!! 
+        -> Origin time becomes float of delta t
+        -> centroid time becomes float of delta t
+        -> half duration is weird to compare like this as well.
+        -> the other class will be subtracted from this one and the resulting 
+           instance will keep the eventname and the region tag from this class
+        """
+        # The origin time is the most problematic part
+        origin_time =  self.origin_time - other.origin_time
+        pde_latitude = self.pde_latitude - other.pde_latitude
+        pde_longitude = self.pde_longitude - other.pde_longitude
+        pde_depth_in_m = self.pde_depth_in_m - other.pde_depth_in_m
+        region_tag = self.region_tag
+        eventame = self.eventname
+        mb = self.mb - other.mb
+        ms = self.ms - other.ms
+        cmt_time = self.cmt_time - other.cmt_time
+        half_duration = self.half_duration - other.half_duration
+        latitude = self.latitude - other.latitude
+        longitude = self.longitude - other.longitude
+        depth_in_m = self.depth_in_m - other.depth_in_m
+        m_rr = self.m_rr - other.m_rr
+        m_tt = self.m_tt - other.m_tt
+        m_pp = self.m_pp - other.m_pp
+        m_rt = self.m_rt - other.m_rt
+        m_rp = self.m_rp - other.m_rp
+        m_tp = self.m_tp - other.m_tp
+
+        return CMTSource(
+            origin_time=origin_time,
+            pde_latitude=pde_latitude, pde_longitude=pde_longitude, mb=mb, ms=ms,
+            pde_depth_in_m=pde_depth_in_m, region_tag=region_tag, 
+            eventname=eventame, cmt_time=cmt_time, half_duration=half_duration, 
+            latitude=latitude, longitude=longitude, depth_in_m=depth_in_m, 
+            m_rr=m_rr, m_tt=m_tt, m_pp=m_pp, m_rt=m_rt, m_rp=m_rp, m_tp=m_tp)
+
 
 def plot_beach():
     cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
@@ -835,3 +874,5 @@ def plot_beachfig():
     cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
     cmtsource.beachfig()
     plt.show(block=True)
+
+
