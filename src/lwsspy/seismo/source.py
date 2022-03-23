@@ -524,15 +524,15 @@ class CMTSource(object):
 
             # rake = np.mod(rake, 2*np.pi)
             # if rake < 0:
-            print('normal:', normal[2])
-            print('slip:', slip[2])
+            # print('normal:', normal[2])
+            # print('slip:', slip[2])
 
             # Fix strike
             tol = 1e-10
             strike = strike + np.pi/2
 
-            print("Solut:", np.degrees(strike),
-                  np.degrees(dip), np.degrees(rake))
+            # print("Solut:", np.degrees(strike),
+            #       np.degrees(dip), np.degrees(rake))
 
             # if strike < 0:
             #     strike += np.pi
@@ -599,13 +599,32 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.5, 0.5),
-                   width=300,
+                   width=200,
                    size=100,
                    nofill=False,
                    zorder=100,
                    axes=ax)
         ax.add_collection(bb)
         ax.axis('off')
+
+    def axbeach(
+        self, ax, x, y, width=50, facecolor='k', linewidth=2, alpha=1.0):
+        """Plots beach ball into given axes.
+        Note that width heavily depends on the given screen size/dpi. Therefore
+        often does not work."""
+
+        # Plot beach ball
+        bb = beach(self.tensor,
+                   linewidth=linewidth,
+                   facecolor=facecolor,
+                   bgcolor='w',
+                   edgecolor='k',
+                   alpha=alpha,
+                   xy=(x, y),
+                   width=200,
+                   size=100, # Defines number of interpolation points 
+                   axes=ax)
+        ax.add_collection(bb)
 
     def beachfig(self):
         """
@@ -624,13 +643,13 @@ class CMTSource(object):
 
         # Plot beach ball
         bb = beach(self.tensor,
-                   linewidth=2,
+                   linewidth=1,
                    facecolor='k',
                    bgcolor='w',
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.625, 0.4),
-                   width=300,
+                   width=150,
                    size=100,
                    nofill=False,
                    zorder=100,
@@ -783,26 +802,6 @@ class CMTSource(object):
         return_str += 'Mtp:%19.6e\n' % self.m_tp  # * 1e7,))
     
         return return_str
-        
-    # def __str__(self):
-    #     return_str = 'CMT Source -- %s\n' % self.eventname
-    #     return_str += 'origin time(pde): %s\n' % self.origin_time
-    #     return_str += 'pde location(lat, lon): %f, %f deg\n' % (
-    #         self.pde_latitude, self.pde_longitude)
-    #     return_str += 'pde depth: %f\n' % self.pde_depth_in_m
-    #     return_str += 'CMT time: %s\n' % self.cmt_time
-    #     return_str += 'CMT location(lat, lon): %f, %f deg\n' % (
-    #         self.latitude, self.longitude)
-    #     return_str += 'CMT depth: %6.1e km\n' % (
-    #         self.depth_in_m / 1e3,)
-    #     return_str += 'half duration: %f\n' % self.half_duration
-    #     return_str += 'Moment Tensor [Mrr, Mtt, Mpp, Mrt, Mrp, Mtp]: \n'
-    #     return_str += '              %s\n' % np.array2string(self.tensor, max_line_width=1e10)
-    #     return_str += 'Magnitude: %4.2f(mw), %4.2f(mb), %4.2f(ms)\n' % (
-    #         self.moment_magnitude, self.mb, self.ms)
-    #     return_str += 'region tag: %s' % self.region_tag
-
-    #     return return_str
 
     def __len__(self):
         return len(self.__dict__)
