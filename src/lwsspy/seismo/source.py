@@ -772,23 +772,27 @@ class CMTSource(object):
 
         # Reconstruct the first line as well as possible. All
         # hypocentral information is missing.
-        return_str = \
-            " PDE %4i %2i %2i %2i %2i %5.2f %8.4f %9.4f %5.1f %.1f %.1f" \
-            " %s\n" % (
-                self.origin_time.year,
-                self.origin_time.month,
-                self.origin_time.day,
-                self.origin_time.hour,
-                self.origin_time.minute,
-                self.origin_time.second
-                + self.origin_time.microsecond / 1E6,
-                self.pde_latitude,
-                self.pde_longitude,
-                self.pde_depth_in_m / 1e3,
-                self.mb,
-                self.ms,
-                self.region_tag)
-        return_str += 'event name:     %s\n' % (str(self.eventname),)
+        if isinstance(self.origin_time, UTCDateTime):
+            return_str = \
+                " PDE %4i %2i %2i %2i %2i %5.2f %8.4f %9.4f %5.1f %.1f %.1f" \
+                " %s\n" % (
+                    self.origin_time.year,
+                    self.origin_time.month,
+                    self.origin_time.day,
+                    self.origin_time.hour,
+                    self.origin_time.minute,
+                    self.origin_time.second
+                    + self.origin_time.microsecond / 1E6,
+                    self.pde_latitude,
+                    self.pde_longitude,
+                    self.pde_depth_in_m / 1e3,
+                    self.mb,
+                    self.ms,
+                    self.region_tag)
+        else: 
+            return_str = "----- CMT Delta: ------- \n"
+
+        return_str += 'event name:  %10s\n' % (str(self.eventname),)
         return_str += 'time shift:%12.4f\n' % (self.time_shift,)
         return_str += 'half duration:%9.4f\n' % (self.half_duration,)
         return_str += 'latitude:%14.4f\n' % (self.latitude,)
@@ -802,6 +806,9 @@ class CMTSource(object):
         return_str += 'Mtp:%19.6e\n' % self.m_tp  # * 1e7,))
     
         return return_str
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def __len__(self):
         return len(self.__dict__)
@@ -826,11 +833,11 @@ class CMTSource(object):
         return self.__dict__ != other.__dict__
 
     @staticmethod
-    def check_eventids(id1, id2):
+    def same_eventids(id1, id2):
 
         id1 = id1 if not id1[0].isalpha() else id1[1:]
         id2 = id2 if not id2[0].isalpha() else id2[1:]
-
+        
         return id1 == id2
 
     def __sub__(self, other):
@@ -842,7 +849,7 @@ class CMTSource(object):
            instance will keep the eventname and the region tag from this class
         """
         
-        if self.check_eventids(self.eventname, other.eventname):
+        if not self.same_eventids(self.eventname, other.eventname):
             raise ValueError('CMTSource.eventname must be equal to compare the events')
         
         # The origin time is the most problematic part
