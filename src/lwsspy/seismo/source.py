@@ -834,6 +834,10 @@ class CMTSource(object):
         -> the other class will be subtracted from this one and the resulting 
            instance will keep the eventname and the region tag from this class
         """
+
+        if (self.eventname != other.eventname):
+            raise ValueError('CMTSource.eventname must be equal to compare the events')
+        
         # The origin time is the most problematic part
         origin_time =  self.origin_time - other.origin_time
         pde_latitude = self.pde_latitude - other.pde_latitude
