@@ -837,7 +837,7 @@ class CMTSource(object):
 
         id1 = id1 if not id1[0].isalpha() else id1[1:]
         id2 = id2 if not id2[0].isalpha() else id2[1:]
-        
+
         return id1 == id2
 
     def __sub__(self, other):
@@ -848,12 +848,12 @@ class CMTSource(object):
         -> the other class will be subtracted from this one and the resulting 
            instance will keep the eventname and the region tag from this class
         """
-        
+
         if not self.same_eventids(self.eventname, other.eventname):
             raise ValueError('CMTSource.eventname must be equal to compare the events')
-        
+
         # The origin time is the most problematic part
-        origin_time =  self.origin_time - other.origin_time
+        origin_time = self.origin_time - other.origin_time
         pde_latitude = self.pde_latitude - other.pde_latitude
         pde_longitude = self.pde_longitude - other.pde_longitude
         pde_depth_in_m = self.pde_depth_in_m - other.pde_depth_in_m
