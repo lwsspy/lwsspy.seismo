@@ -8,9 +8,13 @@ from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
 from obspy import Trace, Stream, UTCDateTime
 from obspy.geodetics.base import gps2dist_azimuth
-from pandas import period_range
-from .source import CMTSource
+from cartopy.crs import LambertAzimuthalEqualArea, PlateCarree
+from pyflex.window import Window
+from .source import CMTSource, plot_beach
 from lwsspy.plot.plot_label import plot_label
+from lwsspy.plot.axes_from_axes import axes_from_axes
+from lwsspy.plot.get_aspect import get_aspect
+from lwsspy.maps.plot_map import plot_map
 from lwsspy.plot.get_limits import get_limits
 from lwsspy.math.envelope import envelope
 from lwsspy.signal.xcorr import xcorr, correct_window_index
@@ -44,11 +48,11 @@ from lwsspy.signal.dlna import dlna
 #     return (t0 + trsec) - origin
 
 
-def get_mcsta(d, s, dt, npts, win, taper=1.0):
-
-    # Get left and right indeces
-    l, r = win.left, win.right
-
+def get_mcsta(d, s, dt, npts, leftidx, rightidx, taper=1.0):
+    
+    # Shorten left and right
+    l, r = leftidx, rightidx
+    
     # Get window data
     wd = d[l:r]
     ws = s[l:r]
@@ -282,20 +286,34 @@ def plot_seismograms(
 
                 # Get window length from custom or trace attached window
                 if customwindows:
-                    
-                    # Compute actual startime
-                    left = UTCDateTime(win['absolute_starttime']) \
-                        - cmtsource.cmt_time
-                    right = UTCDateTime(win['absolute_endtime']) \
-                        - cmtsource.cmt_time
-                    
+                    if isinstance(win, dict):
+                        # Compute actual startime
+                        left = UTCDateTime(win['absolute_starttime']) \
+                            - cmtsource.cmt_time
+                        right = UTCDateTime(win['absolute_endtime']) \
+                            - cmtsource.cmt_time
+
+                    elif isinstance(win, Window):
+                        # Compute actual startime
+                        left = win.absolute_starttime - cmtsource.cmt_time
+                        right = win.absolute_endtime  - cmtsource.cmt_time
+
+                    # Get left and right indeces 
+                    leftidx = np.argmin(np.abs(times_obsd-left))
+                    rightidx = np.argmin(np.abs(times_obsd-right))
+
                     # Scale the time from cmt_time
                     left /= timescale
                     right /= timescale
 
                 else:
+
                     left = times_obsd[win.left]/timescale
                     right = times_obsd[win.right]/timescale
+
+                    # Get left and right indeces
+                    leftidx = win.left
+                    leftidx = win.right
 
                 # Create Rectangle
                 re1 = Rectangle((left, -maxdisp),
@@ -317,7 +335,7 @@ def plot_seismograms(
 
                     m, c, s, t, a = get_mcsta(
                         pobsd, psynt, obsd.stats.delta, obsd.stats.npts,
-                        win, taper=taper)
+                        leftidx, rightidx, taper=taper)
 
                     # Create strings
                     addstring0 = (
@@ -346,7 +364,7 @@ def plot_seismograms(
                     if plotsyntf:
                         m, c, s, t, a = get_mcsta(
                             pobsd, psyntf, obsd.stats.delta, obsd.stats.npts,
-                            win, taper=taper)
+                            leftidx, rightidx, taper=taper)
 
                         # Create strings
                         addstring1 = (
@@ -451,6 +469,7 @@ def plot_seismogram_by_station(
         synt: Optional[Stream] = None,
         newsynt: Optional[Stream] = None,
         cmtsource: Optional[CMTSource] = None,
+        newcmtsource: Optional[CMTSource] = None,
         tag: Optional[str] = None,
         compsystem: str = "ZRT",
         location: str = "00",
@@ -464,7 +483,10 @@ def plot_seismogram_by_station(
         windows: bool = True,
         latitude: Optional[float] = None,
         longitude: Optional[float] = None,
-        window_dict: Optional[dict] = None):
+        window_dict: Optional[dict] = None,
+        map: bool = True,
+        letters: bool = True,
+        plot_beach: bool = True):
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
@@ -511,12 +533,17 @@ def plot_seismogram_by_station(
     # Figure Setup
     components = [x for x in compsystem]
 
+    # Figure setup depending on different parameters
     figfactor = 1.6 if annotations else 1.3
     hspace = 0.3 if annotations else 0.1
     bottom = 0.2 if annotations else 0.1
-    fig = plt.figure(figsize=(10, 1.0 + figfactor*Ncomp))
+    left = 0.2 if map or plot_beach else 0.1
+    leftfig = 1.0 if map or plot_beach else 0.0
+
+    fig = plt.figure(figsize=(10+leftfig, 1.0 + figfactor*Ncomp))
     plt.subplots_adjust(top=0.85 - 0.05 * (3-Ncomp), hspace=hspace,
-                        bottom=bottom + 0.05 * (3-Ncomp))
+                        bottom=bottom + 0.05 * (3-Ncomp),
+                        left=left)
     # get the first line, there might be more
     axes = []
     abc = "abc"
@@ -560,8 +587,11 @@ def plot_seismogram_by_station(
 
         # Read custom windows
         if window_dict is not None:
+            print(obstrace.id)
+            print(window_dict.keys())
             if obstrace.id in window_dict:
                 window_list = window_dict[obstrace.id]
+                print(obstrace.id)
             else: 
                 window_list = None
         else:
@@ -614,9 +644,10 @@ def plot_seismogram_by_station(
             axes[_i].yaxis.set_ticks([])
 
         # Plot figure label
-        plot_label(
-            axes[_i], abc[_i] + ")", location=5, box=False,
-            fontfamily='monospace')
+        if letters:
+            plot_label(
+                axes[_i], abc[_i] + ")", location=5, box=False,
+                fontfamily='monospace')
 
         if _i == 0:
 
@@ -671,7 +702,76 @@ def plot_seismogram_by_station(
                 axes[0], station_string, location=6, box=False,
                 fontfamily='monospace', dist=0.0)
 
-    axes[-1].set_xlabel("Time [h]")
+    # Plot map
+    if map:
+        if (latitude is not None) and (longitude is not None):
+            slat = latitude
+            slon = longitude
+
+            # Create inset with station locations in the center
+        elif hasattr(obstrace.stats, 'latitude') \
+                and hasattr(obstrace.stats, 'longitude'):
+            slat = obstrace.stats.latitude
+            slon = obstrace.stats.longitude
+        
+        else:
+            raise ValueError(
+                'If you want to plot a map, you have to either provide the\n'
+                'latitude and longitude of the station in question,\n'
+                'or make sure that the Trace.Stats have longitude and '
+                'latitude.')
+
+        # If we have cmtsource center map around 
+        if cmtsource is not None:
+            clat, clon = cmtsource.latitude, cmtsource.longitude
+        else:
+            clat, clon = slat, slon
+
+        print(clat, clon)
+
+        # Create projection with station or earthquake at center
+        # gets really weird with latitude, central_latitude=clat)
+        projection = LambertAzimuthalEqualArea(central_longitude=clon)
+            
+        # Create map axes
+        aspect = get_aspect(axes[0])
+        mapax = axes_from_axes(axes[0], 9321, [-1.55*aspect, -0.25, 1.5*aspect, 1.5],
+            zorder=100, projection=projection)
+        mapax.set_global()
+        plot_map()
+
+        # Plot station
+        mapax.plot(slon,slat, 'v',
+            markerfacecolor=(0.8, 0.2, 0.2),
+            markeredgecolor='k', transform=PlateCarree())
+
+        if cmtsource is not None:
+            
+            mapax.plot(cmtsource.longitude, cmtsource.latitude, '*',
+                markerfacecolor=(0.2, 0.2, 0.8),
+                markeredgecolor='k', transform=PlateCarree())
+
+            mapax.plot(
+                [cmtsource.longitude, slon], [cmtsource.latitude, slat], '-k',
+               transform=PlateCarree(), zorder=0)
+            
+    if plot_beach:
+
+        # Create cmt axes
+        if cmtsource is not None:
+            aspect = get_aspect(axes[1])
+            cmtax = axes_from_axes(
+                axes[1], 9321, [-1.55*aspect, -0.25, 1.5*aspect, 1.5],)
+            cmtsource.axbeach(cmtax, 0.5, 0.5, width=100, facecolor='r')
+            cmtax.axis('off')
+
+        if newcmtsource is not None:
+            aspect = get_aspect(axes[2])
+            cmtax1 = axes_from_axes(
+                axes[2], 9321, [-1.55*aspect, -0.25, 1.5*aspect, 1.5],)
+            newcmtsource.axbeach(cmtax1, 0.5, 0.5, width=100, facecolor='b')
+            cmtax1.axis('off')
+
 
     matplotlib.rcParams.update({'font.family': defff})
 
