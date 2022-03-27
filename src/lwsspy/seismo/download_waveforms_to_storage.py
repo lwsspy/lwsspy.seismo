@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 from typing import Union, List
+from lwsspy.utils.retry import retry
 from obspy import Inventory
 from obspy import UTCDateTime
 from obspy.clients.fdsn.mass_downloader import RectangularDomain, \

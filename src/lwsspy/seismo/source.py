@@ -151,7 +151,9 @@ class CMTSource(object):
     def from_sdr(cls, s, d, r, M0=1.0, **kwargs):
         """definition from Stein and Wysession
         s is the strike (phi_f), d is the dip (delta), and r is the slip angle
-        (lambda)."""
+        (lambda).
+        IM ASSIGNING THE COMPONENTS WRONG. SEE EMAIL TO YURI!!!!!
+        """
         s = np.radians(90-s)
         d = np.radians(-d)
         r = np.radians(r)

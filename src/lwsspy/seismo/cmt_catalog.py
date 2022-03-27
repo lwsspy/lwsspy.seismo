@@ -293,6 +293,14 @@ class CMTCatalog:
         if filename is not None:
             plt.savefig(filename)
 
+    @staticmethod
+    def same_eventids(id1, id2):
+
+        id1 = id1 if not id1[0].isalpha() else id1[1:]
+        id2 = id2 if not id2[0].isalpha() else id2[1:]
+
+        return id1 == id2
+
     def unique(self, ret: bool = False):
         """Applies uniqueness condition depending on eventname or returns
         catalog with unique entries. Default is application on self."""
@@ -455,7 +463,7 @@ class CMTCatalog:
     def in_catalog(
             self, event: Union[str, List[str]], verbose=False,
             thorough_check: bool = False):
-        """Check whether event id is in the catalog or not. If single string
+        """Check whether event id is in the catalog or not. If single stringf.
         is provided it will return the CMTSource if it is in the catalog. If
         a list of IDs is provided a new catalog containing those events will be 
         returned. If there is no match a ValueError is raised.
@@ -488,7 +496,7 @@ class CMTCatalog:
             except ValueError as e:
 
                 if thorough_check:
-                    for _letter in ['B', 'S', 'M', 'C']:
+                    for _letter in ['B', 'S', 'M', 'C', 'E']:
 
                         try:
                             # Check corrected name
