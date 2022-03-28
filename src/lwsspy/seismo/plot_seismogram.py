@@ -1,9 +1,14 @@
 
+from ast import Call
 from curses import has_key
+from enum import Flag
 from typing import Callable, Optional, Union, List
+from unittest.mock import NonCallableMagicMock
+from matplotlib import gridspec
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec, SubplotSpec
 from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
 from obspy import Trace, Stream, UTCDateTime
@@ -46,6 +51,17 @@ from lwsspy.signal.dlna import dlna
 #     # Second on trace
 #     trsec = (tsample*dt)
 #     return (t0 + trsec) - origin
+
+def az_arrow(ax, x, y, r, angle, *args, **kwargs):
+    dx = r*np.sin(angle/180*np.pi)
+    dy = r*np.cos(angle/180*np.pi)
+    ax.arrow(x, y, dx, dy, *args, **kwargs)
+
+
+def az_arrow_r(ax, x, y, r, angle, *args, **kwargs):
+    dx = r*np.sin(angle/180*np.pi)
+    dy = r*np.cos(angle/180*np.pi)
+    ax.arrow(x+dx, y+dy, -dx, -dy, *args, **kwargs)
 
 
 def get_mcsta(d, s, dt, npts, leftidx, rightidx, taper=1.0):
@@ -166,7 +182,7 @@ def plot_seismograms(
         cmtsource: Optional[CMTSource] = None,
         tag: Union[str, None] = None,
         ax: Optional[matplotlib.axes.Axes] = None,
-        processfunc: Callable = lambda x: x,
+        processfunc: Callable = lambda x : x.data,
         annotations: bool = True,
         labelbottom: bool = False,
         labelobsd: str = None,
@@ -225,31 +241,33 @@ def plot_seismograms(
         if plotsyntf:
             offset_syntf = syntf.stats.starttime - cmtsource.cmt_time
 
+    # Alpha values
+    alpha = 1.0 if windows is False else 0.5
     maxdisp = 0.0
     if plotobsd:
         times_obsd = offset_obsd + obsd.stats.delta * \
             np.arange(obsd.stats.npts)
-        pobsd = processfunc(obsd.data)
+        pobsd = processfunc(obsd)
         ax.plot(np.array(times_obsd)/timescale, pobsd, color="black",
-                linewidth=0.75, label=labelobsd)
+                linewidth=0.75, label=labelobsd, alpha=alpha)
         obsdmax = np.max(np.abs(pobsd))
         maxdisp = obsdmax if obsdmax > maxdisp else maxdisp
 
     if plotsynt:
         times_synt = offset_synt + synt.stats.delta * \
             np.arange(synt.stats.npts)
-        psynt = processfunc(synt.data)
+        psynt = processfunc(synt)
         ax.plot(np.array(times_synt)/timescale, psynt, color="red",
-                linewidth=0.75, label=labelsynt)
+                linewidth=0.75, label=labelsynt, alpha=alpha)
         syntmax = np.max(np.abs(psynt))
         maxdisp = syntmax if syntmax > maxdisp else maxdisp
 
     if plotsyntf:
         times_syntf = offset_syntf + syntf.stats.delta * \
             np.arange(syntf.stats.npts)
-        psyntf = processfunc(syntf.data)
-        ax.plot(np.array(times_syntf)/timescale, processfunc(syntf.data), color="blue",
-                linewidth=0.75, label=labelnewsynt)
+        psyntf = processfunc(syntf)
+        ax.plot(np.array(times_syntf)/timescale, psyntf, color="blue",
+                linewidth=0.75, label=labelnewsynt, alpha=alpha)
         syntfmax = np.max(np.abs(psyntf))
         maxdisp = syntfmax if syntfmax > maxdisp else maxdisp
 
@@ -313,7 +331,24 @@ def plot_seismograms(
 
                     # Get left and right indeces
                     leftidx = win.left
-                    leftidx = win.right
+                    rightidx = win.right
+
+                # Plot windows
+                if plotobsd:
+                    ax.plot(
+                        np.array(times_obsd[leftidx:rightidx])/timescale,
+                        pobsd[leftidx:rightidx], color="black",
+                        linewidth=1.0, label=labelobsd if _i == 0 else None)
+                if plotsynt:
+                    ax.plot(
+                        np.array(times_synt[leftidx:rightidx])/timescale,
+                        psynt[leftidx:rightidx], color="red",
+                        linewidth=1.0, label=labelsynt if _i == 0 else None)
+                if plotsyntf:
+                    ax.plot(
+                        np.array(times_syntf[leftidx:rightidx])/timescale,
+                        psyntf[leftidx:rightidx], color="blue",
+                        linewidth=1.0, label=labelnewsynt if _i == 0 else None)
 
                 # Create Rectangle
                 re1 = Rectangle((left, -maxdisp),
@@ -468,25 +503,27 @@ def plot_seismogram_by_station(
         obsd: Optional[Stream] = None,
         synt: Optional[Stream] = None,
         newsynt: Optional[Stream] = None,
-        cmtsource: Optional[CMTSource] = None,
-        newcmtsource: Optional[CMTSource] = None,
+        obsdcmt: Optional[CMTSource] = None,
+        syntcmt: Optional[CMTSource] = None,
+        newsyntcmt: Optional[CMTSource] = None,
         tag: Optional[str] = None,
         compsystem: str = "ZRT",
         location: str = "00",
         logger: Callable = print,
-        processfunc: Callable = lambda x: x,
+        processfunc: Callable = lambda x: x.data,
         annotations: bool = False,
         labelobsd: Optional[str] = None,
         labelsynt: Optional[str] = None,
         labelnewsynt: Optional[str] = None,
         periodrange: Optional[list] = None,
-        windows: bool = True,
+        windows: bool = False,
         latitude: Optional[float] = None,
         longitude: Optional[float] = None,
         window_dict: Optional[dict] = None,
-        map: bool = True,
-        letters: bool = True,
-        plot_beach: bool = True):
+        map: bool = False,
+        letters: bool = False,
+        plot_beach: bool = False,
+        timescale: float = 3600.0):
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
@@ -530,27 +567,104 @@ def plot_seismogram_by_station(
     if not labelnewsynt:
         labelnewsynt = 'New Syn'
 
+
     # Figure Setup
     components = [x for x in compsystem]
+    nrows = len(components)
+
+    # check whether any cmts should be plotted
+    if (obsdcmt is not None) or (syntcmt is not None) or (newsyntcmt is not None):
+        cmtcomp = True
+    else: 
+        cmtcomp = False
+
+    # Whether to have the left colum for map info etc.
+    if map or cmtcomp:
+        twocol = True
+        ncols = 2
+        width_ratios = [1, 6]
+    else:
+        twocol = False
+        ncols = 1
+        width_ratios = [1]
+
+    # Total figure width
+    left = 0.2 if twocol else 0.1
+    leftfig = 1.0 if twocol else 0.0
 
     # Figure setup depending on different parameters
-    figfactor = 1.6 if annotations else 1.3
+    figfactor = 1.6 #if annotations else 1.3
     hspace = 0.3 if annotations else 0.1
     bottom = 0.2 if annotations else 0.1
-    left = 0.2 if map or plot_beach else 0.1
-    leftfig = 1.0 if map or plot_beach else 0.0
 
-    fig = plt.figure(figsize=(10+leftfig, 1.0 + figfactor*Ncomp))
+    # Figure and Gridspec setups
+    fig = plt.figure(figsize=(12+leftfig, 1.0 + figfactor*Ncomp))
+    GS = GridSpec(
+        nrows=nrows, ncols=ncols, width_ratios=width_ratios,
+        wspace=0.00, hspace=hspace)
+
+    if plot_beach and cmtcomp:
+        # Create center axes either way
+        cmtax1 = fig.add_subplot(GS[1, 0])
+        cmtax1.set_clip_on = False
+        cmtax2 = fig.add_subplot(GS[2, 0])
+        cmtax2.set_clip_on = False
+        cmtax1.axis('equal')
+        cmtax2.axis('equal')
+        cmtax1.set_xlim(0, 1)
+        cmtax1.set_ylim(0, 1)
+        cmtax2.set_xlim(0, 1)
+        cmtax2.set_ylim(0, 1)
+        cmtax1.axis('off')
+        cmtax2.axis('off')
+
+        # plot beaches in the axes anyways
+        if (obsdcmt is not None):
+            xy_obsdbeach = 0.25, 0.85
+            obsdcmt.axbeach(
+                cmtax1, *xy_obsdbeach, width=80, facecolor='k', clip_on=False,
+                linewidth=1)
+
+        # Plot synthetic beach ball
+        if (syntcmt is not None):
+            xy_syntbeach = 0.75, 0.85
+            syntcmt.axbeach(
+                cmtax1, *xy_syntbeach, width=80, facecolor='r', clip_on=False,
+                linewidth=1)
+
+        # Plot new synthetic beach ball
+        if newsyntcmt is not None:
+            xy_newsyntbeach = 0.75, 0.85
+            newsyntcmt.axbeach(
+                cmtax2, *xy_newsyntbeach, width=80, facecolor='b', clip_on=False,
+                linewidth=1)
+
+    # Getting the CMT that is used for the base info 
+    # Always start with obsdcmt first os that changes with repect to the can
+    # be computed
+    if (obsdcmt is None) and (syntcmt is None) and (newsyntcmt is None):
+        infocmt = None
+    else:
+        if obsdcmt is not None:
+            infocmt = obsdcmt
+        elif syntcmt is not None:
+            infocmt = syntcmt
+        elif newsyntcmt is not None:
+            infocmt = newsyntcmt
+
+    # Seismogram axes
+    axes = [fig.add_subplot(GS[i, ncols-1]) for i in range(nrows)]
+
+    # Adjusting the figure size
     plt.subplots_adjust(top=0.85 - 0.05 * (3-Ncomp), hspace=hspace,
                         bottom=bottom + 0.05 * (3-Ncomp),
                         left=left)
-    # get the first line, there might be more
-    axes = []
+
+    # Get the first line, there might be more
     abc = "abc"
     for _i, _component in enumerate(components):
 
-        axes.append(plt.subplot(Ncomp*100 + 11 + _i))
-
+        # Checking for observed trace
         if obs is not None:
             try:
                 obstrace = obs.select(component=_component)[0]
@@ -563,6 +677,7 @@ def plot_seismogram_by_station(
         else:
             obstrace = None
 
+        # Checking for synthetic trace
         if syn is not None:
 
             try:
@@ -574,6 +689,7 @@ def plot_seismogram_by_station(
         else:
             syntrace = None
 
+        # Checking for new synthetic trace
         if newsyn is not None:
 
             try:
@@ -587,16 +703,12 @@ def plot_seismogram_by_station(
 
         # Read custom windows
         if window_dict is not None:
-            print(obstrace.id)
-            print(window_dict.keys())
             if obstrace.id in window_dict:
                 window_list = window_dict[obstrace.id]
-                print(obstrace.id)
-            else: 
+            else:
                 window_list = None
         else:
             window_list = None
-
 
         # Set some plotting parameters
         legend = True if _i == 0 else False
@@ -604,14 +716,16 @@ def plot_seismogram_by_station(
 
         # Plot the seismograms for compoenent _comp
         plot_seismograms(obsd=obstrace, synt=syntrace, syntf=newsyntrace,
-                         cmtsource=cmtsource, tag=tag, processfunc=processfunc,
+                         cmtsource=obsdcmt, tag=tag, processfunc=processfunc,
                          ax=axes[_i], labelbottom=labelbottom,
                          annotations=annotations, labelobsd=labelobsd,
                          labelsynt=labelsynt, labelnewsynt=labelnewsynt,
-                         legend=legend, timescale=3600.0, windows=windows,
+                         legend=legend, timescale=timescale, windows=windows,
                          window_list=window_list)
 
         # Get limits for seismograms
+        axes[_i].set_xlim(left=0)
+
         # Need some escape for envelope eventually
         axes[_i].set_yticklabels([])
         axes[_i].set_facecolor('none')
@@ -622,7 +736,7 @@ def plot_seismogram_by_station(
         if annotations:
             yscale_max *= 1.5
 
-        axes[_i].set_xlim(xmin, xmax)
+        axes[_i].set_xlim(0.0, xmax)
         axes[_i].set_ylim(-yscale_max, yscale_max)
 
         if _i == Ncomp-1:
@@ -651,14 +765,20 @@ def plot_seismogram_by_station(
 
         if _i == 0:
 
-            # Create String
-            station_string = (
-                f"{cmtsource.cmt_time.strftime('%Y/%m/%d %H:%M:%S')}, "
-                f"$\\theta$={cmtsource.latitude:6.2f}, "
-                f"$\\phi$={cmtsource.longitude:7.2f}, "
-                f"$h$={cmtsource.depth_in_m/1000.0:5.1f}\n"
-                f"{station}-{network}   "
-            )
+            if infocmt is None:
+                station_string = ""
+            else:
+                # Create String
+                station_string = (
+                    f"{infocmt.cmt_time.strftime('%Y/%m/%d %H:%M:%S')}, "
+                    f"$\\theta$={infocmt.latitude:6.2f}, "
+                    f"$\\phi$={infocmt.longitude:7.2f}, "
+                    f"$h$={infocmt.depth_in_m/1000.0:5.1f}"
+                    )
+
+            # Add station name
+            station_string += f"\n{station}-{network}   "
+
             # Get filter
             if periodrange is None:
                 periodstr = ""
@@ -668,29 +788,34 @@ def plot_seismogram_by_station(
             m2deg = 360/(2*np.pi*6371000.0)
 
             # Add location specific labels dist, az, baz
-            if (latitude is not None) and (latitude is not None):
-                # Get some geographical data
-                dist, az, baz = gps2dist_azimuth(
-                    cmtsource.latitude, cmtsource.longitude,
-                    latitude, longitude)
-                locstr = (
-                    f"$\\Delta$={m2deg*dist:6.2f}, "
-                    f"$\\alpha$={az:6.2f}, "
-                    f"$\\beta$={baz:6.2f}"
-                )
-            elif hasattr(obstrace.stats, 'latitude') \
-                and hasattr(obstrace.stats, 'longitude'):
-                
-                # Get some geographical data
-                dist, az, baz = gps2dist_azimuth(
-                    cmtsource.latitude, cmtsource.longitude,
-                    obstrace.stats.latitude, obstrace.stats.longitude)
+            if (infocmt is not None):
 
-                locstr = (
-                    f"$\\Delta$={m2deg*dist:6.2f}, "
-                    f"$\\alpha$={az:6.2f}, "
-                    f"$\\beta$={baz:6.2f}"
-                )
+                if (latitude is not None) and (latitude is not None):
+
+                    # Get some geographical data
+                    dist, az, baz = gps2dist_azimuth(
+                        infcmt.latitude, infocmt.longitude,
+                        latitude, longitude)
+                    locstr = (
+                        f"$\\Delta$={m2deg*dist:6.2f}, "
+                        f"$\\alpha$={az:6.2f}, "
+                        f"$\\beta$={baz:6.2f}")
+
+                elif hasattr(obstrace.stats, 'latitude') \
+                    and hasattr(obstrace.stats, 'longitude'):
+
+                    # Get some geographical data
+                    dist, az, baz = gps2dist_azimuth(
+                        infocmt.latitude, infocmt.longitude,
+                        obstrace.stats.latitude, obstrace.stats.longitude)
+
+                    locstr = (
+                        f"$\\Delta$={m2deg*dist:6.2f}, "
+                        f"$\\alpha$={az:6.2f}, "
+                        f"$\\beta$={baz:6.2f}")
+
+                else:
+                    locstr = ""
             else:
                 locstr = ""
 
@@ -702,7 +827,16 @@ def plot_seismogram_by_station(
                 axes[0], station_string, location=6, box=False,
                 fontfamily='monospace', dist=0.0)
 
-    # Plot map
+    # xlabel
+    if timescale == 1:
+        axes[-1].set_xlabel('Time [s]')
+    elif timescale == 60:
+        axes[-1].set_xlabel('Time [min]')
+    elif timescale == 60*60:
+        axes[-1].set_xlabel('Time [h]')
+    elif timescale == 60*60*24:
+        axes[-1].set_xlabel('Time [D]')
+
     if map:
         if (latitude is not None) and (longitude is not None):
             slat = latitude
@@ -713,7 +847,7 @@ def plot_seismogram_by_station(
                 and hasattr(obstrace.stats, 'longitude'):
             slat = obstrace.stats.latitude
             slon = obstrace.stats.longitude
-        
+
         else:
             raise ValueError(
                 'If you want to plot a map, you have to either provide the\n'
@@ -721,23 +855,34 @@ def plot_seismogram_by_station(
                 'or make sure that the Trace.Stats have longitude and '
                 'latitude.')
 
+        mapax = fig.add_subplot(GS[0, 0])
+        mapax.axis('off')
+
         # If we have cmtsource center map around 
-        if cmtsource is not None:
-            clat, clon = cmtsource.latitude, cmtsource.longitude
+        if obsdcmt is not None:
+            clat, clon = obsdcmt.latitude, obsdcmt.longitude
+            cmtplot = True
+        elif syntcmt is not None:
+            clat, clon = syntcmt.latitude, syntcmt.longitude
+            cmtplot = True
+        elif newsyntcmt is not None:
+            clat, clon = newsyntcmt.latitude, newsyntcmt.longitude
+            cmtplot = True
         else:
             clat, clon = slat, slon
-
-        print(clat, clon)
+            cmtplot = False
 
         # Create projection with station or earthquake at center
         # gets really weird with latitude, central_latitude=clat)
         projection = LambertAzimuthalEqualArea(central_longitude=clon)
-            
+
         # Create map axes
-        aspect = get_aspect(axes[0])
-        mapax = axes_from_axes(axes[0], 9321, [-1.55*aspect, -0.25, 1.5*aspect, 1.5],
-            zorder=100, projection=projection)
+        mapax = axes_from_axes(
+            mapax, 90124, extent=[-0.3, 0.0, 1.3, 1.3/get_aspect(mapax)],
+            projection=projection)
         mapax.set_global()
+
+        # Plot Map
         plot_map()
 
         # Plot station
@@ -745,33 +890,153 @@ def plot_seismogram_by_station(
             markerfacecolor=(0.8, 0.2, 0.2),
             markeredgecolor='k', transform=PlateCarree())
 
-        if cmtsource is not None:
-            
-            mapax.plot(cmtsource.longitude, cmtsource.latitude, '*',
+        # Plotting ray path between source an 
+        if cmtplot:
+
+            mapax.plot(clon, clat, '*',
                 markerfacecolor=(0.2, 0.2, 0.8),
                 markeredgecolor='k', transform=PlateCarree())
 
             mapax.plot(
-                [cmtsource.longitude, slon], [cmtsource.latitude, slat], '-k',
+                [clon, slon], [clat, slat], '-k',
                transform=PlateCarree(), zorder=0)
-            
-    if plot_beach:
 
-        # Create cmt axes
-        if cmtsource is not None:
-            aspect = get_aspect(axes[1])
-            cmtax = axes_from_axes(
-                axes[1], 9321, [-1.55*aspect, -0.25, 1.5*aspect, 1.5],)
-            cmtsource.axbeach(cmtax, 0.5, 0.5, width=100, facecolor='r')
-            cmtax.axis('off')
+    # Arrow parameters
+    ar = 1.0
+    awidth = 0.025
 
-        if newcmtsource is not None:
-            aspect = get_aspect(axes[2])
-            cmtax1 = axes_from_axes(
-                axes[2], 9321, [-1.55*aspect, -0.25, 1.5*aspect, 1.5],)
-            newcmtsource.axbeach(cmtax1, 0.5, 0.5, width=100, facecolor='b')
-            cmtax1.axis('off')
+    if plot_beach and ((obsdcmt is not None and syntcmt is not None) or \
+            (obsdcmt is not None and newsyntcmt is not None) or \
+            (syntcmt is not None and newsyntcmt is not None)):
 
+        # Plot arrow legend on obsd beach ball
+        az_arrow(
+            cmtax1, 0.75, 0.30, ar*0.1, 90, zorder=100, width=awidth,
+            head_length=awidth*1.5, head_width=awidth*3,
+            head_starts_at_zero=True, length_includes_head=True,
+            facecolor='k', clip_on=False)
+        
+        plot_label(
+            cmtax1, '0.1 deg\n\n', location=4, dist=0.0, box=False,
+            fontfamily='monospace', fontsize='xx-small', color='k',
+            zorder=100)
+
+        # Plot arrow startpoint
+        cmtax2.scatter([0.2], [0.8], s=40, marker='o',facecolor='k', edgecolor='k')
+
+    if plot_beach and obsdcmt is not None and syntcmt is not None:
+
+        #  Get the difference between synthetic and observed
+        dcmt = syntcmt - obsdcmt
+
+        # Comparing cmt values
+        compstring = ""
+        # Comparing cmt values
+        compstring = ""
+        compstring += f"dM = {100*(syntcmt.M0-obsdcmt.M0)/obsdcmt.M0:3.2f}%\n"
+        compstring += f"dt = {dcmt.time_shift:6.3f}\n"
+        compstring += f"dth= {dcmt.latitude:6.3f}\n"
+        compstring += f"dph= {dcmt.longitude:6.3f}\n"
+        compstring += f"dh = {dcmt.depth_in_m/1000:6.3f}"
+
+        plot_label(
+            cmtax1, compstring, location=3, dist=0.0, box=False,
+            fontfamily='monospace', fontsize='x-small', color='r',
+            zorder=100)
+
+        # Get some geographical data
+        dist1, az1, baz1 = gps2dist_azimuth(
+            obsdcmt.latitude, obsdcmt.longitude,
+            syntcmt.latitude, syntcmt.longitude)
+        arrow_length = dist1*360/1000.0/(2*np.pi*6371.0)
+        
+        # Plot arrow on obsd beach ball
+        az_arrow(
+            cmtax2, 0.2, 0.8, ar * arrow_length, az1, zorder=100, width=awidth,
+            head_length=awidth*1.5, head_width=awidth*3,
+            head_starts_at_zero=True, length_includes_head=True,
+            facecolor='r', clip_on=False)
+
+    if plot_beach and obsdcmt is not None and newsyntcmt is not None:
+
+        #  Get the difference between synthetic and observed
+        dcmt = newsyntcmt - obsdcmt
+
+        # Comparing cmt values
+        compstring = ""
+        compstring += f"dM = {100*(newsyntcmt.M0-obsdcmt.M0)/obsdcmt.M0:3.2f}%\n"
+        compstring += f"dt = {dcmt.time_shift:6.3f}\n"
+        compstring += f"dth= {dcmt.latitude:6.3f}\n"
+        compstring += f"dph= {dcmt.longitude:6.3f}\n"
+        compstring += f"dh = {dcmt.depth_in_m/1000:6.3f}"
+
+        plot_label(
+            cmtax2, compstring, location=3, dist=0.0, box=False,
+            fontfamily='monospace', fontsize='x-small', color='b')
+
+        # Get some geographical data
+        dist2, az2, baz2 = gps2dist_azimuth(
+            obsdcmt.latitude, obsdcmt.longitude,
+            newsyntcmt.latitude, newsyntcmt.longitude)
+        arrow_length = dist2*360/1000.0/(2*np.pi*6371.0)
+
+        az_arrow(
+            cmtax2, 0.2, 0.8, ar*arrow_length, az2, zorder=100, width=awidth,
+            head_length=awidth*1.5, head_width=awidth*3,
+            head_starts_at_zero=True, length_includes_head=True,
+            facecolor='b', clip_on=False)
+
+    # Add longitude change between events .. or not
+    if plot_beach and syntcmt is not None and newsyntcmt is not None:
+
+        if obsdcmt is not None:
+
+            d2cmt = newsyntcmt - syntcmt
+            ws = 12
+            comp2string = ""
+            comp2string += ws * " " + f"{d2cmt.moment_magnitude:6.3f}\n"
+            comp2string += ws * " " + f"{d2cmt.time_shift:6.3f}\n"
+            comp2string += ws * " " + f"{d2cmt.latitude:6.3f}\n"
+            comp2string += ws * " " + f"{d2cmt.longitude:6.3f}\n"
+            comp2string += ws * " " + f"{d2cmt.depth_in_m/1000:6.3f}"
+
+            plot_label(
+                cmtax2, comp2string, location=3, dist=0.0, box=False,
+                fontfamily='monospace', fontsize='x-small', color='k')
+
+            # Get some geographical data
+            dist12, az12, baz12 = gps2dist_azimuth(
+                obsdcmt.latitude, obsdcmt.longitude,
+                newsyntcmt.latitude, newsyntcmt.longitude)
+
+        else:
+
+            #  Get the difference between synthetic and observed
+            dcmt = newsyntcmt - syntcmt
+
+            # Comparing cmt values
+            compstring = ""
+            compstring += f"dM = {100*(newsyntcmt.M0-syntcmt.M0)/syntcmt.M0:3.2f}%\n"
+            compstring += f"dt = {dcmt.time_shift:6.3f}\n"
+            compstring += f"dth= {dcmt.latitude:6.3f}\n"
+            compstring += f"dph= {dcmt.longitude:6.3f}\n"
+            compstring += f"dh = {dcmt.depth_in_m/1000:6.3f}"
+
+            plot_label(
+                cmtax2, compstring, location=3, dist=0.0, box=False,
+                fontfamily='monospace', fontsize='x-small', color='b')
+
+            # Get some geographical data
+            dist3, az3, baz3 = gps2dist_azimuth(
+                syntcmt.latitude, syntcmt.longitude,
+                newsyntcmt.latitude, newsyntcmt.longitude)
+            arrow_length = dist3*360/1000.0/(2*np.pi*6371.0)
+
+            az_arrow(
+                cmtax2, 0.2, 0.8, ar*arrow_length, az3, zorder=100, width=awidth,
+                head_length=awidth*1.5, head_width=awidth*3,
+                head_starts_at_zero=True, length_includes_head=True,
+                facecolor='b', clip_on=False)
 
     matplotlib.rcParams.update({'font.family': defff})
 

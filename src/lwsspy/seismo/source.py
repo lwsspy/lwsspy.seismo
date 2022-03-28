@@ -151,37 +151,65 @@ class CMTSource(object):
     def from_sdr(cls, s, d, r, M0=1.0, **kwargs):
         """definition from Stein and Wysession
         s is the strike (phi_f), d is the dip (delta), and r is the slip angle
-        (lambda).
-        IM ASSIGNING THE COMPONENTS WRONG. SEE EMAIL TO YURI!!!!!
+        (lambda). IM ASSIGNING THE COMPONENTS WRONG. SEE EMAIL TO YURI!!!!!
+
+        Note How in Stein and Wysession the z-axis points UP (Figure 4.2-2) and
+        in Aki and Richards the z-axis points down (Figure 4.20). 
+        This results in a sign changes for the fault normal and slip vector. 
+
+        Convention for the code here is 
+        X-North, Y-East, Z-Down
+        R-Down, Theta-North, Phi-East
+
+
         """
-        s = np.radians(90-s)
-        d = np.radians(-d)
+
+        # To radians
+        s = np.radians(s)
+        d = np.radians(d)
         r = np.radians(r)
+        
 
         # Fault normal
         n = np.array([
-            -np.sin(d) * np.sin(s),
-            -np.sin(d) * np.cos(s),
-            np.cos(d)
+            - np.sin(d) * np.sin(s),
+            + np.sin(d) * np.cos(s),
+            - np.cos(d)
         ])
 
         # Slip vector
         d = np.array([
-            np.cos(r) * np.cos(s) + np.sin(r) * np.cos(d) * np.sin(s),
-            -np.cos(r) * np.sin(s) + np.sin(r) * np.cos(d) * np.cos(s),
-            np.sin(r) * np.sin(d)
+            np.cos(r) * np.cos(s) + np.cos(d) * np.sin(r) * np.sin(s),
+            np.cos(r) * np.sin(s) - np.cos(d) * np.sin(r) * np.cos(s),
+            - np.sin(r) * np.sin(d)
         ])
 
-        # Tension, Pressure, Null Vector
-        t = n + d
-        p = n - d
-        b = np.cross(n, d)
+        # Compute moment tensor Stein and Wysession Style
+        Mx = M0 * (np.outer(n, d) + np.outer(d, n))
 
-        # Tensor
-        mt = M0 * (np.outer(n, d) + np.outer(d, n))
+        # # Full terms from AKI & Richards (Box 4.4)
+        # Mxx = -M0 * (np.sin(d) * np.cos(r) * np.sin(2*s) + np.sin(2*d) * np.sin(r) * np.sin(s)**2)
+        # Mxy = +M0 * (np.sin(d) * np.cos(r) * np.cos(2*s) + 0.5 * np.sin(2*d) * np.sin(r) * np.sin(2*s))
+        # Mxz = -M0 * (np.cos(d) * np.cos(r) * np.cos(s) + np.cos(2*d) * np.sin(r) * np.sin(s))
+        # Myy = +M0 * (np.sin(d) * np.cos(r) * np.sin(2*s) - np.sin(2*d) * np.sin(r) * np.cos(s)**2)
+        # Myz = -M0 * (np.cos(d) * np.cos(r) * np.sin(s) - np.cos(2*d) * np.sin(r) * np.cos(s))
+        # Mzz = +M0 * np.sin(2*d) * np.sin(r)
+        
+        # # Moment tensor creation
+        # Mx = np.array( [
+        #     [Mxx, Mxy, Mxz],
+        #     [Mxy, Myy, Myz],
+        #     [Mxz, Myz, Mzz]
+        # ])
 
-        return cls(m_rr=mt[0, 0], m_tt=mt[1, 1], m_pp=mt[2, 2], m_rt=mt[0, 1],
-                   m_rp=mt[0, 2], m_tp=mt[1, 2])
+        Mr = np.array([
+            [ Mx[2, 2],  Mx[2, 0], -Mx[2, 1]],
+            [ Mx[0, 2],  Mx[0, 0], -Mx[0, 1]],
+            [-Mx[1, 2], -Mx[1, 0],  Mx[1, 1]],
+        ])
+
+        return cls(m_rr=Mr[0, 0], m_tt=Mr[1, 1], m_pp=Mr[2, 2], m_rt=Mr[0, 1],
+                   m_rp=Mr[0, 2], m_tp=Mr[1, 2])
 
     @classmethod
     def from_event(cls, event: Event):
@@ -427,7 +455,7 @@ class CMTSource(object):
             2.26 * 10**(-6) * (self.M0 * Nm_conv)**(1/3), decimals=1)
 
     @property
-    def tbp(self):
+    def pbt(self):
         """Returns tension (t), null (b), and pressure (p) axis and
         corresponding eigenvalues.
 
@@ -437,18 +465,59 @@ class CMTSource(object):
             matrix with corresponding eigenvalues, tbp column vectors
         """
         # Get eigenvalues and eigenvectors
-        lb, ev = np.linalg.eig(self.fulltensor)
+        (lb, ev) = np.linalg.eigh(self.fulltensor)
 
-        order = lb.argsort()[::-1]  # in decreasing order -> tpb
+        order = lb.argsort()  # in decreasing order -> pbt
 
-        return lb[order], ev[:, order]
+        return lb[order], ev[order]
+
+    @property
+    def tnp_deg(self):
+        """Returns tension (t), null (b), and pressure (p) axis in terms of 
+        eignevalue, az, plunge
+
+        Returns
+        -------
+        tuple
+            matrix with corresponding eigenvalues, tbp column vectors
+        """
+
+        # Get eigenvalues and vectors
+        (d, v) = self.pbt
+
+        # compute plunges
+        pl = np.arcsin(-v[0])
+
+        # Compute azimuthes
+        az = np.arctan2(v[2], -v[1])
+
+        # Fix angles
+        for i in range(0, 3):
+            if pl[i] <= 0:
+                pl[i] = -pl[i]
+                az[i] += np.pi
+            if az[i] < 0:
+                az[i] += 2 * np.pi
+            if az[i] > 2 * np.pi:
+                az[i] -= 2 * np.pi
+        
+        # Radians to degress
+        pl *= 180.0/np.pi
+        az *= 180.0/np.pi
+
+        # -> eignevalue, 
+        t = np.array([d[2], az[2], pl[2]])
+        n = np.array([d[1], az[1], pl[1]])
+        p = np.array([d[0], az[0], pl[0]])
+    
+        return (t, n, p)
 
     @property
     def tbp_norm(self):
         """Returns the same as tpb, but eigenvalues are normalized
         by the scalar moment.
         """
-        lb, ev = self.tbp
+        lb, ev = self.pbt
         return lb/self.M0, ev
 
     @property
@@ -456,10 +525,10 @@ class CMTSource(object):
         """
         Return fault normal and slip vectors
         """
-        E, tbp = self.tbp
+        E, pbt = self.pbt
 
         # Get pressure and tension axes
-        T, _, P = tbp[:, 0], tbp[:, 1], tbp[:, 2]
+        T, _, P = pbt[:, 2], pbt[:, 1], pbt[:, 0]
 
         # Get two directions
         TP1 = T+P
@@ -493,10 +562,10 @@ class CMTSource(object):
             # print(normal)
             # print(slip)
 
-            # Fix polarities
-            if normal[2] > 0:
-                normal[2] *= -1
-                slip[2] *= -1
+            # # Fix polarities
+            # if normal[2] > 0:
+            #     normal[2] *= -1
+            #     slip[2] *= -1
 
             # print('Fix')
             # print(normal)
@@ -504,7 +573,7 @@ class CMTSource(object):
 
             # Get strike and dip
             strike, dip = self.normal2sd(normal)
-
+            print(np.degrees(strike), np.degrees(dip))
             # print('SDR')
             # print(strike)
             # print(dip)
@@ -530,8 +599,8 @@ class CMTSource(object):
             # print('slip:', slip[2])
 
             # Fix strike
-            tol = 1e-10
-            strike = strike + np.pi/2
+            # tol = 1e-10
+            # strike = strike + np.pi/2
 
             # print("Solut:", np.degrees(strike),
             #       np.degrees(dip), np.degrees(rake))
@@ -553,15 +622,15 @@ class CMTSource(object):
             #     strike = strike + np.pi
             #     rake = 2 * np.pi - rake
 
-            if strike > 2 * np.pi:
-                strike = strike - 2*np.pi
-            elif strike < 0:
-                strike = strike + 2*np.pi
+            # if strike > 2 * np.pi:
+            #     strike = strike - 2*np.pi
+            # elif strike < 0:
+            #     strike = strike + 2*np.pi
 
-            if rake > np.pi:
-                rake = rake - 2*np.pi
-            elif rake < -np.pi:
-                rake = rake + 2*np.pi
+            # if rake > np.pi:
+            #     rake = rake - 2*np.pi
+            # elif rake < -np.pi:
+            #     rake = rake + 2*np.pi
 
             sdrs.append(np.degrees((strike, dip, rake)))
 
@@ -578,7 +647,7 @@ class CMTSource(object):
         """
 
         # strike
-        strike = np.arctan2(-normal[0], normal[1])
+        strike = np.arctan2(normal[1], -normal[2])
         # strike = np.mod(strike, 2*np.pi)
 
         # dip
@@ -611,7 +680,7 @@ class CMTSource(object):
 
     def axbeach(
         self, ax, x, y, width=50, facecolor='k', linewidth=2, alpha=1.0, 
-        **kwargs):
+        clip_on=False, **kwargs):
         """Plots beach ball into given axes.
         Note that width heavily depends on the given screen size/dpi. Therefore
         often does not work."""
@@ -628,6 +697,8 @@ class CMTSource(object):
                    size=100, # Defines number of interpolation points 
                    axes=ax,
                    **kwargs)
+        bb.set(clip_on=clip_on)
+        
         ax.add_collection(bb)
 
     def beachfig(self):
