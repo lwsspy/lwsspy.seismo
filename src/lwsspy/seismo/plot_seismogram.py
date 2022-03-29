@@ -2,6 +2,7 @@
 from ast import Call
 from curses import has_key
 from enum import Flag
+from signal import raise_signal
 from typing import Callable, Optional, Union, List
 from unittest.mock import NonCallableMagicMock
 from matplotlib import gridspec
@@ -13,12 +14,17 @@ from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
 from obspy import Trace, Stream, UTCDateTime
 from obspy.geodetics.base import gps2dist_azimuth
-from cartopy.crs import AzimuthalEquidistant, PlateCarree
+from cartopy.crs import AzimuthalEquidistant, Orthographic, Geodetic, \
+    PlateCarree
 from pyflex.window import Window
+from torch import rad2deg
 from .source import CMTSource, plot_beach
 from lwsspy.plot.plot_label import plot_label
 from lwsspy.plot.axes_from_axes import axes_from_axes
+from lwsspy.plot.geo2axes import geo2axes
 from lwsspy.plot.get_aspect import get_aspect
+from lwsspy.maps.midpoint import geomidpointv
+from lwsspy.maps.reckon import reckon
 from lwsspy.maps.plot_map import plot_map
 from lwsspy.plot.get_limits import get_limits
 from lwsspy.math.envelope import envelope
@@ -553,7 +559,8 @@ def plot_seismogram_by_station(
         map: bool = False,
         letters: bool = False,
         plot_beach: bool = False,
-        timescale: float = 3600.0):
+        timescale: float = 3600.0,
+        midpointmap: bool = False):
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
@@ -923,11 +930,13 @@ def plot_seismogram_by_station(
             slon = obstrace.stats.longitude
 
         else:
-            raise ValueError(
-                'If you want to plot a map, you have to either provide the\n'
-                'latitude and longitude of the station in question,\n'
-                'or make sure that the Trace.Stats have longitude and '
-                'latitude.')
+            # raise ValueError(
+            #     'If you want to plot a map, you have to either provide the\n'
+            #     'latitude and longitude of the station in question,\n'
+            #     'or make sure that the Trace.Stats have longitude and '
+            #     'latitude.')
+            slat = None
+            slon = None
 
         mapax = fig.add_subplot(GS[0, 0])
         mapax.axis('off')
@@ -945,10 +954,24 @@ def plot_seismogram_by_station(
         else:
             clat, clon = slat, slon
             cmtplot = False
+        
+        if clat is None or clon is None:
+            raise ValueError('For some reason I dont have a central (lat/lon)')
 
-        # Create projection with station or earthquake at center
-        # gets really weird with latitude, central_latitude=clat)
-        projection = AzimuthalEquidistant(central_longitude=clon, central_latitude=clat)
+        if midpointmap:
+            if slat is not None and slon is not None:
+                # Get midpoint of the station and the cmt
+                mlat, mlon = geomidpointv(clat, clon, slat, slon)
+            else:
+                # Set midpoint to cmt 
+                mlat, mlon = clat, clon
+            
+            # Projection
+            projection = Orthographic(
+                central_longitude=mlon, central_latitude=mlat)
+        else:
+            # Create projection with station or earthquake at center
+            projection = AzimuthalEquidistant(central_longitude=clon, central_latitude=clat)
 
         # Create map axes
         mapax = axes_from_axes(
@@ -959,23 +982,31 @@ def plot_seismogram_by_station(
         # Plot Map
         # plot_map()
         mapax.coastlines(lw=0.25)
-        mapax.gridlines(lw=0.25, ls='-', color=(0.75, 0.75, 0.75))
+        mapax.gridlines(lw=0.25, ls='-', color=(0.75, 0.75, 0.75), zorder=-1)
 
         # Plot station
-        mapax.plot(slon,slat, 'v',
-            markerfacecolor=(0.8, 0.2, 0.2),
-            markeredgecolor='k', transform=PlateCarree())
+        if slat is not None and slon is not None:
+            mapax.plot(
+                slon, slat, 'v',
+                markerfacecolor=(0.8, 0.2, 0.2),
+                markeredgecolor='k', transform=PlateCarree())
 
-        # Plotting ray path between source an 
+        # Plotting Cmtsource location
         if cmtplot:
 
-            mapax.plot(clon, clat, '*',
+            mapax.plot(
+                clon, clat, '*',
                 markerfacecolor=(0.2, 0.2, 0.8),
                 markeredgecolor='k', transform=PlateCarree())
 
+        # Plotting Great Circle Path
+        if slat is not None and slon is not None \
+                and clat is not None and clon is not None:
+
             mapax.plot(
                 [clon, slon], [clat, slat], '-k',
-               transform=PlateCarree(), zorder=0)
+               transform=Geodetic(), zorder=0)
+
 
     # Arrow parameters
     arrowprops = dict(lw=0.25, ls='-', ec='k', width=0.01)
@@ -990,6 +1021,9 @@ def plot_seismogram_by_station(
         az_arrow(mapax, 0.0, 0.98, scale*keylength, 90, fc='k', **arrowprops)
         plot_label(mapax, f'{keylength:.2f}deg', location=6, dist=0.0, box=False,
                    fontfamily='monospace', fontsize='xx-small', color='k')
+
+        # Get axes location of the event in fractional axes coordinates
+        arrowloc = geo2axes(mapax, infocmt.longitude, infocmt.latitude)
 
     if plot_beach and obsdcmt is not None and syntcmt is not None:
 
@@ -1019,8 +1053,20 @@ def plot_seismogram_by_station(
         arrow_length = dist1*360/1000.0/(2*np.pi*6371.0)
 
         if map:
+            if midpointmap:
+                # Get fixed arrow directions
+                lat2, lon2 = reckon(syntcmt.latitude, syntcmt.longitude, 2, az1)
+                print(lat2, lon2)
+                p_arrowdir = geo2axes(
+                    mapax, lon2, lat2)
+                az1 = 90-np.degrees(
+                    np.arctan2(
+                        p_arrowdir[1]-arrowloc[1],
+                        p_arrowdir[0]-arrowloc[0])
+                )
+
             az_arrow(
-                mapax, 0.5, 0.5, scale*arrow_length, az1, fc='r', **arrowprops)
+                mapax, *arrowloc, scale*arrow_length, az1, fc='r', **arrowprops)
 
     if plot_beach and (obsdcmt is not None) and (newsyntcmt is not None):
 
@@ -1046,8 +1092,19 @@ def plot_seismogram_by_station(
         arrow_length = dist2*360/1000.0/(2*np.pi*6371.0)
 
         if map:
+            if midpointmap:
+                # Get fixed arrow directions
+                lat2, lon2 = reckon(newsyntcmt.latitude, newsyntcmt.longitude, 2, az2)
+                p_arrowdir = geo2axes(
+                    mapax, lon2, lat2)
+                az2 = 90-np.degrees(
+                    np.arctan2(
+                        p_arrowdir[1]-arrowloc[1],
+                        p_arrowdir[0]-arrowloc[0])
+                )
+
             az_arrow(
-                mapax, 0.5, 0.5, scale*arrow_length, az2, fc='b', **arrowprops)
+                mapax, *arrowloc, scale*arrow_length, az2, fc='b', **arrowprops)
 
     # Add longitude change between events .. or not
     if False and plot_beach and (syntcmt is not None) and (newsyntcmt is not None):

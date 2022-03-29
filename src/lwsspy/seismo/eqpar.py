@@ -111,7 +111,7 @@ def eqpar(fmomin):
         # Plunge
         plungs[i] = np.arctan2(
             -eivecs[0, i],
-            np.sqrt(eivecs[1, i])**2 + eivecs[2, i]**2) * rad2deg
+            np.sqrt(eivecs[1, i]**2 + eivecs[2, i]**2)) * rad2deg
 
         # Azimuth
         azims[i] = np.arctan2(
