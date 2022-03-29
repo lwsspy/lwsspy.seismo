@@ -13,7 +13,7 @@ from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
 from obspy import Trace, Stream, UTCDateTime
 from obspy.geodetics.base import gps2dist_azimuth
-from cartopy.crs import LambertAzimuthalEqualArea, PlateCarree
+from cartopy.crs import AzimuthalEquidistant, PlateCarree
 from pyflex.window import Window
 from .source import CMTSource, plot_beach
 from lwsspy.plot.plot_label import plot_label
@@ -53,15 +53,45 @@ from lwsspy.signal.dlna import dlna
 #     return (t0 + trsec) - origin
 
 def az_arrow(ax, x, y, r, angle, *args, **kwargs):
+
+    # Arrow properties
+    arrowprops = dict(
+        arrowstyle="simple", 
+    )
+    
+    # Get dx dependent on the radius
     dx = r*np.sin(angle/180*np.pi)
     dy = r*np.cos(angle/180*np.pi)
-    ax.arrow(x, y, dx, dy, *args, **kwargs)
+    
+    xy = (x+dx, y+dy)
+    xytext= (x, y)
+    print(xytext)
+    print(xy)
+
+    # Make "Annotation"
+    ax.arrow(x, y, dx, dy, *args, **kwargs, transform=ax.transAxes,
+             clip_on=False)
 
 
-def az_arrow_r(ax, x, y, r, angle, *args, **kwargs):
-    dx = r*np.sin(angle/180*np.pi)
-    dy = r*np.cos(angle/180*np.pi)
-    ax.arrow(x+dx, y+dy, -dx, -dy, *args, **kwargs)
+
+# def az_arrow(ax, x1, y1, x2, y2, *args, **kwargs):
+#     q = ax.quiver(
+#         np.array([x1]), np.array([y1]), np.array([x2-x1]), np.array([y2-y1]), 
+#         # angles='xy', scale_units='xy', 
+#         *args, **kwargs)
+#     return q
+
+
+# def az_arrow_bu(ax, x, y, r, angle, *args, **kwargs):
+#     dx = r*np.sin(angle/180*np.pi)
+#     dy = r*np.cos(angle/180*np.pi)
+#     ax.arrow(x, y, dx, dy, *args, **kwargs)
+
+
+# def az_arrow_r(ax, x, y, r, angle, *args, **kwargs):
+#     dx = r*np.sin(angle/180*np.pi)
+#     dy = r*np.cos(angle/180*np.pi)
+#     ax.arrow(x+dx, y+dy, -dx, -dy, *args, **kwargs)
 
 
 def get_mcsta(d, s, dt, npts, leftidx, rightidx, taper=1.0):
@@ -582,7 +612,7 @@ def plot_seismogram_by_station(
     if map or cmtcomp:
         twocol = True
         ncols = 2
-        width_ratios = [1, 6]
+        width_ratios = [1, 5.75]
     else:
         twocol = False
         ncols = 1
@@ -598,7 +628,7 @@ def plot_seismogram_by_station(
     bottom = 0.2 if annotations else 0.1
 
     # Figure and Gridspec setups
-    fig = plt.figure(figsize=(12+leftfig, 1.0 + figfactor*Ncomp))
+    fig = plt.figure(figsize=(13+leftfig, 1.0 + figfactor*Ncomp))
     GS = GridSpec(
         nrows=nrows, ncols=ncols, width_ratios=width_ratios,
         wspace=0.00, hspace=hspace)
@@ -620,24 +650,68 @@ def plot_seismogram_by_station(
 
         # plot beaches in the axes anyways
         if (obsdcmt is not None):
-            xy_obsdbeach = 0.25, 0.85
+            if syntcmt is not None:
+                xy_obsdbeach = 0.25, 0.825
+                ha='left'
+                xanchor = 0
+            else:
+                xy_obsdbeach = 0.75, 0.825
+                ha='right'
+                xanchor = 1
+            
+            # Plot beach ball
             obsdcmt.axbeach(
                 cmtax1, *xy_obsdbeach, width=80, facecolor='k', clip_on=False,
                 linewidth=1)
+            
+            # Plot SDR string
+            ss, ds, rs = obsdcmt.sdr
+            label = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
+            label+= f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
+
+            # Plot SDR string
+            cmtax1.text(
+                xanchor, xy_obsdbeach[1]-0.25,
+                label, horizontalalignment=ha,
+                verticalalignment='top', transform=cmtax1.transAxes, 
+                bbox={'facecolor': 'none', 'edgecolor': 'none'},
+                fontfamily='monospace', fontsize='xx-small', color='k')
 
         # Plot synthetic beach ball
         if (syntcmt is not None):
-            xy_syntbeach = 0.75, 0.85
+            xy_syntbeach = 0.75, 0.825
             syntcmt.axbeach(
                 cmtax1, *xy_syntbeach, width=80, facecolor='r', clip_on=False,
                 linewidth=1)
 
+            ss, ds, rs = syntcmt.sdr
+            label  = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
+            label += f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
+
+            cmtax1.text(
+                1, xy_syntbeach[1]-0.25,
+                label, horizontalalignment='right',
+                verticalalignment='top', transform=cmtax1.transAxes, 
+                bbox={'facecolor': 'none', 'edgecolor': 'none'},
+                fontfamily='monospace', fontsize='xx-small', color='r')
+
         # Plot new synthetic beach ball
         if newsyntcmt is not None:
-            xy_newsyntbeach = 0.75, 0.85
+            xy_newsyntbeach = 0.75, 0.825
             newsyntcmt.axbeach(
                 cmtax2, *xy_newsyntbeach, width=80, facecolor='b', clip_on=False,
                 linewidth=1)
+
+            ss, ds, rs = newsyntcmt.sdr
+            label = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
+            label+= f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
+
+            cmtax2.text(
+                1, xy_newsyntbeach[1]-0.25,
+                label, horizontalalignment='right',
+                verticalalignment='top', transform=cmtax2.transAxes, 
+                bbox={'facecolor': 'none', 'edgecolor': 'none'},
+                fontfamily='monospace', fontsize='xx-small', color='b')
 
     # Getting the CMT that is used for the base info 
     # Always start with obsdcmt first os that changes with repect to the can
@@ -874,7 +948,7 @@ def plot_seismogram_by_station(
 
         # Create projection with station or earthquake at center
         # gets really weird with latitude, central_latitude=clat)
-        projection = LambertAzimuthalEqualArea(central_longitude=clon)
+        projection = AzimuthalEquidistant(central_longitude=clon, central_latitude=clat)
 
         # Create map axes
         mapax = axes_from_axes(
@@ -883,7 +957,9 @@ def plot_seismogram_by_station(
         mapax.set_global()
 
         # Plot Map
-        plot_map()
+        # plot_map()
+        mapax.coastlines(lw=0.25)
+        mapax.gridlines(lw=0.25, ls='-', color=(0.75, 0.75, 0.75))
 
         # Plot station
         mapax.plot(slon,slat, 'v',
@@ -902,27 +978,18 @@ def plot_seismogram_by_station(
                transform=PlateCarree(), zorder=0)
 
     # Arrow parameters
-    ar = 1.0
-    awidth = 0.025
+    arrowprops = dict(lw=0.25, ls='-', ec='k', width=0.01)
+    scale = 0.5 # axes length per degree
 
-    if plot_beach and ((obsdcmt is not None and syntcmt is not None) or \
+    if plot_beach and map and ((obsdcmt is not None and syntcmt is not None) or \
             (obsdcmt is not None and newsyntcmt is not None) or \
             (syntcmt is not None and newsyntcmt is not None)):
 
-        # Plot arrow legend on obsd beach ball
-        az_arrow(
-            cmtax1, 0.75, 0.30, ar*0.1, 90, zorder=100, width=awidth,
-            head_length=awidth*1.5, head_width=awidth*3,
-            head_starts_at_zero=True, length_includes_head=True,
-            facecolor='k', clip_on=False)
-        
-        plot_label(
-            cmtax1, '0.1 deg\n\n', location=4, dist=0.0, box=False,
-            fontfamily='monospace', fontsize='xx-small', color='k',
-            zorder=100)
-
-        # Plot arrow startpoint
-        cmtax2.scatter([0.2], [0.8], s=40, marker='o',facecolor='k', edgecolor='k')
+        # Legend Key length
+        keylength = 0.1
+        az_arrow(mapax, 0.0, 0.98, scale*keylength, 90, fc='k', **arrowprops)
+        plot_label(mapax, f'{keylength:.2f}deg', location=6, dist=0.0, box=False,
+                   fontfamily='monospace', fontsize='xx-small', color='k')
 
     if plot_beach and obsdcmt is not None and syntcmt is not None:
 
@@ -940,24 +1007,22 @@ def plot_seismogram_by_station(
         compstring += f"dh = {dcmt.depth_in_m/1000:6.3f}"
 
         plot_label(
-            cmtax1, compstring, location=3, dist=0.0, box=False,
-            fontfamily='monospace', fontsize='x-small', color='r',
+            cmtax1, compstring, location=4, dist=0.0, box=False,
+            fontfamily='monospace', fontsize='xx-small', color='r',
             zorder=100)
+        
 
         # Get some geographical data
         dist1, az1, baz1 = gps2dist_azimuth(
             obsdcmt.latitude, obsdcmt.longitude,
             syntcmt.latitude, syntcmt.longitude)
         arrow_length = dist1*360/1000.0/(2*np.pi*6371.0)
-        
-        # Plot arrow on obsd beach ball
-        az_arrow(
-            cmtax2, 0.2, 0.8, ar * arrow_length, az1, zorder=100, width=awidth,
-            head_length=awidth*1.5, head_width=awidth*3,
-            head_starts_at_zero=True, length_includes_head=True,
-            facecolor='r', clip_on=False)
 
-    if plot_beach and obsdcmt is not None and newsyntcmt is not None:
+        if map:
+            az_arrow(
+                mapax, 0.5, 0.5, scale*arrow_length, az1, fc='r', **arrowprops)
+
+    if plot_beach and (obsdcmt is not None) and (newsyntcmt is not None):
 
         #  Get the difference between synthetic and observed
         dcmt = newsyntcmt - obsdcmt
@@ -971,8 +1036,8 @@ def plot_seismogram_by_station(
         compstring += f"dh = {dcmt.depth_in_m/1000:6.3f}"
 
         plot_label(
-            cmtax2, compstring, location=3, dist=0.0, box=False,
-            fontfamily='monospace', fontsize='x-small', color='b')
+            cmtax2, compstring, location=4, dist=0.0, box=False,
+            fontfamily='monospace', fontsize='xx-small', color='b')
 
         # Get some geographical data
         dist2, az2, baz2 = gps2dist_azimuth(
@@ -980,14 +1045,12 @@ def plot_seismogram_by_station(
             newsyntcmt.latitude, newsyntcmt.longitude)
         arrow_length = dist2*360/1000.0/(2*np.pi*6371.0)
 
-        az_arrow(
-            cmtax2, 0.2, 0.8, ar*arrow_length, az2, zorder=100, width=awidth,
-            head_length=awidth*1.5, head_width=awidth*3,
-            head_starts_at_zero=True, length_includes_head=True,
-            facecolor='b', clip_on=False)
+        if map:
+            az_arrow(
+                mapax, 0.5, 0.5, scale*arrow_length, az2, fc='b', **arrowprops)
 
     # Add longitude change between events .. or not
-    if plot_beach and syntcmt is not None and newsyntcmt is not None:
+    if False and plot_beach and (syntcmt is not None) and (newsyntcmt is not None):
 
         if obsdcmt is not None:
 
@@ -1023,7 +1086,7 @@ def plot_seismogram_by_station(
             compstring += f"dh = {dcmt.depth_in_m/1000:6.3f}"
 
             plot_label(
-                cmtax2, compstring, location=3, dist=0.0, box=False,
+                cmtax2, compstring, location=4, dist=0.0, box=False,
                 fontfamily='monospace', fontsize='x-small', color='b')
 
             # Get some geographical data
@@ -1032,11 +1095,9 @@ def plot_seismogram_by_station(
                 newsyntcmt.latitude, newsyntcmt.longitude)
             arrow_length = dist3*360/1000.0/(2*np.pi*6371.0)
 
-            az_arrow(
-                cmtax2, 0.2, 0.8, ar*arrow_length, az3, zorder=100, width=awidth,
-                head_length=awidth*1.5, head_width=awidth*3,
-                head_starts_at_zero=True, length_includes_head=True,
-                facecolor='b', clip_on=False)
+            if map:
+                az_arrow(
+                    mapax, 0.5, 0.5, scale*arrow_length, az3, fc='b', **arrowprops)
 
     matplotlib.rcParams.update({'font.family': defff})
 

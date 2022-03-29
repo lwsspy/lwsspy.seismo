@@ -31,6 +31,7 @@ from ..plot.plot_label import plot_label
 from ..plot.get_aspect import get_aspect
 from ..plot.updaterc import updaterc
 from ..plot.midpointcolornorm import MidpointNormalize
+from .eqpar import eqpar
 import matplotlib.pyplot as plt
 
 
@@ -541,100 +542,18 @@ class CMTSource(object):
         return normal, slip
 
     @property
+    def eqpar(self):
+        """For documentation see lwsspy.seismo.eqpar."""
+        return list(eqpar(self.tensor))
+
+    @property
     def sdr(self):
         """
         Returns
         -------
-        (strike, dip, rake)
+        (strikes, dips, rakes)
         """
-
-        # Get fault normal and slip
-        normals = self.fns
-
-        # Get strike and dip
-        sdrs = []
-        for i in range(len(normals)):
-
-            # Get normal and strike
-            normal, slip = normals[i], normals[-(i+1)]
-
-            # print("Unaltered:")
-            # print(normal)
-            # print(slip)
-
-            # # Fix polarities
-            # if normal[2] > 0:
-            #     normal[2] *= -1
-            #     slip[2] *= -1
-
-            # print('Fix')
-            # print(normal)
-            # print(slip)
-
-            # Get strike and dip
-            strike, dip = self.normal2sd(normal)
-            print(np.degrees(strike), np.degrees(dip))
-            # print('SDR')
-            # print(strike)
-            # print(dip)
-
-            # Get rake
-            x = -slip[2]
-            y = slip[0]*normal[1] - slip[1]*normal[0]
-            rake = - np.arctan2(-slip[2], slip[0] *
-                                normal[1] - slip[1]*normal[0])
-            # rake = np.real(np.arccos(
-            #     np.cos(strike) * slip[0]
-            #     + np.sin(strike) * slip[1]
-            # ))
-
-            # if slip[2] < 0:
-            #     print("slip neg", np.degrees(rake))
-            #     rake *= -1
-            # rake = np.pi - rake
-
-            # rake = np.mod(rake, 2*np.pi)
-            # if rake < 0:
-            # print('normal:', normal[2])
-            # print('slip:', slip[2])
-
-            # Fix strike
-            # tol = 1e-10
-            # strike = strike + np.pi/2
-
-            # print("Solut:", np.degrees(strike),
-            #       np.degrees(dip), np.degrees(rake))
-
-            # if strike < 0:
-            #     strike += np.pi
-
-            # if np.abs(strike-2*np.pi) < tol\
-            #         or np.abs(strike-0.0) < tol:
-            #     strike = 0.0
-
-            # Fix Rake
-
-            # Fix dip
-            # dip = np.pi - dip
-
-            # if dip > np.pi/2:
-            #     dip = np.pi - dip
-            #     strike = strike + np.pi
-            #     rake = 2 * np.pi - rake
-
-            # if strike > 2 * np.pi:
-            #     strike = strike - 2*np.pi
-            # elif strike < 0:
-            #     strike = strike + 2*np.pi
-
-            # if rake > np.pi:
-            #     rake = rake - 2*np.pi
-            # elif rake < -np.pi:
-            #     rake = rake + 2*np.pi
-
-            sdrs.append(np.degrees((strike, dip, rake)))
-
-        return sdrs
+        return self.eqpar[1:4]
 
     @ staticmethod
     def normal2sd(normal):
@@ -724,7 +643,7 @@ class CMTSource(object):
                    edgecolor='k',
                    alpha=1.0,
                    xy=(0.625, 0.4),
-                   width=150,
+                   width=145,
                    size=100,
                    nofill=False,
                    zorder=100,
@@ -750,11 +669,11 @@ class CMTSource(object):
         bottomleft += f'Depth: {self.depth_in_m/1000:>17.1f} km\n'
         bottomleft += f'hdur: {self.half_duration:>19} s'
 
-        sdr1, sdr2 = self.sdr
+        ss, ds, rs = self.sdr
         bottomright = ''
         bottomright += f'S/D/R:\n'
-        bottomright += f'{sdr1[0]:3.0f}/{sdr1[1]:3.0f}/{sdr1[2]:4.0f}\n'
-        bottomright += f'{sdr2[0]:3.0f}/{sdr2[1]:3.0f}/{sdr2[2]:4.0f}'
+        bottomright += f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[0]:4.0f}\n'
+        bottomright += f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
 
         # Topleft text
         plot_label(ax, header_topleft, location=1, dist=0.0, box=False,
