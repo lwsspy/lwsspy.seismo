@@ -3,7 +3,8 @@ from ast import Call
 from curses import has_key
 from enum import Flag
 from signal import raise_signal
-from typing import Callable, Optional, Union, List
+from time import time
+from typing import Callable, Optional, Union, List, Iterable
 from unittest.mock import NonCallableMagicMock
 from matplotlib import gridspec
 import numpy as np
@@ -63,17 +64,16 @@ def az_arrow(ax, x, y, r, angle, *args, **kwargs):
     # Get dx dependent on the radius
     dx = r*np.sin(angle/180*np.pi)
     dy = r*np.cos(angle/180*np.pi)
-    
+
     # Make "Annotation"
     ax.arrow(x, y, dx, dy, *args, **kwargs, transform=ax.transAxes,
              clip_on=False)
 
 
-
 # def az_arrow(ax, x1, y1, x2, y2, *args, **kwargs):
 #     q = ax.quiver(
-#         np.array([x1]), np.array([y1]), np.array([x2-x1]), np.array([y2-y1]), 
-#         # angles='xy', scale_units='xy', 
+#         np.array([x1]), np.array([y1]), np.array([x2-x1]), np.array([y2-y1]),
+#         # angles='xy', scale_units='xy',
 #         *args, **kwargs)
 #     return q
 
@@ -91,10 +91,10 @@ def az_arrow(ax, x, y, r, angle, *args, **kwargs):
 
 
 def get_mcsta(d, s, dt, npts, leftidx, rightidx, taper=1.0):
-    
+
     # Shorten left and right
     l, r = leftidx, rightidx
-    
+
     # Get window data
     wd = d[l:r]
     ws = s[l:r]
@@ -208,7 +208,7 @@ def plot_seismograms(
         cmtsource: Optional[CMTSource] = None,
         tag: Union[str, None] = None,
         ax: Optional[matplotlib.axes.Axes] = None,
-        processfunc: Callable = lambda x : x.data,
+        processfunc: Callable = lambda x: x.data,
         annotations: bool = True,
         labelbottom: bool = False,
         labelobsd: str = None,
@@ -220,14 +220,17 @@ def plot_seismograms(
         timescale: float = 1.0,
         obsdcolor='k',
         syntcolor='r',
-        newsyntcolor='b'):
+        newsyntcolor='b',
+        xlim_in_seconds: Optional[Iterable[float]] = None):
 
     if ax is None:
         ax = plt.gca()
 
+    # Check whether there are traces to plot
     plotobsd = isinstance(obsd, Trace)
     plotsynt = isinstance(synt, Trace)
     plotsyntf = isinstance(syntf, Trace)
+
     if plotobsd:
         station = obsd.stats.station
         network = obsd.stats.network
@@ -274,31 +277,67 @@ def plot_seismograms(
     alpha = 1.0 if windows is False else 0.5
     maxdisp = 0.0
     if plotobsd:
+
+        # Times
         times_obsd = offset_obsd + obsd.stats.delta * \
             np.arange(obsd.stats.npts)
+
+        # Get data
         pobsd = processfunc(obsd)
+
+        # Timeband data
+        if xlim_in_seconds:
+            obsdpos = np.where(
+                (xlim_in_seconds[0] <= times_obsd) &
+                (times_obsd <= xlim_in_seconds[1]))[0]
+            times_obsd = times_obsd[obsdpos]
+            pobsd = pobsd[obsdpos]
+
+        # Plot seismograms
         ax.plot(np.array(times_obsd)/timescale, pobsd, color=obsdcolor,
                 linewidth=0.75, label=labelobsd, alpha=alpha)
-        obsdmax = np.max(np.abs(pobsd))
-        maxdisp = obsdmax if obsdmax > maxdisp else maxdisp
 
     if plotsynt:
+
+        # Times
         times_synt = offset_synt + synt.stats.delta * \
             np.arange(synt.stats.npts)
+
+        # Get data
         psynt = processfunc(synt)
+
+        # Timeband data
+        if xlim_in_seconds:
+            syntpos = np.where(
+                (xlim_in_seconds[0] <= times_synt) &
+                (times_synt <= xlim_in_seconds[1]))[0]
+            times_synt = times_synt[syntpos]
+            psynt = psynt[syntpos]
+
+        # Plot seismograms
         ax.plot(np.array(times_synt)/timescale, psynt, color=syntcolor,
                 linewidth=0.75, label=labelsynt, alpha=alpha)
-        syntmax = np.max(np.abs(psynt))
-        maxdisp = syntmax if syntmax > maxdisp else maxdisp
 
     if plotsyntf:
+
+        # Times
         times_syntf = offset_syntf + syntf.stats.delta * \
             np.arange(syntf.stats.npts)
+
+        # Get data
         psyntf = processfunc(syntf)
+
+        # Timeband data
+        if xlim_in_seconds:
+            syntfpos = np.where(
+                (xlim_in_seconds[0] <= times_syntf) &
+                (times_syntf <= xlim_in_seconds[1]))[0]
+            times_syntf = times_syntf[syntfpos]
+            psyntf = psyntf[syntfpos]
+
+        # Plot seismograms
         ax.plot(np.array(times_syntf)/timescale, psyntf, color=newsyntcolor,
                 linewidth=0.75, label=labelnewsynt, alpha=alpha)
-        syntfmax = np.max(np.abs(psyntf))
-        maxdisp = syntfmax if syntfmax > maxdisp else maxdisp
 
     if legend:
         ax.legend(loc='lower right', frameon=False, ncol=2,
@@ -306,13 +345,20 @@ def plot_seismograms(
                   bbox_to_anchor=(1., 1.), borderaxespad=0.0)
     ax.tick_params(labelbottom=labelbottom, labeltop=False)
 
-    # Setting top left corner text manually
-    # if isinstance(tag, str):
-    #     label = f"{trace_id}\n{tag.capitalize()}"
-    # else:
-    #     label = f"{trace_id}"
-    # plot_label(ax, label, location=1, dist=0.005, box=False)
+    if xlim_in_seconds:
+        xmin = xlim_in_seconds[0]/timescale
+        xmax = xlim_in_seconds[1]/timescale
 
+        # Set x axis limits
+        ax.set_xlim(xmin, xmax)
+
+    # Get data limits
+    _, _, ymin, ymax = get_limits(ax)
+
+    # Get maximum displacement in terms of ydata
+    maxdisp = np.max(np.abs((ymin, ymax)))
+
+    # Plot windows
     if plotobsd and (plotsynt or plotsyntf) and (windows):
 
         # If custom windows are given check those first,
@@ -343,9 +389,9 @@ def plot_seismograms(
                     elif isinstance(win, Window):
                         # Compute actual startime
                         left = win.absolute_starttime - cmtsource.cmt_time
-                        right = win.absolute_endtime  - cmtsource.cmt_time
+                        right = win.absolute_endtime - cmtsource.cmt_time
 
-                    # Get left and right indeces 
+                    # Get left and right indeces
                     leftidx = np.argmin(np.abs(times_obsd-left))
                     rightidx = np.argmin(np.abs(times_obsd-right))
 
@@ -354,9 +400,17 @@ def plot_seismograms(
                     right /= timescale
 
                 else:
-
-                    left = times_obsd[win.left]/timescale
-                    right = times_obsd[win.right]/timescale
+                    if xlim_in_seconds:
+                        if win.left in obsdpos and win.right in obsdpos:
+                            wleft = obsdpos.tolist().index(win.left)
+                            wright = obsdpos.tolist().index(win.right)
+                            left = times_obsd[wleft]/timescale
+                            right = times_obsd[wright]/timescale
+                        else:
+                            continue
+                    else:
+                        left = times_obsd[win.left]/timescale
+                        right = times_obsd[win.right]/timescale
 
                     # Get left and right indeces
                     leftidx = win.left
@@ -442,7 +496,7 @@ def plot_seismograms(
                         # Print second string
                         ax.text(left, y, addstring1, transform=trans,
                                 fontdict=dict(size="xx-small",
-                                            family='monospace'),
+                                              family='monospace'),
                                 horizontalalignment='left',
                                 verticalalignment=va, color=newsyntcolor)
 
@@ -466,11 +520,10 @@ def plot_seismograms(
 
     if plotobsd:
         if hasattr(obsd.stats, 'weights'):
-            weightstring = f"W: {obsd.stats.weights:6.4f}" 
+            weightstring = f"W: {obsd.stats.weights:6.4f}"
 
             plot_label(ax, weightstring, location=8, box=False,
-               fontfamily='monospace', dist=0.01, fontsize=fontsize)
-
+                       fontfamily='monospace', dist=0.01, fontsize=fontsize)
 
     # Add Measurements
     if plotobsd and plotsynt and plotsyntf:
@@ -555,9 +608,10 @@ def plot_seismogram_by_station(
         timescale: float = 3600.0,
         midpointmap: bool = False,
         obsdcolor='k',
-        syntcolor=(0.9,0.2,0.2),
-        newsyntcolor=(0.2,0.2,0.8),
-        pdfmode: bool = False):
+        syntcolor=(0.9, 0.2, 0.2),
+        newsyntcolor=(0.2, 0.2, 0.8),
+        pdfmode: bool = False,
+        xlim_in_seconds: Optional[Iterable[float]] = None):
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
@@ -601,7 +655,6 @@ def plot_seismogram_by_station(
     if not labelnewsynt:
         labelnewsynt = 'New Syn'
 
-
     # Figure Setup
     components = [x for x in compsystem]
     nrows = len(components)
@@ -609,7 +662,7 @@ def plot_seismogram_by_station(
     # check whether any cmts should be plotted
     if (obsdcmt is not None) or (syntcmt is not None) or (newsyntcmt is not None):
         cmtcomp = True
-    else: 
+    else:
         cmtcomp = False
 
     # Whether to have the left colum for map info etc.
@@ -627,7 +680,7 @@ def plot_seismogram_by_station(
     leftfig = 1.0 if twocol else 0.0
 
     # Figure setup depending on different parameters
-    figfactor = 1.55 #if annotations else 1.3
+    figfactor = 1.55  # if annotations else 1.3
     hspace = 0.3 if annotations else 0.1
     bottom = 0.1
 
@@ -635,20 +688,20 @@ def plot_seismogram_by_station(
     fig = plt.figure(figsize=(12+leftfig, 1.0 + figfactor*Ncomp))
     outer = GridSpec(
         nrows=1, ncols=ncols, width_ratios=width_ratios,
-        wspace=0.00)
+        wspace=0.01)
 
     if ncols == 2:
         # Map and cmt axes
         GSL = gridspec.GridSpecFromSubplotSpec(
-            3, 1, subplot_spec = outer[0], hspace=0.1)
-        
+            3, 1, subplot_spec=outer[0], hspace=0.1)
+
         # Seismogram axes
         GSR = gridspec.GridSpecFromSubplotSpec(
-            3, 1, subplot_spec = outer[1], hspace=hspace)    
+            3, 1, subplot_spec=outer[1], hspace=hspace)
     else:
         # Seismogram axes
         GSR = gridspec.GridSpecFromSubplotSpec(
-            3, 1, subplot_spec = outer[0], hspace=hspace)    
+            3, 1, subplot_spec=outer[0], hspace=hspace)
 
     # Seismogram axes
     axes = [fig.add_subplot(GSR[i]) for i in range(nrows)]
@@ -656,9 +709,6 @@ def plot_seismogram_by_station(
     # Adjusting the figure size
     plt.subplots_adjust(top=0.85 - 0.05 * (3-Ncomp), hspace=hspace,
                         bottom=bottom + 0.05 * (3-Ncomp))
-    
-
-
 
     if plot_beach and cmtcomp:
         # Create center axes either way
@@ -681,21 +731,21 @@ def plot_seismogram_by_station(
             beachwidth = widthperdpi * 72
         else:
             beachwidth = widthperdpi*rcParams['figure.dpi']
-        
+
         if (obsdcmt is not None):
             if syntcmt is not None:
                 xy_obsdbeach = 0.25, 0.80
-                ha='left'
+                ha = 'left'
                 xanchor = 0
             else:
                 xy_obsdbeach = 0.75, 0.80
-                ha='right'
+                ha = 'right'
                 xanchor = 1
-            
+
             # Plot beach ball
             obsdcmt.axbeach(
-                cmtax1, *xy_obsdbeach, width=beachwidth, facecolor=obsdcolor, clip_on=False,
-                linewidth=1)
+                cmtax1, *xy_obsdbeach, width=beachwidth, facecolor=obsdcolor,
+                clip_on=False, linewidth=1)
 
         # Plot synthetic beach ball
         if (syntcmt is not None):
@@ -705,13 +755,13 @@ def plot_seismogram_by_station(
                 clip_on=False, linewidth=1)
 
             ss, ds, rs = syntcmt.sdr
-            label  = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
+            label = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
             label += f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
 
             cmtax1.text(
                 1, xy_syntbeach[1]-0.2,
                 label, horizontalalignment='right',
-                verticalalignment='top', transform=cmtax1.transAxes, 
+                verticalalignment='top', transform=cmtax1.transAxes,
                 bbox={'facecolor': 'none', 'edgecolor': 'none'},
                 fontfamily='monospace', fontsize='xx-small', color=syntcolor)
 
@@ -719,21 +769,21 @@ def plot_seismogram_by_station(
         if newsyntcmt is not None:
             xy_newsyntbeach = 0.75, 0.80
             newsyntcmt.axbeach(
-                cmtax2, *xy_newsyntbeach, width=beachwidth, 
+                cmtax2, *xy_newsyntbeach, width=beachwidth,
                 facecolor=newsyntcolor, clip_on=False, linewidth=1)
 
             ss, ds, rs = newsyntcmt.sdr
             label = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
-            label+= f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
-            
+            label += f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
+
             cmtax2.text(
                 1, xy_newsyntbeach[1]-0.2,
                 label, horizontalalignment='right',
-                verticalalignment='top', transform=cmtax2.transAxes, 
+                verticalalignment='top', transform=cmtax2.transAxes,
                 bbox={'facecolor': 'none', 'edgecolor': 'none'},
                 fontfamily='monospace', fontsize='xx-small', color=newsyntcolor)
 
-    # Getting the CMT that is used for the base info 
+    # Getting the CMT that is used for the base info
     # Always start with obsdcmt first os that changes with repect to the can
     # be computed
     if (obsdcmt is None) and (syntcmt is None) and (newsyntcmt is None):
@@ -801,30 +851,38 @@ def plot_seismogram_by_station(
         labelbottom = True if _i == Ncomp-1 else False
 
         # Plot the seismograms for compoenent _comp
-        plot_seismograms(obsd=obstrace, synt=syntrace, syntf=newsyntrace,
-                         cmtsource=obsdcmt, tag=tag, processfunc=processfunc,
-                         ax=axes[_i], labelbottom=labelbottom,
-                         annotations=annotations, labelobsd=labelobsd,
-                         labelsynt=labelsynt, labelnewsynt=labelnewsynt,
-                         legend=legend, timescale=timescale, windows=windows,
-                         window_list=window_list, 
-                         obsdcolor=obsdcolor, syntcolor=syntcolor,
-                         newsyntcolor=newsyntcolor)
-
-        # Get limits for seismograms
-        axes[_i].set_xlim(left=0)
+        plot_seismograms(
+            obsd=obstrace, synt=syntrace, syntf=newsyntrace,
+            cmtsource=obsdcmt, tag=tag, processfunc=processfunc,
+            ax=axes[_i], labelbottom=labelbottom,
+            annotations=annotations, labelobsd=labelobsd,
+            labelsynt=labelsynt, labelnewsynt=labelnewsynt,
+            legend=legend, timescale=timescale, windows=windows,
+            window_list=window_list,
+            obsdcolor=obsdcolor, syntcolor=syntcolor,
+            newsyntcolor=newsyntcolor,
+            xlim_in_seconds=xlim_in_seconds)
 
         # Need some escape for envelope eventually
         axes[_i].set_yticklabels([])
         axes[_i].set_facecolor('none')
 
-        xmin, xmax, ymin, ymax = get_limits(axes[_i])
+        if xlim_in_seconds:
+            xmin = xlim_in_seconds[0]/timescale
+            xmax = xlim_in_seconds[1]/timescale
+        else:
+            xmin, xmax = 0, None
+
+        # Set x axis limits
+        axes[_i].set_xlim(xmin, xmax)
+
+        # Get and set y axis limits
+        _, _, ymin, ymax = get_limits(axes[_i])
         yscale_max = np.max(np.abs([ymin, ymax]))
 
         if annotations:
             yscale_max *= 1.5
 
-        axes[_i].set_xlim(0.0, xmax)
         axes[_i].set_ylim(-yscale_max, yscale_max)
 
         if _i == Ncomp-1:
@@ -864,7 +922,6 @@ def plot_seismogram_by_station(
 
                 m2deg = 360/(2*np.pi*6371000.0)
 
-
                 if (latitude is not None) and (latitude is not None):
 
                     # Get some geographical data
@@ -877,7 +934,7 @@ def plot_seismogram_by_station(
                         f"$\\beta$={baz:6.2f}")
 
                 elif hasattr(obstrace.stats, 'latitude') \
-                    and hasattr(obstrace.stats, 'longitude'):
+                        and hasattr(obstrace.stats, 'longitude'):
 
                     # Get some geographical data
                     dist, az, baz = gps2dist_azimuth(
@@ -891,8 +948,7 @@ def plot_seismogram_by_station(
 
                 else:
                     locstr = "\n"
-            
-                
+
                 ss, ds, rs = infocmt.sdr
                 ss = np.round(ss).astype(int)
                 ds = np.round(ds).astype(int)
@@ -901,7 +957,7 @@ def plot_seismogram_by_station(
                 plungs = np.round(plungs).astype(int)
                 azims = np.round(azims).astype(int)
 
-                TBP="TBP"
+                TBP = "TBP"
                 lstr += 3
                 # Create String
                 event_string += (
@@ -909,14 +965,14 @@ def plot_seismogram_by_station(
                     f"$\\theta$={infocmt.latitude:6.2f}, "
                     f"$\\phi$={infocmt.longitude:7.2f}, "
                     f"$h$={infocmt.depth_in_m/1000.0:5.1f}\n"
-                    + ' ' * lstr + locstr + 
+                    + ' ' * lstr + locstr +
                     f"\n{' '*lstr}S/D/R = ({ss[0]:d}/{ds[0]:d}/{rs[0]:d})"
                     f" | ({ss[1]:d}/{ds[1]:d}/{rs[1]:d}), "
                     f"$\\epsilon$={infocmt.decomp(dtype='eps_nu')[0]:5.3f}\n"
                     f"{' '*lstr}Ax(Az,Pl): "
                     + ", ".join([
                         f"{TBP[i]:s}({azims[i]:d},{plungs[i]:d})" for i in range(3)])
-                    )
+                )
 
                 station_string += event_string
 
@@ -935,13 +991,17 @@ def plot_seismogram_by_station(
 
     # xlabel
     if timescale == 1:
-        axes[-1].set_xlabel('Time [s]')
+        unit = f's'
     elif timescale == 60:
-        axes[-1].set_xlabel('Time [min]')
+        unit = 'min'
     elif timescale == 60*60:
-        axes[-1].set_xlabel('Time [h]')
+        unit = 'h'
     elif timescale == 60*60*24:
-        axes[-1].set_xlabel('Time [D]')
+        unit = 'D'
+    else:
+        unit = f's/{timescale}s'
+
+    axes[-1].set_xlabel(f'Time [{unit}]')
 
     if map:
         if (latitude is not None) and (longitude is not None):
@@ -966,7 +1026,7 @@ def plot_seismogram_by_station(
         mapax = fig.add_subplot(GSL[0])
         mapax.axis('off')
 
-        # If we have cmtsource center map around 
+        # If we have cmtsource center map around
         if obsdcmt is not None:
             clat, clon = obsdcmt.latitude, obsdcmt.longitude
             cmtplot = True
@@ -979,7 +1039,7 @@ def plot_seismogram_by_station(
         else:
             clat, clon = slat, slon
             cmtplot = False
-        
+
         if clat is None or clon is None:
             raise ValueError('For some reason I dont have a central (lat/lon)')
 
@@ -988,19 +1048,20 @@ def plot_seismogram_by_station(
                 # Get midpoint of the station and the cmt
                 mlat, mlon = geomidpointv(clat, clon, slat, slon)
             else:
-                # Set midpoint to cmt 
+                # Set midpoint to cmt
                 mlat, mlon = clat, clon
-            
+
             # Projection
             projection = Orthographic(
                 central_longitude=mlon, central_latitude=mlat)
         else:
             # Create projection with station or earthquake at center
-            projection = AzimuthalEquidistant(central_longitude=clon, central_latitude=clat)
+            projection = AzimuthalEquidistant(
+                central_longitude=clon, central_latitude=clat)
 
         # Create map axes
         mapax = axes_from_axes(
-            mapax, 90124, extent=[-0.3, 0.0, 1.4, 1.4/get_aspect(mapax)],
+            mapax, 90124, extent=[-0.4, 0.0, 1.4, 1.4/get_aspect(mapax)],
             projection=projection)
         mapax.set_global()
 
@@ -1030,20 +1091,20 @@ def plot_seismogram_by_station(
 
             mapax.plot(
                 [clon, slon], [clat, slat], '-k',
-               transform=Geodetic(), zorder=0)
-
+                transform=Geodetic(), zorder=0)
 
     # Arrow parameters
     arrowprops = dict(lw=0.25, ls='-', ec='k', width=0.01)
-    scale = 0.5 # axes length per degree
+    scale = 0.5  # axes length per degree
 
-    if plot_beach and map and ((obsdcmt is not None and syntcmt is not None) or \
-            (obsdcmt is not None and newsyntcmt is not None) or \
-            (syntcmt is not None and newsyntcmt is not None)):
+    if plot_beach and map and ((obsdcmt is not None and syntcmt is not None) or
+                               (obsdcmt is not None and newsyntcmt is not None) or
+                               (syntcmt is not None and newsyntcmt is not None)):
 
         # Legend Key length
         keylength = 0.1
-        az_arrow(mapax, 0.0, 0.98, scale*keylength, 90, fc='k', zorder=10, **arrowprops)
+        az_arrow(mapax, 0.0, 0.98, scale*keylength,
+                 90, fc='k', zorder=10, **arrowprops)
         plot_label(mapax, f'{keylength:.2f}deg', location=6, dist=0.0, box=False,
                    fontfamily='monospace', fontsize='xx-small', color='k')
 
@@ -1069,7 +1130,6 @@ def plot_seismogram_by_station(
             cmtax1, compstring, location=4, dist=0.0, box=False,
             fontfamily='monospace', fontsize='xx-small', color=syntcolor,
             zorder=100)
-        
 
         # Get some geographical data
         dist1, az1, baz1 = gps2dist_azimuth(
@@ -1080,7 +1140,8 @@ def plot_seismogram_by_station(
         if map:
             if midpointmap:
                 # Get fixed arrow directions
-                lat2, lon2 = reckon(syntcmt.latitude, syntcmt.longitude, 2, az1)
+                lat2, lon2 = reckon(
+                    syntcmt.latitude, syntcmt.longitude, 2, az1)
                 p_arrowdir = geo2axes(
                     mapax, lon2, lat2)
                 az1 = 90-np.degrees(
@@ -1090,7 +1151,7 @@ def plot_seismogram_by_station(
                 )
 
             az_arrow(
-                mapax, *arrowloc, scale*arrow_length, az1, fc=syntcolor,  zorder=10, 
+                mapax, *arrowloc, scale*arrow_length, az1, fc=syntcolor,  zorder=10,
                 **arrowprops)
 
     if plot_beach and (obsdcmt is not None) and (newsyntcmt is not None):
@@ -1119,7 +1180,8 @@ def plot_seismogram_by_station(
         if map:
             if midpointmap:
                 # Get fixed arrow directions
-                lat2, lon2 = reckon(newsyntcmt.latitude, newsyntcmt.longitude, 2, az2)
+                lat2, lon2 = reckon(newsyntcmt.latitude,
+                                    newsyntcmt.longitude, 2, az2)
                 p_arrowdir = geo2axes(
                     mapax, lon2, lat2)
                 az2 = 90-np.degrees(
@@ -1129,7 +1191,7 @@ def plot_seismogram_by_station(
                 )
 
             az_arrow(
-                mapax, *arrowloc, scale*arrow_length, az2, fc=newsyntcolor, 
+                mapax, *arrowloc, scale*arrow_length, az2, fc=newsyntcolor,
                 zorder=10, **arrowprops)
 
     matplotlib.rcParams.update({'font.family': defff})
