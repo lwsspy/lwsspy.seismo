@@ -33,6 +33,7 @@ from ..plot.updaterc import updaterc
 from ..plot.midpointcolornorm import MidpointNormalize
 from .eqpar import eqpar
 import matplotlib.pyplot as plt
+from matplotlib import transforms
 
 
 class CMTSource(object):
@@ -595,6 +596,10 @@ class CMTSource(object):
                    zorder=100,
                    axes=ax)
         ax.add_collection(bb)
+        
+        # This fixes pdf output issue
+        bb.set_transform(transforms.Affine2D(np.identity(3)))
+
         ax.axis('off')
 
     def axbeach(
@@ -617,6 +622,9 @@ class CMTSource(object):
                    axes=ax,
                    **kwargs)
         bb.set(clip_on=clip_on)
+
+        # This fixes pdf output issue
+        bb.set_transform(transforms.Affine2D(np.identity(3)))
         
         ax.add_collection(bb)
 
@@ -649,6 +657,9 @@ class CMTSource(object):
                    zorder=100,
                    axes=ax)
         ax.add_collection(bb)
+        
+        # This fixes pdf output issue
+        bb.set_transform(transforms.Affine2D(np.identity(3)))
 
         # Base info string
         title_string = f'{self.eventname}'
@@ -758,7 +769,7 @@ class CMTSource(object):
 
         # Get function from the module
         decompfunc = getattr(sourcedecomposition, dtype)
-        (M1, M2, M3), _ = self.tbp
+        (M3, M2, M1), _ = self.pbt
 
         return decompfunc(M1, M2, M3)
 
