@@ -947,7 +947,7 @@ def plot_seismogram_by_station(
                         f"$\\beta$={baz:6.2f}")
 
                 else:
-                    locstr = "\n"
+                    locstr = ""
 
                 ss, ds, rs = infocmt.sdr
                 ss = np.round(ss).astype(int)
