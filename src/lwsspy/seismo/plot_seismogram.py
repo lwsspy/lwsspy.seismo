@@ -987,7 +987,7 @@ def plot_seismogram_by_station(
             # Plot the label
             plot_label(
                 axes[0], station_string, location=6, box=False,
-                fontfamily='monospace', dist=0.0, fontsize='small')
+                fontfamily='monospace', dist=0.01, fontsize='small')
 
     # xlabel
     if timescale == 1:
