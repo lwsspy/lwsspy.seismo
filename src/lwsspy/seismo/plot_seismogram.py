@@ -1103,9 +1103,9 @@ def plot_seismogram_by_station(
 
         # Legend Key length
         keylength = 0.1
-        az_arrow(mapax, 0.0, 0.98, scale*keylength,
+        az_arrow(mapax, 0.0, 0.925, scale*keylength,
                  90, fc='k', zorder=10, **arrowprops)
-        plot_label(mapax, f'{keylength:.2f}deg', location=6, dist=0.0, box=False,
+        plot_label(mapax, f'{keylength:.2f}deg', location=6, dist=-0.01, box=False,
                    fontfamily='monospace', fontsize='xx-small', color='k')
 
         # Get axes location of the event in fractional axes coordinates
