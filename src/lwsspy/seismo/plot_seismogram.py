@@ -420,17 +420,17 @@ def plot_seismograms(
                 if plotobsd:
                     ax.plot(
                         np.array(times_obsd[leftidx:rightidx])/timescale,
-                        pobsd[leftidx:rightidx], color="black",
+                        pobsd[leftidx:rightidx], color=obsdcolor,
                         linewidth=1.0, label=labelobsd if _i == 0 else None)
                 if plotsynt:
                     ax.plot(
                         np.array(times_synt[leftidx:rightidx])/timescale,
-                        psynt[leftidx:rightidx], color="red",
+                        psynt[leftidx:rightidx], color=syntcolor,
                         linewidth=1.0, label=labelsynt if _i == 0 else None)
                 if plotsyntf:
                     ax.plot(
                         np.array(times_syntf[leftidx:rightidx])/timescale,
-                        psyntf[leftidx:rightidx], color="blue",
+                        psyntf[leftidx:rightidx], color=newsyntcolor,
                         linewidth=1.0, label=labelnewsynt if _i == 0 else None)
 
                 # Create Rectangle
