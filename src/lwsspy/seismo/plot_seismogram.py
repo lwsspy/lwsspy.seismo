@@ -1,14 +1,6 @@
 
-from ast import Call
-from curses import has_key
-from enum import Flag
-from re import S
-from signal import raise_signal
-from time import time
 from typing import Callable, Optional, Union, List, Iterable
-from unittest.mock import NonCallableMagicMock
 from matplotlib import gridspec
-from more_itertools import only
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -20,7 +12,7 @@ from obspy.geodetics.base import gps2dist_azimuth
 from cartopy.crs import AzimuthalEquidistant, Orthographic, Geodetic, \
     PlateCarree
 from pyflex.window import Window
-from .source import CMTSource, plot_beach
+from .source import CMTSource
 from lwsspy.plot.plot_label import plot_label
 from lwsspy.plot.axes_from_axes import axes_from_axes
 from lwsspy.plot.geo2axes import geo2axes
