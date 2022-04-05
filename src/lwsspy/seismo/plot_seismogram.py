@@ -1,4 +1,6 @@
 
+from operator import inv
+from optparse import Option
 from typing import Callable, Optional, Union, List, Iterable
 from matplotlib import gridspec
 import numpy as np
@@ -7,8 +9,9 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec, SubplotSpec
 from matplotlib.patches import Rectangle
 import matplotlib.transforms as transforms
-from obspy import Trace, Stream, UTCDateTime
+from obspy import Trace, Stream, UTCDateTime, Inventory
 from obspy.geodetics.base import gps2dist_azimuth
+from obspy.geodetics.flinnengdahl import FlinnEngdahl
 from cartopy.crs import AzimuthalEquidistant, Orthographic, Geodetic, \
     PlateCarree
 from pyflex.window import Window
@@ -67,7 +70,12 @@ def EW(longitude):
     return 'E' if longitude > 0 else 'W'
 
 
-def cmtheader(network, station, slat=None, slon=None, cmt=None, periodrange=None):
+def cmtheader(
+        network: str, station: str,
+        slat: Optional[float] = None, slon: Optional[float] = None,
+        cmt: Optional[CMTSource] = None, flinn: bool = True,
+        stationdetails: bool = True, inventory: Optional[Inventory] = None,
+        instrumentdetails: bool = True, periodrange=None):
 
     header = f"{network}-{station}"
 
@@ -77,8 +85,40 @@ def cmtheader(network, station, slat=None, slon=None, cmt=None, periodrange=None
     if (slat is not None) and (slon is not None):
 
         header += (
-            f" - $\\theta$={np.abs(slat):.2f}{NS(slat)}, "
-            f"$\\phi$={np.abs(slon):.2f}{EW(slon)}")
+            f" - LAT={np.abs(slat):.2f}{NS(slat)}, "
+            f"LON={np.abs(slon):.2f}{EW(slon)}")
+
+    # put station location and sensor deets
+    if stationdetails is True and inventory is not None:
+        try:
+            # Get site details
+            station = inventory.select(network=network, station=station)[0][0]
+            site = station.site.name
+
+            if instrumentdetails:
+                try:
+                    # Get sensor info
+                    channel = station[0]
+                    inst = channel.sensor.description
+                    elev = channel.elevation
+                    burial = channel.depth
+
+                    # Add info to header
+                    header += (
+                        f" - {site}\n{inst},  ELEV={elev:.2f}m, BURIAL={burial:.2f}m"
+                    )
+                except Exception as e:
+                    print(
+                        f'Couldnt get instrument details for {network}.{station}', e)
+            else:
+                # Get elevation from station
+                elev = station.elevation
+
+                # Add info to header
+                header += f", ELEV={elev:.2f}m - {site}"
+
+        except Exception as e:
+            print(f'Couldnt get station details for {network}.{station}', e)
 
     # Put event info
     if cmt is not None:
@@ -89,10 +129,18 @@ def cmtheader(network, station, slat=None, slon=None, cmt=None, periodrange=None
         header += (
             f"\n{cmt.eventname} - "
             f"{cmt.cmt_time.strftime('%Y/%m/%d %H:%M:%S')}, "
-            f"$\\theta$={np.abs(clat):.2f}{NS(clat)}, "
-            f"$\\phi$={np.abs(clon):.2f}{EW(clon)}, "
-            f"$h$={cmt.depth_in_m/1000.0:5.1f}"
+            f"LAT={np.abs(clat):.2f}{NS(clat)}, "
+            f"LON={np.abs(clon):.2f}{EW(clon)}, "
+            f"Z={cmt.depth_in_m/1000.0:5.1f}"
         )
+
+        if flinn:
+            flinn_engdahl = FlinnEngdahl()
+            region = flinn_engdahl.get_region(cmt.longitude, cmt.latitude)
+
+            header += (
+                f"\n{region}"
+            )
     else:
         clat, clon = None, None
 
@@ -103,9 +151,9 @@ def cmtheader(network, station, slat=None, slon=None, cmt=None, periodrange=None
         dist, az, baz = gps2dist_azimuth(clat, clon, slat, slon)
 
         header += (
-            f"\n$\\Delta$={m2deg*dist:6.2f}, "
-            f"$\\alpha$={az:6.2f}, "
-            f"$\\beta$={baz:6.2f}")
+            f"\nEPI={m2deg*dist:6.2f}, "
+            f"AZI={az:6.2f}, "
+            f"BAZ={baz:6.2f}")
 
     # Put Period range
     if periodrange is not None:
@@ -126,15 +174,15 @@ def cmtstring(
     S = f"  S = " if labels else ""
     D = f"  D = " if labels else ""
     R = f"  R = " if labels else ""
-    Ax = f" Ax = " if labels else ""
+    Ax = f"      " if labels else ""
     T = f"  T = " if labels else ""
     B = f"  B = " if labels else ""
     P = f"  P = " if labels else ""
-    eps = f"eps = " if labels else ""
-    t = f"  t = " if labels else ""
-    th = f" th = " if labels else ""
-    ph = f" ph = " if labels else ""
-    h = f"  h = " if labels else ""
+    eps = f"EPS = " if labels else ""
+    t = f"  T = " if labels else ""
+    th = f"LAT = " if labels else ""
+    ph = f"LON = " if labels else ""
+    h = f"  Z = " if labels else ""
     line = "------" if labels else ""
     if labelsonly:
         return f"{Mw}\n{S}\n{D}\n{R}\n\n{Ax}\n{T}\n{B}\n{P}\n{eps}\n\n{t}\n{th}\n{ph}\n{h}"
@@ -199,26 +247,6 @@ def az_arrow(ax, x, y, r, angle, *args, **kwargs):
     # Make "Annotation"
     ax.arrow(x, y, dx, dy, *args, **kwargs, transform=ax.transAxes,
              clip_on=False)
-
-
-# def az_arrow(ax, x1, y1, x2, y2, *args, **kwargs):
-#     q = ax.quiver(
-#         np.array([x1]), np.array([y1]), np.array([x2-x1]), np.array([y2-y1]),
-#         # angles='xy', scale_units='xy',
-#         *args, **kwargs)
-#     return q
-
-
-# def az_arrow_bu(ax, x, y, r, angle, *args, **kwargs):
-#     dx = r*np.sin(angle/180*np.pi)
-#     dy = r*np.cos(angle/180*np.pi)
-#     ax.arrow(x, y, dx, dy, *args, **kwargs)
-
-
-# def az_arrow_r(ax, x, y, r, angle, *args, **kwargs):
-#     dx = r*np.sin(angle/180*np.pi)
-#     dy = r*np.cos(angle/180*np.pi)
-#     ax.arrow(x+dx, y+dy, -dx, -dy, *args, **kwargs)
 
 
 def get_mcsta(d, s, dt, npts, leftidx, rightidx, taper=1.0):
@@ -337,6 +365,7 @@ def plot_seismograms(
         synt: Optional[Trace] = None,
         syntf: Optional[Trace] = None,
         cmtsource: Optional[CMTSource] = None,
+        inventory: Optional[Inventory] = None,
         tag: Union[str, None] = None,
         ax: Optional[matplotlib.axes.Axes] = None,
         processfunc: Callable = lambda x: x.data,
@@ -471,9 +500,9 @@ def plot_seismograms(
                 linewidth=0.75, label=labelnewsynt, alpha=alpha)
 
     if legend:
-        ax.legend(loc='lower right', frameon=False, ncol=1,
+        ax.legend(loc='lower left', frameon=False, ncol=1,
                   prop=dict(size=11, family='monospace'),
-                  bbox_to_anchor=(1., 1.), borderaxespad=0.0)
+                  bbox_to_anchor=(1., 1.05), borderaxespad=0.0)
     ax.tick_params(labelbottom=labelbottom, labeltop=False)
 
     if xlim_in_seconds:
@@ -504,7 +533,7 @@ def plot_seismograms(
         else:
             customwindows = False
             window_list = []
-        # print("trying to print windows")
+
         try:
             for _i, win in enumerate(window_list):
 
@@ -564,10 +593,36 @@ def plot_seismograms(
                         psyntf[leftidx:rightidx], color=newsyntcolor,
                         linewidth=1.0, label=labelnewsynt if _i == 0 else None)
 
+                # Get window tapers if they are defined
+                if hasattr(obsd.stats, 'tapers'):
+                    taper = obsd.stats.tapers[_i]
+                else:
+                    taper = 1.0
+
+                # Compute the misfit
+                m, c, s, t, a = get_mcsta(
+                    pobsd, psynt, obsd.stats.delta, obsd.stats.npts,
+                    leftidx, rightidx, taper=taper)
+
+                # Compute misfit of second set
+                if plotsyntf:
+                    mf, cf, sf, tf, af = get_mcsta(
+                        pobsd, psyntf, obsd.stats.delta, obsd.stats.npts,
+                        leftidx, rightidx, taper=taper)
+
+                # Rectangle color
+                if plotsyntf:
+                    if m > mf:
+                        rcolor = 'green'
+                    else:
+                        rcolor = 'red'
+                else:
+                    rcolor = 'gray'
+
                 # Create Rectangle
                 re1 = Rectangle((left, -maxdisp),
                                 right - left, + 2*maxdisp,
-                                color="blue", alpha=0.1, zorder=-1)
+                                color=rcolor, alpha=0.1, zorder=-1)
 
                 # Add rectangle to Axes
                 ax.add_patch(re1)
@@ -576,15 +631,6 @@ def plot_seismograms(
                 if annotations:
                     trans = transforms.blended_transform_factory(
                         ax.transData, ax.transAxes)
-
-                    if hasattr(obsd.stats, 'tapers'):
-                        taper = obsd.stats.tapers[_i]
-                    else:
-                        taper = 1.0
-
-                    m, c, s, t, a = get_mcsta(
-                        pobsd, psynt, obsd.stats.delta, obsd.stats.npts,
-                        leftidx, rightidx, taper=taper)
 
                     # Create strings
                     addstring0 = (
@@ -611,17 +657,14 @@ def plot_seismograms(
                             verticalalignment=va, color=syntcolor)
 
                     if plotsyntf:
-                        m, c, s, t, a = get_mcsta(
-                            pobsd, psyntf, obsd.stats.delta, obsd.stats.npts,
-                            leftidx, rightidx, taper=taper)
 
                         # Create strings
                         addstring1 = (
-                            f"        {m:5.2f}"
-                            f"\n        {c:5.2f}"
-                            f"\n        {s:5.2f}"
-                            f"\n        {t:5.2f}"
-                            f"\n        {a:5.2f}"
+                            f"        {mf:5.2f}"
+                            f"\n        {cf:5.2f}"
+                            f"\n        {sf:5.2f}"
+                            f"\n        {tf:5.2f}"
+                            f"\n        {af:5.2f}"
                         )
 
                         # Print second string
@@ -723,6 +766,7 @@ def plot_seismogram_by_station(
         obsdcmt: Optional[CMTSource] = None,
         syntcmt: Optional[CMTSource] = None,
         newsyntcmt: Optional[CMTSource] = None,
+        inventory: Optional[Inventory] = None,
         tag: Optional[str] = None,
         compsystem: str = "ZRT",
         location: str = "00",
@@ -747,7 +791,10 @@ def plot_seismogram_by_station(
         newsyntcolor=(0.2, 0.2, 0.8),
         pdfmode: bool = False,
         xlim_in_seconds: Optional[Iterable[float]] = None,
-        eventdetails: bool = True):
+        eventdetails: bool = True,
+        stationdetails: bool = True,
+        instrumentdetails: bool = True,
+        flinn: bool = True):
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
@@ -919,17 +966,6 @@ def plot_seismogram_by_station(
                     fontsize=cmtstringfontsize, color='k', zorder=100
                 )
 
-        # ss, ds, rs = newsyntcmt.sdr
-        # label = f'{ss[0]:3.0f}/{ds[0]:3.0f}/{rs[1]:4.0f}\n'
-        # label += f'{ss[1]:3.0f}/{ds[1]:3.0f}/{rs[1]:4.0f}'
-
-        # cmtax2.text(
-        #     1, xy_newsyntbeach[1]-0.2,
-        #     label, horizontalalignment='right',
-        #     verticalalignment='top', transform=cmtax2.transAxes,
-        #     bbox={'facecolor': 'none', 'edgecolor': 'none'},
-        #     fontfamily='monospace', fontsize='xx-small', color=newsyntcolor)
-
     # Getting the CMT that is used for the base info
     # Always start with obsdcmt first os that changes with repect to the can
     # be computed
@@ -1077,12 +1113,23 @@ def plot_seismogram_by_station(
 
             header = cmtheader(
                 network=network, station=station, slat=slat, slon=slon,
-                cmt=infocmt, periodrange=periodrange)
+                stationdetails=stationdetails,
+                instrumentdetails=instrumentdetails, inventory=inventory,
+                cmt=infocmt, periodrange=periodrange, flinn=flinn,
+            )
+
+            # Get fontsize dependent on label line number
+            if len(header.split("\n")) > 4:
+                fontsize = 'small'
+            elif len(header.split("\n")) > 3:
+                fontsize = 'medium'
+            else:
+                fontsize = 'large'
 
             # Plot the label
             plot_label(
                 axes[0], header, location=6, box=False,
-                fontfamily='monospace', dist=0.01, fontsize='large')
+                fontfamily='monospace', dist=0.01, fontsize=fontsize)
 
     # xlabel
     if timescale == 1:
