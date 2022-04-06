@@ -59,7 +59,17 @@ from matplotlib import rcParams
 import typing as tp
 from obspy.geodetics.base import gps2dist_azimuth
 
-# Create String
+# make string bold
+
+
+def bold(string, better=None):
+
+    if better is not None:
+        if better:
+            N = string.count(' ')
+            string = f'$\\bf{{{string}}}$'
+            string = N * ' ' + string
+    return string
 
 
 def NS(latitude):
@@ -139,7 +149,7 @@ def cmtheader(
             region = flinn_engdahl.get_region(cmt.longitude, cmt.latitude)
 
             header += (
-                f"\n{region}"
+                f" - {region.title()}"
             )
     else:
         clat, clon = None, None
@@ -386,6 +396,13 @@ def plot_seismograms(
     if ax is None:
         ax = plt.gca()
 
+    ofs = matplotlib.rcParams['mathtext.fontset']
+    orm = matplotlib.rcParams['mathtext.rm']
+    obf = matplotlib.rcParams['mathtext.bf']
+    matplotlib.rcParams['mathtext.fontset'] = 'custom'
+    matplotlib.rcParams['mathtext.rm'] = 'monospace'
+    matplotlib.rcParams['mathtext.bf'] = 'monospace:bold'
+
     # Check whether there are traces to plot
     plotobsd = isinstance(obsd, Trace)
     plotsynt = isinstance(synt, Trace)
@@ -610,13 +627,36 @@ def plot_seismograms(
                         pobsd, psyntf, obsd.stats.delta, obsd.stats.npts,
                         leftidx, rightidx, taper=taper)
 
-                # Rectangle color
+                # Rectangle color, and fontweights depeniding on change in
+                # misfit
                 if plotsyntf:
+
+                    # Compare misfit
                     if m > mf:
                         rcolor = 'green'
+                        mworse = False
                     else:
                         rcolor = 'red'
+                        mworse = True
+
+                    # Compare xcorr
+                    cworse = False if c < cf else True
+
+                    # Compare scaling
+                    sworse = False if np.abs(s-1) > np.abs(sf-1) else True
+
+                    # Compare timing
+                    tworse = False if np.abs(t) > np.abs(tf) else True
+
+                    # Compare dlnA
+                    aworse = False if np.abs(a) > np.abs(af) else True
+
                 else:
+                    mworse = None
+                    cworse = None
+                    sworse = None
+                    tworse = None
+                    aworse = None
                     rcolor = 'gray'
 
                 # Create Rectangle
@@ -631,15 +671,16 @@ def plot_seismograms(
                 if annotations:
                     trans = transforms.blended_transform_factory(
                         ax.transData, ax.transAxes)
+                    ibold = "\\bf{"
+                    texf = "}"
 
                     # Create strings
                     addstring0 = (
-                        f"  {m:5.2f}"
-                        f"\n  {c:5.2f}"
-                        f"\n  {s:5.2f}"
-                        f"\n  {t:5.2f}"
-                        f"\n  {a:5.2f}"
-                    )
+                        f"  {bold(f'{m:5.2f}', mworse):>5s}"
+                        f"\n  {bold(f'{c:5.2f}', cworse):>5s}"
+                        f"\n  {bold(f'{s:5.2f}', sworse):>5s}"
+                        f"\n  {bold(f'{t:5.2f}', tworse):>5s}"
+                        f"\n  {bold(f'{a:5.2f}', aworse):>5s}")
 
                     # va = 'top' if (_i % 2) == 0 else 'bottom'
                     # y = 0.98 if (_i % 2) == 0 else 0.02
@@ -647,12 +688,14 @@ def plot_seismograms(
                     y = 0.15
 
                     ax.text(left, y, "M:\nC:\nS:\nT:\nA:", transform=trans,
-                            fontdict=dict(size="xx-small", family='monospace'),
+                            fontdict=dict(size="xx-small",
+                                          family='monospace'),
                             horizontalalignment='left',
                             verticalalignment=va)
 
                     ax.text(left, y, addstring0, transform=trans,
-                            fontdict=dict(size="xx-small", family='monospace'),
+                            fontdict=dict(size="xx-small",
+                                          family='monospace'),
                             horizontalalignment='left',
                             verticalalignment=va, color=syntcolor)
 
@@ -660,11 +703,11 @@ def plot_seismograms(
 
                         # Create strings
                         addstring1 = (
-                            f"        {mf:5.2f}"
-                            f"\n        {cf:5.2f}"
-                            f"\n        {sf:5.2f}"
-                            f"\n        {tf:5.2f}"
-                            f"\n        {af:5.2f}"
+                            f"        {bold(f'{mf:5.2f}', not mworse):>5s}"
+                            f"\n        {bold(f'{cf:5.2f}', not cworse):>5s}"
+                            f"\n        {bold(f'{sf:5.2f}', not sworse):>5s}"
+                            f"\n        {bold(f'{tf:5.2f}', not tworse):>5s}"
+                            f"\n        {bold(f'{af:5.2f}', not aworse):>5s}"
                         )
 
                         # Print second string
@@ -756,6 +799,10 @@ def plot_seismograms(
                    fontfamily='monospace', dist=0.01, color=syntcolor,
                    fontsize=fontsize)
 
+    matplotlib.rcParams['mathtext.fontset'] = ofs
+    matplotlib.rcParams['mathtext.rm'] = orm
+    matplotlib.rcParams['mathtext.bf'] = obf
+
 
 def plot_seismogram_by_station(
         network: str,
@@ -791,9 +838,9 @@ def plot_seismogram_by_station(
         newsyntcolor=(0.2, 0.2, 0.8),
         pdfmode: bool = False,
         xlim_in_seconds: Optional[Iterable[float]] = None,
-        eventdetails: bool = True,
-        stationdetails: bool = True,
-        instrumentdetails: bool = True,
+        eventdetails: bool = False,
+        stationdetails: bool = False,
+        instrumentdetails: bool = False,
         flinn: bool = True):
 
     # Get and set font family
@@ -842,14 +889,15 @@ def plot_seismogram_by_station(
     components = [x for x in compsystem]
     nrows = len(components)
 
-    # check whether any cmts should be plotted
-    if (obsdcmt is not None) or (syntcmt is not None) or (newsyntcmt is not None):
-        cmtcomp = True
-    else:
-        cmtcomp = False
+    # Whether cmt is provided
+    cmtcomp = (
+        (obsdcmt is not None) or
+        (syntcmt is not None) or
+        (newsyntcmt is not None)
+    )
 
     # Whether to have the left colum for map info etc.
-    if map or cmtcomp:
+    if map or plot_beach:
         twocol = True
         ncols = 2
         width_ratios = [1, 4]
@@ -860,7 +908,7 @@ def plot_seismogram_by_station(
 
     # Total figure width
     # left = 0.2 if twocol else 0.1
-    leftfig = 1.0 if twocol else 0.0
+    leftfig = 4.0 if twocol else 0.0
 
     # Figure setup depending on different parameters
     figfactor = 1.75  # if annotations else 1.3
@@ -868,7 +916,7 @@ def plot_seismogram_by_station(
     bottom = 0.15  # if annotations else 0.1
 
     # Figure and Gridspec setups
-    fig = plt.figure(figsize=(15+leftfig, 1.0 + figfactor*Ncomp))
+    fig = plt.figure(figsize=(12+leftfig, 1.0 + figfactor*Ncomp))
     outer = GridSpec(
         nrows=1, ncols=ncols, width_ratios=width_ratios,
         wspace=0.01)
@@ -928,7 +976,7 @@ def plot_seismogram_by_station(
         elif len(axcmts) == 2:
             beachfactor = 1.5
             cmtstringfontsize = 'x-small'
-            y = 0.85
+            y = 0.875
         else:
             beachfactor = 1.5
             cmtstringfontsize = 'x-small'
@@ -1121,10 +1169,10 @@ def plot_seismogram_by_station(
             # Get fontsize dependent on label line number
             if len(header.split("\n")) > 4:
                 fontsize = 'small'
-            elif len(header.split("\n")) > 3:
+            elif len(header.split("\n")) > 3 or ncols == 1:
                 fontsize = 'medium'
             else:
-                fontsize = 'large'
+                fontsize = 'medium'
 
             # Plot the label
             plot_label(
@@ -1246,7 +1294,7 @@ def plot_seismogram_by_station(
                                (obsdcmt is not None and newsyntcmt is not None) or
                                (syntcmt is not None and newsyntcmt is not None)):
 
-        # Legend Key length
+        # Legend Key lengthf
         keylength = 0.01
         az_arrow(mapax, 0.0, 0.925, scale*keylength,
                  90, fc='k', zorder=10, **arrowprops)
