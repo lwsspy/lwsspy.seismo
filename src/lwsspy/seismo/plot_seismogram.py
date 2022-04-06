@@ -87,8 +87,7 @@ def cmtheader(
         stationdetails: bool = True, inventory: Optional[Inventory] = None,
         instrumentdetails: bool = True, periodrange=None):
 
-    header = f"{network}-{station}"
-
+    header = rf"{bold(f'{network}-{station}', True)}"
     m2deg = 360/(2*np.pi*6371000.0)
 
     # Put Station location
@@ -137,7 +136,7 @@ def cmtheader(
 
         # Add cmt info
         header += (
-            f"\n{cmt.eventname} - "
+            f"\n{bold(cmt.eventname, True)} - "
             f"{cmt.cmt_time.strftime('%Y/%m/%d %H:%M:%S')}, "
             f"LAT={np.abs(clat):.2f}{NS(clat)}, "
             f"LON={np.abs(clon):.2f}{EW(clon)}, "
@@ -168,6 +167,9 @@ def cmtheader(
     # Put Period range
     if periodrange is not None:
         header += f", P: {int(periodrange[0]):d}-{int(periodrange[1]):d}s"
+
+    # Make the string a raw string
+    header.encode('unicode_escape')
 
     return header
 
@@ -845,7 +847,13 @@ def plot_seismogram_by_station(
 
     # Get and set font family
     defff = matplotlib.rcParams['font.family']
-    matplotlib.rcParams.update({'font.family': 'monospace'})
+    ofs = matplotlib.rcParams['mathtext.fontset']
+    orm = matplotlib.rcParams['mathtext.rm']
+    obf = matplotlib.rcParams['mathtext.bf']
+    matplotlib.rcParams['font.family'] = 'monospace'
+    matplotlib.rcParams['mathtext.fontset'] = 'custom'
+    matplotlib.rcParams['mathtext.rm'] = 'monospace'
+    matplotlib.rcParams['mathtext.bf'] = 'monospace:bold'
 
     # Some flag corrections
     # Annotations can only be printed if windows are to be printed as well
@@ -1159,6 +1167,7 @@ def plot_seismogram_by_station(
                 slat = None
                 slon = None
 
+            # cmtheader returns raw-string
             header = cmtheader(
                 network=network, station=station, slat=slat, slon=slon,
                 stationdetails=stationdetails,
@@ -1177,7 +1186,7 @@ def plot_seismogram_by_station(
             # Plot the label
             plot_label(
                 axes[0], header, location=6, box=False,
-                fontfamily='monospace', dist=0.01, fontsize=fontsize)
+                dist=0.01, fontsize=fontsize)
 
     # xlabel
     if timescale == 1:
@@ -1377,6 +1386,9 @@ def plot_seismogram_by_station(
                 mapax, *arrowloc, scale*arrow_length, az2, fc=cmtcolors[newsyntidx],
                 zorder=10, **arrowprops)
 
-    matplotlib.rcParams.update({'font.family': defff})
+    matplotlib.rcParams['mathtext.fontset'] = ofs
+    matplotlib.rcParams['mathtext.rm'] = orm
+    matplotlib.rcParams['mathtext.bf'] = obf
+    matplotlib.rcParams['font.family'] = defff
 
     return fig, axes
