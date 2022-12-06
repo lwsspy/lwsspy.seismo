@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 import time
 from copy import deepcopy
 import inspect
@@ -12,8 +13,12 @@ from obspy.core.event import Event
 from obspy import Catalog
 import matplotlib.pyplot as plt
 from obspy.core.utcdatetime import UTCDateTime
-import pandas as pd
-from pandas.core.frame import DataFrame
+
+try:
+    from pandas.core.frame import DataFrame
+except ModuleNotFoundError:
+    pass
+
 
 from .source import CMTSource
 from . import sourcedecomposition
@@ -160,6 +165,10 @@ class CMTCatalog:
     @property
     def dataframe(self) -> DataFrame:
 
+        if 'DataFrame' not in sys.modules.keys():
+            raise ValueError(
+                'Pandas is probably not installed. It''s not loaded if it is not installed.')
+        
         columns = [
             'origin_time',
             'pde_latitude',
