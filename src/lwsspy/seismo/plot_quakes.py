@@ -34,6 +34,9 @@ def get_level_norm_cmap(depth, cmap: str, levels: list = None):
     level_maxidx = int(level_maxidx)
 
     # Fix levels
+    if np.abs(level_minidx - level_maxidx) <= 1:
+        level_minidx -= 1
+        level_maxidx += 1
     levels = levels[level_minidx:level_maxidx]
 
     # Create

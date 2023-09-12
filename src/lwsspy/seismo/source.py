@@ -18,6 +18,7 @@ Source and Receiver classes of Instaseis.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import sys
+import io
 import numpy as np
 import typing as tp
 from obspy import UTCDateTime, read_events
@@ -46,8 +47,8 @@ class CMTSource(object):
             self, origin_time: tp.Union[UTCDateTime, float] = UTCDateTime(0),
             pde_latitude=0.0, pde_longitude=0.0, mb=0.0, ms=0.0,
             pde_depth_in_m=0.0, region_tag='', eventname='',
-            cmt_time: tp.Union[UTCDateTime, float] = UTCDateTime(0), 
-            half_duration=0.0, latitude=0.0, longitude=0.0, depth_in_m=0.0, 
+            cmt_time: tp.Union[UTCDateTime, float] = UTCDateTime(0),
+            half_duration=0.0, latitude=0.0, longitude=0.0, depth_in_m=0.0,
             m_rr=0.0, m_tt=0.0, m_pp=0.0, m_rt=0.0, m_rp=0.0, m_tp=0.0):
         """
         :param latitude: latitude of the source in degree
@@ -170,7 +171,6 @@ class CMTSource(object):
         s = np.radians(s)
         d = np.radians(d)
         r = np.radians(r)
-        
 
         # Fault normal
         n = np.array([
@@ -196,7 +196,7 @@ class CMTSource(object):
         # Myy = +M0 * (np.sin(d) * np.cos(r) * np.sin(2*s) - np.sin(2*d) * np.sin(r) * np.cos(s)**2)
         # Myz = -M0 * (np.cos(d) * np.cos(r) * np.sin(s) - np.cos(2*d) * np.sin(r) * np.cos(s))
         # Mzz = +M0 * np.sin(2*d) * np.sin(r)
-        
+
         # # Moment tensor creation
         # Mx = np.array( [
         #     [Mxx, Mxy, Mxz],
@@ -205,8 +205,8 @@ class CMTSource(object):
         # ])
 
         Mr = np.array([
-            [ Mx[2, 2],  Mx[2, 0], -Mx[2, 1]],
-            [ Mx[0, 2],  Mx[0, 0], -Mx[0, 1]],
+            [Mx[2, 2],  Mx[2, 0], -Mx[2, 1]],
+            [Mx[0, 2],  Mx[0, 0], -Mx[0, 1]],
             [-Mx[1, 2], -Mx[1, 0],  Mx[1, 1]],
         ])
 
@@ -270,6 +270,14 @@ class CMTSource(object):
                    longitude=longitude, depth_in_m=depth_in_m,
                    m_rr=m_rr, m_tt=m_tt, m_pp=m_pp, m_rt=m_rt,
                    m_rp=m_rp, m_tp=m_tp)
+
+    def to_event(self) -> Event:
+        """returns obspy event"""
+        with io.BytesIO() as f:
+            f.write(self.__str__().encode('utf-8'))
+            f.seek(0)
+            ev = read_events(f)[0]
+        return ev
 
     @classmethod
     def from_dictionary(cls, d):
@@ -457,7 +465,7 @@ class CMTSource(object):
             2.26 * 10**(-6) * (self.M0 * Nm_conv)**(1/3), decimals=1)
 
     @property
-    def pbt(self):
+    def pbt_old(self):
         """Returns tension (t), null (b), and pressure (p) axis and
         corresponding eigenvalues.
 
@@ -474,9 +482,14 @@ class CMTSource(object):
         return lb[order], ev[order]
 
     @property
+    def tnp(self):
+        ep = self.eqpar
+        return ep[4], ep[5]
+
+    @property
     def tnp_deg(self):
         """Returns tension (t), null (b), and pressure (p) axis in terms of 
-        eignevalue, az, plunge
+        eigenvalue, az, plunge
 
         Returns
         -------
@@ -502,16 +515,16 @@ class CMTSource(object):
                 az[i] += 2 * np.pi
             if az[i] > 2 * np.pi:
                 az[i] -= 2 * np.pi
-        
+
         # Radians to degress
         pl *= 180.0/np.pi
         az *= 180.0/np.pi
 
-        # -> eignevalue, 
+        # -> eignevalue,
         t = np.array([d[2], az[2], pl[2]])
         n = np.array([d[1], az[1], pl[1]])
         p = np.array([d[0], az[0], pl[0]])
-    
+
         return (t, n, p)
 
     @property
@@ -556,6 +569,16 @@ class CMTSource(object):
         """
         return self.eqpar[1:4]
 
+    @property
+    def tbp(self):
+        """
+        Returns
+        -------
+        (t[pl, az], b[pl, az], p[pl, az])
+        """
+        _, _, _, _, _, _, plungs, azims = self.eqpar
+        return [[plungs[i], azims[i]] for i in range(3)]
+
     @ staticmethod
     def normal2sd(normal):
         """Compute strike and dip from normal
@@ -596,15 +619,15 @@ class CMTSource(object):
                    zorder=100,
                    axes=ax)
         ax.add_collection(bb)
-        
+
         # This fixes pdf output issue
         bb.set_transform(transforms.Affine2D(np.identity(3)))
 
         ax.axis('off')
 
     def axbeach(
-        self, ax, x, y, width=50, facecolor='k', linewidth=2, alpha=1.0, 
-        clip_on=False, **kwargs):
+            self, ax, x, y, width=50, facecolor='k', linewidth=2, alpha=1.0,
+            clip_on=False, **kwargs):
         """Plots beach ball into given axes.
         Note that width heavily depends on the given screen size/dpi. Therefore
         often does not work."""
@@ -618,14 +641,14 @@ class CMTSource(object):
                    alpha=alpha,
                    xy=(x, y),
                    width=width,
-                   size=100, # Defines number of interpolation points 
+                   size=100,  # Defines number of interpolation points
                    axes=ax,
                    **kwargs)
         bb.set(clip_on=clip_on)
 
         # This fixes pdf output issue
         bb.set_transform(transforms.Affine2D(np.identity(3)))
-        
+
         ax.add_collection(bb)
 
     def beachfig(self):
@@ -657,7 +680,7 @@ class CMTSource(object):
                    zorder=100,
                    axes=ax)
         ax.add_collection(bb)
-        
+
         # This fixes pdf output issue
         bb.set_transform(transforms.Affine2D(np.identity(3)))
 
@@ -769,7 +792,7 @@ class CMTSource(object):
 
         # Get function from the module
         decompfunc = getattr(sourcedecomposition, dtype)
-        (M3, M2, M1), _ = self.pbt
+        (M1, M2, M3), _ = self.tnp  # self.pbt_old
 
         return decompfunc(M1, M2, M3)
 
@@ -794,7 +817,7 @@ class CMTSource(object):
                     self.mb,
                     self.ms,
                     self.region_tag)
-        else: 
+        else:
             return_str = "----- CMT Delta: ------- \n"
 
         return_str += 'event name:  %10s\n' % (str(self.eventname),)
@@ -809,7 +832,7 @@ class CMTSource(object):
         return_str += 'Mrt:%19.6e\n' % self.m_rt  # * 1e7,))
         return_str += 'Mrp:%19.6e\n' % self.m_rp  # * 1e7,))
         return_str += 'Mtp:%19.6e\n' % self.m_tp  # * 1e7,))
-    
+
         return return_str
 
     def __repr__(self) -> str:
@@ -855,7 +878,8 @@ class CMTSource(object):
         """
 
         if not self.same_eventids(self.eventname, other.eventname):
-            raise ValueError('CMTSource.eventname must be equal to compare the events')
+            raise ValueError(
+                'CMTSource.eventname must be equal to compare the events')
 
         # The origin time is the most problematic part
         origin_time = self.origin_time - other.origin_time
@@ -881,9 +905,9 @@ class CMTSource(object):
         return CMTSource(
             origin_time=origin_time,
             pde_latitude=pde_latitude, pde_longitude=pde_longitude, mb=mb, ms=ms,
-            pde_depth_in_m=pde_depth_in_m, region_tag=region_tag, 
-            eventname=eventame, cmt_time=cmt_time, half_duration=half_duration, 
-            latitude=latitude, longitude=longitude, depth_in_m=depth_in_m, 
+            pde_depth_in_m=pde_depth_in_m, region_tag=region_tag,
+            eventname=eventame, cmt_time=cmt_time, half_duration=half_duration,
+            latitude=latitude, longitude=longitude, depth_in_m=depth_in_m,
             m_rr=m_rr, m_tt=m_tt, m_pp=m_pp, m_rt=m_rt, m_rp=m_rp, m_tp=m_tp)
 
 
@@ -897,5 +921,3 @@ def plot_beachfig():
     cmtsource = CMTSource.from_CMTSOLUTION_file(sys.argv[1])
     cmtsource.beachfig()
     plt.show(block=True)
-
-

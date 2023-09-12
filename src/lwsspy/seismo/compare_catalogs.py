@@ -1,7 +1,12 @@
+import lwsspy.plot as lplt
+from hashlib import new
 import os
+from tkinter import font
 from typing import Optional
 from copy import copy, deepcopy
+from lwsspy.seismo.source import CMTSource
 import numpy as np
+from scipy import stats
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from matplotlib.cm import ScalarMappable
@@ -96,7 +101,8 @@ class CompareCatalogs:
             time_shift="$t_{cmt} [s]$",
             eps_nu="$\epsilon$",  # Nu is unused for GCMTs
             depth_in_m="Z [km]",
-            location='Location [km]'
+            location='Location [km]',
+            omega='$\omega$ [deg]'
         )
 
         # Number of bins
@@ -151,12 +157,12 @@ class CompareCatalogs:
         # Plot histogram GCMT3D
         plt.hist(self.oeps_nu[:, 0], bins=bins, edgecolor='k',
                  facecolor=(0.3, 0.3, 0.8, 0.75), linewidth=0.75,
-                 label='GCMT', histtype='stepfilled')
+                 label=self.oldlabel, histtype='stepfilled')
 
         # Plot histogram GCMT3D+
         plt.hist(self.neps_nu[:, 0], bins=bins, edgecolor='k',
                  facecolor=(0.3, 0.8, 0.3, 0.75), linewidth=0.75,
-                 label='GCMT3D+', histtype='stepfilled')
+                 label=self.newlabel, histtype='stepfilled')
         plt.legend(loc='upper left', frameon=False, fancybox=False,
                    numpoints=1, scatterpoints=1, fontsize='x-small',
                    borderaxespad=0.0, borderpad=0.5, handletextpad=0.2,
@@ -304,6 +310,433 @@ class CompareCatalogs:
         else:
             plt.show()
 
+    def omega_angle(self):
+
+        omt = self.old.getvals(vtype='fulltensor')
+        nmt = self.new.getvals(vtype='fulltensor')
+
+        norm_omt = np.sqrt(np.sum(omt*omt, axis=tuple((1, 2))))
+        norm_nmt = np.sqrt(np.sum(nmt*nmt, axis=tuple((1, 2))))
+
+        mt_dot = np.sum(omt*nmt, axis=tuple((1, 2)))
+
+        mt_angle = np.arccos(mt_dot/(norm_nmt*norm_omt))
+
+        return mt_angle/np.pi*180
+
+    def gamma(self):
+
+        ogamma = self.old.getvals(vtype='decomp', dtype='gamma')
+        ngamma = self.new.getvals(vtype='decomp', dtype='gamma')
+
+        return ogamma, ngamma
+
+    def plot_omega_gamma_figure(self):
+
+        angles = self.omega_angle()
+        ogamma, ngamma = self.gamma()
+
+        # Get numbers in segments
+        N_10 = len(np.where(angles <= 10)[0])
+        N10_20 = len(np.where((10 < angles) & (angles <= 20))[0])
+        N20_30 = len(np.where((20 < angles) & (angles <= 30))[0])
+        N30_ = len(np.where(30 < angles)[0])
+
+        _, axes = plt.subplots(2, 1, figsize=(5, 4))
+        plt.subplots_adjust(hspace=0.65)
+        vals, bins, bc = axes[0].hist(angles, bins=150, color='darkgray')
+
+        # Axes limits
+        xmin, xmax = 0, 49.99
+        ymin, ymax = 0, np.max(vals)*1.25
+        yann = np.max(vals)*1.05
+        axes[0].set_ylim(ymin, ymax)
+        axes[0].set_xlim(xmin, xmax)
+
+        # Annotations
+        axes[0].vlines([10, 20, 30], 0, ymax, 'k', lw=0.75, ls='--')
+        axes[0].annotate(f'{N_10}', (5, yann), ha='center')
+        axes[0].annotate(f'{N10_20}', (15, yann), ha='center')
+        axes[0].annotate(f'{N20_30}', (25, yann), ha='center')
+        axes[0].annotate(f'{N30_}', (40, yann), ha='center')
+        axes[0].set_xlabel('$\\omega$')
+        axes[0].set_ylabel('N')
+
+        # Spine changes
+        axes[0].tick_params(
+            direction='inout', which='both', top=False, right=False)
+        axes[0].spines['right'].set_visible(False)
+        axes[0].spines['top'].set_visible(False)
+
+        # manual arrowhead width and length
+        hw = 1./15.*(ymax-ymin)
+        hl = 1./40.*(xmax-xmin)
+        lw = 1.  # axis line width
+        ohg = 0.5  # arrow overhang
+
+        axes[0].arrow(xmax-0.5*hl, 0., hl, 0., fc='k', ec='k', lw=lw,
+                      head_width=hw, head_length=hl, overhang=ohg,
+                      length_includes_head=True, clip_on=False,
+                      head_starts_at_zero=False)
+
+        # Labels
+        lplt.plot_label(axes[0], "a)", location=18, box=False, dist=0.025,
+                        fontdict=dict(fontsize='small'))
+        lplt.plot_label(axes[0], "Angular Change in Moment Tensor",
+                        location=14, box=False, dist=0.025,
+                        fontdict=dict(fontsize='small'))
+
+        # Plot Gamma subplot
+        bins = np.linspace(-np.pi/6, np.pi/6, 100)
+        oldlabel = (
+            f"{self.oldlabel}\n"
+            f"$\\mu$ = {np.mean(ogamma):7.4f}\n"
+            f"$\\sigma$ = {np.std(ogamma):7.4f}")
+        newlabel = (
+            f"{self.newlabel}\n"
+            f"$\\mu$ = {np.mean(ngamma):7.4f}\n"
+            f"$\\sigma$ = {np.std(ngamma):7.4f}")
+
+        # Plot histograms with labels
+        ovals, _, _ = axes[1].hist(
+            ogamma, bins=bins, color='lightgray', label=oldlabel)
+        nvals, _, _ = axes[1].hist(
+            ngamma, bins=bins, color='black', histtype='step', label=newlabel)
+
+        # Legend
+        leg = plt.legend(
+            loc='upper right', frameon=False, labelspacing=1.0,
+            prop=dict(size='x-small', family="monospace"), borderaxespad=0.0)
+
+        # Axes limits
+        ymax = np.max((np.max(nvals), np.max(ovals)))*1.1
+        axes[1].set_ylim(0, ymax)
+        axes[1].set_xlim(-np.pi/6, np.pi/6)
+        axes[1].vlines([0], 0, ymax, 'k', ls=':', lw=0.5)
+
+        # Label locators
+        axes[1].xaxis.set_minor_locator(plt.MultipleLocator(np.pi / 24))
+        axes[1].xaxis.set_major_locator(plt.MultipleLocator(np.pi / 12))
+        major = lplt.Multiple(12, number=np.pi, latex='\pi')
+        axes[1].xaxis.set_major_formatter(major.formatter)
+
+        # Plot Axes, DC, CLVD labels
+        lplt.plot_label(axes[1], "b)", location=18, box=False, dist=0.025,
+                        fontdict=dict(fontsize='small'))
+        lplt.plot_label(axes[1], "CLVD-", location=6, box=False, dist=0.01,
+                        fontdict=dict(fontsize='small'))
+        lplt.plot_label(axes[1], "CLVD+", location=7, box=False, dist=0.01,
+                        fontdict=dict(fontsize='small'))
+        lplt.plot_label(axes[1], "DC", location=14, box=False, dist=0.01,
+                        fontdict=dict(fontsize='small'))
+        axes[1].set_xlabel(r"$\gamma$")
+        axes[1].set_ylabel('N')
+
+    def spatial_omega(self):
+        # Define levels on where to loo
+        levels = [0.0, 10.0, 12.5, 15.0, 20.0, 30.0, 70.0, 120.0,
+                  300.0, 800.0]
+
+        # omega angle
+        omega = self.omega_angle()
+
+        # Get vector entries
+        x = np.cos(omega/180*np.pi)
+        y = np.sin(omega/180*np.pi)
+
+        # Get the events in each depth range
+        individualpos = []
+        for _i in range(len(levels)-1):
+            pos = np.where(
+                (levels[_i] < self.ndepth_in_m/1000.0)
+                & (self.ndepth_in_m/1000.0 < levels[_i+1])
+            )
+            if len(pos[0]) != 0:
+                individualpos.append(pos[0])
+
+        # 2D histogram bins
+        ddeg = 5.0
+        latbins = np.arange(-90, 90 + ddeg, ddeg)
+        lonbins = np.arange(-180, 180 + ddeg, ddeg)
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+        mlat, mlon = np.meshgrid(clat, clon)
+
+        depthmin = []
+        depthmax = []
+        latitudes = []
+        longitudes = []
+        angles = []
+        N = []
+
+        for _i, pos in enumerate(individualpos):
+            # Get the eq's that are in the certain range
+            dmin = np.min(self.ndepth_in_m[pos]/1000.0)
+            dmax = np.max(self.ndepth_in_m[pos]/1000.0)
+
+            x_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=x[pos],
+                bins=[lonbins, latbins])
+            y_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=y[pos],
+                bins=[lonbins, latbins])
+            counts, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos],
+                bins=[lonbins, latbins])
+
+            x_hist = np.where(counts >= 2, x_hist, np.nan)
+            y_hist = np.where(counts >= 2, y_hist, np.nan)
+            counts = np.where(counts >= 2, counts, 1)
+
+            # Get where histogram has values
+            npos = np.where(~np.isnan(x_hist.flatten()))[0]
+
+            # Get mean values in each bin
+            x_mean = (x_hist/counts).flatten()[npos]
+            y_mean = (y_hist/counts).flatten()[npos]
+
+            # Compute the means of the angles
+            mean_angles = np.arctan2(y_mean, x_mean)
+
+            # Locations
+            depthmin.append(dmin)
+            depthmax.append(dmax)
+            lons = mlon.flatten()[npos]
+            lats = mlat.flatten()[npos]
+            latitudes.append(lats)
+            longitudes.append(lons)
+            angles.append(mean_angles)
+
+            # Number of events
+            N.append(len(pos))
+        return depthmin, depthmax, latitudes, longitudes, angles
+
+    def plot_spatial_omega(self):
+
+        depthmin, depthmax, latitudes, longitudes, angles = self.spatial_omega()
+
+        aspect = 10.0/9.0
+        size = 8
+        fig = plt.figure(figsize=(size*aspect, size))
+        axes = []
+        norm = Normalize(0, 50)
+        cmap = 'Greys'
+
+        for _i, (_dmin, _dmax, _latitudes, _longitudes, _angles) in \
+                enumerate(
+                    zip(depthmin, depthmax, latitudes, longitudes, angles)):
+
+            # Create axes
+            axes.append(plt.subplot(3, 3, _i + 1))
+            axes[_i].set_title(
+                f"{int(np.round(_dmin)):3d} - {int(np.round(_dmax)):3d} km",
+                y=0.925)
+            axes[_i].axis('off')
+
+            # Create subaaxes
+            mapinset = lplt.axes_from_axes(
+                axes[_i], _i, [0.0, 0.2, 1.0, 0.8],
+                projection=Mollweide(central_longitude=180.0))
+            mapinset.set_global()
+
+            # Plot map
+            lmap.plot_map(ax=mapinset, outline=False, borders=False)
+
+            # Wedge scatter
+
+            # Create paths for angle markers
+            # markers = []
+            # for _angle in _angles:
+            #     x1 = np.sin(np.linspace(0, _angle))
+            #     y1 = np.cos(np.linspace(0, _angle))
+            #     xy1 = np.row_stack([[0, 0], np.column_stack([x1, y1])])
+            #     markers.append(xy1)
+            #
+            # Plot scatter with specific markers.
+            # lplt.mscatter(
+            #     _longitudes, _latitudes,
+            #     c='k',
+            #     s=100,
+            #     m=markers,
+            #     transform=PlateCarree(),
+            #     alpha=1.0, edgecolor='none',
+            #     linewidth=0.175, zorder=10, ax=mapinset)
+
+            # Wedge scatter
+            mapinset.scatter(
+                _longitudes, _latitudes,
+                s=10,
+                marker='s',
+                c=_angles/np.pi*180,
+                cmap=cmap,
+                transform=PlateCarree(),
+                norm=norm,
+                alpha=1.0, edgecolor='k',
+                linewidth=0.175, zorder=10)
+
+            # Histogram axis
+            inset = lplt.axes_from_axes(
+                axes[_i], _i, [0.2, 0.075, 0.6, 0.15])
+            inset.spines['right'].set_visible(False)
+            inset.spines['top'].set_visible(False)
+            inset.spines['left'].set_visible(False)
+            inset.tick_params(top=False, left=False,
+                              right=False, labelleft=False)
+            inset.minorticks_off()
+            xlim = [0, 50]
+            inset.set_xlim(xlim)
+
+            # Plot histogram
+            bins = np.linspace(xlim[0], xlim[1], 20)
+            plt.hist(_angles/np.pi*180, bins,
+                     facecolor='darkgray', histtype='bar')
+
+            # Automatically set eight of the histograms and plot corresponding
+            # Vertical line at zero
+            ylim = inset.get_ylim()
+            inset.plot([0, 0], ylim, 'k', lw=2.0)
+            inset.plot(xlim, [0, 0], 'k', lw=1.0)
+            inset.set_ylim(ylim)
+
+        # Colorbar for the entire figure
+        cbar = fig.colorbar(
+            ScalarMappable(cmap=cmap, norm=norm), orientation='horizontal',
+            ax=axes, shrink=0.5, fraction=0.05, pad=0.05, aspect=40)
+        cbar.set_label('$\omega$-Angle [deg]')
+
+    def spatial_relocations(self):
+        # Define levels on where to loo
+        levels = [0.0, 10.0, 12.5, 15.0, 20.0, 30.0, 70.0, 120.0,
+                  300.0, 800.0]
+
+        # Get data for parameter in question
+        olat = copy(self.olatitude)
+        nlat = copy(self.nlatitude)
+        olon = copy(self.olongitude)
+        nlon = copy(self.nlongitude)
+        dlat = nlat - olat
+        dlon = nlon - olon
+        dparam = lmap.haversine(olon, olat, nlon, nlat)
+        b = lmap.bearing(olon, olat, nlon, nlat)
+        print(np.min(b), np.mean(b), np.max(b))
+
+        dparam_absmax = np.max(np.abs(
+            [np.quantile(dparam, 0.05),
+             np.quantile(dparam, 0.95)]))
+
+        individualpos = []
+        for _i in range(len(levels)-1):
+            pos = np.where(
+                (levels[_i] < self.ndepth_in_m/1000.0)
+                & (self.ndepth_in_m/1000.0 < levels[_i+1])
+            )
+            if len(pos[0]) != 0:
+                individualpos.append(pos[0])
+
+        # 2D histogram bins
+        ddeg = 5.0
+        latbins = np.arange(-90, 90 + ddeg, ddeg)
+        lonbins = np.arange(-180, 180 + ddeg, ddeg)
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+        mlat, mlon = np.meshgrid(clat, clon)
+
+        depthmin = []
+        depthmax = []
+        latitudes = []
+        longitudes = []
+        east_velocity = []
+        east_sigma = []
+        north_velocity = []
+        north_sigma = []
+        correlation_EN = []
+        dist_km = []
+        angle_deg = []
+        N = []
+
+        for _i, pos in enumerate(individualpos):
+
+            # Get the eq's that are in the certain range
+            dmin = np.min(self.ndepth_in_m[pos]/1000.0)
+            dmax = np.max(self.ndepth_in_m[pos]/1000.0)
+
+            depthmin.append(dmin)
+            depthmax.append(dmax)
+
+            # Get locatl relocation
+            dx = dparam[pos] * np.sin(np.radians(b[pos]))
+            dy = dparam[pos] * np.cos(np.radians(b[pos]))
+
+            dx_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=dx,
+                bins=[lonbins, latbins])
+            dy_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=dy,
+                bins=[lonbins, latbins])
+            dxdy_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=dy*dx,
+                bins=[lonbins, latbins])
+            dx2_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=dx**2,
+                bins=[lonbins, latbins])
+            dy2_hist, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos], weights=dy**2,
+                bins=[lonbins, latbins])
+            counts, _, _ = np.histogram2d(
+                self.olongitude[pos], self.olatitude[pos],
+                bins=[lonbins, latbins])
+            dx_hist = np.where(counts >= 2, dx_hist, np.nan)
+            dy_hist = np.where(counts >= 2, dy_hist, np.nan)
+            dxdy_hist = np.where(counts >= 2, dxdy_hist, np.nan)
+            dx2_hist = np.where(counts >= 2, dx2_hist, np.nan)
+            dy2_hist = np.where(counts >= 2, dy2_hist, np.nan)
+            counts = np.where(counts >= 2, counts, 1)
+
+            # Get where histogram has values
+            npos = np.where(~np.isnan(dx_hist.flatten()))[0]
+
+            # Get where values are ok
+            dx_mean = (dx_hist/counts).flatten()[npos]
+            dy_mean = (dy_hist/counts).flatten()[npos]
+            dxdy_mean = (dxdy_hist/counts).flatten()[npos]
+            dx2_mean = (dx2_hist/counts).flatten()[npos]
+            dy2_mean = (dy2_hist/counts).flatten()[npos]
+
+            # Extra stats
+            dx_std = np.sqrt(dx2_mean - dx_mean**2)
+            dy_std = np.sqrt(dy2_mean - dy_mean**2)
+            corr = (dxdy_mean - dx_mean*dy_mean)/(dx_std*dy_std)
+
+            # Locations
+            lons = mlon.flatten()[npos]
+            lats = mlat.flatten()[npos]
+
+            # Outputs
+            latitudes.append(lats)
+            longitudes.append(lons)
+            east_velocity.append(dx_mean)
+            east_sigma.append(dx_std)
+            north_velocity.append(dy_mean)
+            north_sigma.append(dy_std)
+            correlation_EN.append(corr)
+            dist_km.append(dparam[pos])
+            angle_deg.append(b[pos])
+            # Number of events
+            N.append(len(pos))
+
+        return (
+            depthmin, depthmax,
+            latitudes, longitudes,
+            east_velocity, east_sigma,
+            north_velocity, north_sigma,
+            correlation_EN,
+            dist_km, angle_deg, N
+        )
+        # angle = np.arctan2(dx_mean, dy_mean)
+        # epi = np.sqrt(dx_mean**2 + dy_mean**2)
+        # nlat, nlon = lmap.reckon(
+        #     mlat, mlon, epi/6371/np.pi*180, angle/np.pi*180)
+
     def plot_spatial_distribution(
             self, parameter: str, outfile: Optional[str] = None,
             extent=None):
@@ -333,9 +766,17 @@ class CompareCatalogs:
 
         # Raise error if parameter doesnt exist.
 
-        # Define levels on where to loo
+        # Define levels on where to look
         levels = [0.0, 10.0, 12.5, 15.0, 20.0, 30.0, 70.0, 120.0,
                   300.0, 800.0]
+
+        # 2D histogram
+        ddeg = 5.0
+        latbins = np.arange(-90, 90 + ddeg, ddeg)
+        lonbins = np.arange(-180, 180 + ddeg, ddeg)
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+        mlat, mlon = np.meshgrid(clat, clon)
 
         if parameter == 'location':
 
@@ -347,7 +788,7 @@ class CompareCatalogs:
             dlat = nlat - olat
             dlon = nlon - olon
             dparam = lmap.haversine(olon, olat, nlon, nlat)
-            b = 90 - lmap.bearing(olon, olat, nlon, nlat)
+            b = lmap.bearing(olon, olat, nlon, nlat)
             print(np.min(b), np.mean(b), np.max(b))
 
         else:
@@ -421,6 +862,15 @@ class CompareCatalogs:
             if len(pos[0]) != 0:
                 individualpos.append(pos[0])
 
+        if parameter == 'location':
+            # 2D histogram
+            ddeg = 5.0
+            latbins = np.arange(-90, 90 + ddeg, ddeg)
+            lonbins = np.arange(-180, 180 + ddeg, ddeg)
+            clat = latbins[:-1] + 0.5 * np.diff(latbins)
+            clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+            mlat, mlon = np.meshgrid(clat, clon)
+
         for _i, pos in enumerate(individualpos):
 
             # Get the eq's that are in the certain range
@@ -452,13 +902,49 @@ class CompareCatalogs:
                 # calculate scale factor for quiver
                 scale_factor = np.max(dparam)/displayed_arrow_length
 
-                Q = mapinset.quiver(
+                # Get locatl relocation
+                dx = dparam[pos] * np.sin(np.radians(b[pos]))
+                dy = dparam[pos] * np.cos(np.radians(b[pos]))
+
+                dx_hist, _, _ = np.histogram2d(
+                    self.olongitude[pos], self.olatitude[pos], weights=dx,
+                    bins=[lonbins, latbins])
+                dy_hist, _, _ = np.histogram2d(
+                    self.olongitude[pos], self.olatitude[pos], weights=dy,
+                    bins=[lonbins, latbins])
+                counts, _, _ = np.histogram2d(
                     self.olongitude[pos], self.olatitude[pos],
-                    dlon[pos], dlat[pos], dparam[pos], angles=b[pos],
+                    bins=[lonbins, latbins])
+                dx_hist = np.where(counts >= 2, dx_hist, np.nan)
+                dy_hist = np.where(counts >= 2, dy_hist, np.nan)
+                counts = np.where(counts >= 2, counts, 1)
+
+                dx_mean = dx_hist/counts
+                dy_mean = dy_hist/counts
+
+                npos = np.where(~np.isnan(dx_mean.flatten()))[0]
+                angle = np.arctan2(dx_mean, dy_mean)
+                epi = np.sqrt(dx_mean**2 + dy_mean**2)
+                nlat, nlon = lmap.reckon(
+                    mlat, mlon, epi/6371/np.pi*180, angle/np.pi*180)
+
+                Q = mapinset.quiver(
+                    mlon.flatten()[npos],  mlat.flatten()[npos],
+                    nlon.flatten()[npos] - mlon.flatten()[npos],
+                    nlat.flatten()[npos] - mlat.flatten()[npos],
+                    epi.flatten()[npos],
+                    angles=90-angle.flatten()[npos]/np.pi*180,
                     pivot='tail', cmap=cmap, norm=norm, scale=2.0,
                     transform=PlateCarree(),  # units='xy', width=100,
-                    width=0.005, linewidth=0.1, edgecolor='k'
-                )
+                    width=0.005, linewidth=0.1, edgecolor='k')
+
+                # Q = mapinset.quiver(
+                #     self.olongitude[pos], self.olatitude[pos],
+                #     dlon[pos], dlat[pos], dparam[pos], angles=b[pos],
+                #     pivot='tail', cmap=cmap, norm=norm, scale=2.0,
+                #     transform=PlateCarree(),  # units='xy', width=100,
+                #     width=0.005, linewidth=0.1, edgecolor='k'
+                # )
                 quivers.append(Q)
             else:
                 mapinset.scatter(
@@ -545,6 +1031,605 @@ class CompareCatalogs:
             plt.close(fig)
             plt.switch_backend(backend)
 
+    @staticmethod
+    def bin_geodata(lat, lon, param, ddeg: float = 5.0):
+
+        # 2D histogram bins
+        latbins = np.arange(-90, 90 + ddeg, ddeg)
+        lonbins = np.arange(-180, 180 + ddeg, ddeg)
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+        mlat, mlon = np.meshgrid(clat, clon)
+
+        hist, _, _ = np.histogram2d(
+            lon, lat, weights=param,
+            bins=[lonbins, latbins])
+
+        counts, _, _ = np.histogram2d(
+            lon, lat,
+            bins=[lonbins, latbins])
+
+        hist = np.where(counts >= 2, hist, np.nan)
+        counts = np.where(counts >= 2, counts, 1)
+
+        # Get where histogram has values
+        npos = np.where(~np.isnan(hist.flatten()))[0]
+
+        # Get mean values in each bin
+        hist_mean = (hist/counts).flatten()[npos]
+
+        return mlat.flatten()[npos], mlon.flatten()[npos], hist_mean
+
+    def plot_spatial_distribution_binned(
+            self, parameter: str, outfile: Optional[str] = None,
+            extent=None):
+        """Plots a 3x3 plots of distributions of changes at different depth
+        ranges for a provided parameter.
+
+        Parameters
+        ----------
+        parameter : str
+            parameter to plot the changes of
+        outfile : Optional[str], optional
+            outputfile, by default None
+        extent : Iterable, optional
+            arraylike of 4 elements describing the map bounds. Just an input
+            for cartopy's ax.set_extent, by default None, which makes the map
+            a global map.
+        """
+
+        # Change backend if output is pdf
+        if outfile is not None:
+            backend = plt.get_backend()
+            plt.switch_backend('pdf')
+
+        aspect = 9.0/9.0
+        size = 9
+        fig = plt.figure(figsize=(size*aspect, size))
+
+        # Raise error if parameter doesnt exist.
+
+        # Define levels on where to loo
+        levels = [0.0, 10.0, 12.5, 15.0, 20.0, 30.0, 70.0, 120.0,
+                  300.0, 800.0]
+
+        # 2D histogram
+        ddeg = 5.0
+        latbins = np.arange(-90, 90 + ddeg, ddeg)
+        lonbins = np.arange(-180, 180 + ddeg, ddeg)
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+        mlat, mlon = np.meshgrid(clat, clon)
+
+        if parameter == 'location':
+
+            # Get data for parameter in question
+            olat = copy(self.olatitude)
+            nlat = copy(self.nlatitude)
+            olon = copy(self.olongitude)
+            nlon = copy(self.nlongitude)
+            dlat = nlat - olat
+            dlon = nlon - olon
+            dparam = lmap.haversine(olon, olat, nlon, nlat)
+            b = lmap.bearing(olon, olat, nlon, nlat)
+
+        elif parameter == 'omega':
+            dparam = self.omega_angle()
+        else:
+            # Get data for parameter in question
+            oparam = copy(getattr(self, "o" + parameter))
+            nparam = copy(getattr(self, "n" + parameter))
+            dparam = nparam - oparam
+
+        if parameter == "eps_nu":
+            oparam = oparam[:, 0]
+            nparam = nparam[:, 0]
+            dparam = dparam[:, 0]
+
+        if parameter == 'depth_in_m':
+            oparam /= 1000.0
+            nparam /= 1000.0
+            dparam /= 1000.0
+
+        if parameter in ["M0"]:
+            dparam /= oparam
+            dparam *= 100.0
+
+        if parameter == "eps_nu":
+            vmin, vmax = -0.2, 0.2
+        elif parameter == "omega":
+            vmin, vmax = 0, 50
+        else:
+            dparam_absmax = np.max(np.abs(
+                [np.quantile(dparam, 0.05),
+                 np.quantile(dparam, 0.95)]))
+
+            vmin = -dparam_absmax
+            vmax = dparam_absmax
+
+        # Location, we only have positive values so they change.
+        if parameter == 'location':
+            vmin = 0
+            norm = Normalize(vmin=vmin, vmax=vmax)
+            cmap = plt.get_cmap('inferno')
+            quivers = []
+        elif parameter in ['omega']:
+            norm = Normalize(vmin=0, vmax=50)
+            cmap = plt.get_cmap('Greys')
+        else:
+            vcenter = 0
+            norm = lplt.MidpointNormalize(
+                vmin=vmin, midpoint=vcenter, vmax=vmax)
+            cmap = plt.get_cmap('seismic')
+
+        # Split the depth region such that each plot has
+        # an equal amount of events --> not useful
+        # individualpos = []
+        # idx_sort = np.argsort(self.ndepth_in_m)
+        # pos = np.arange(0, len(self.ndepth_in_m))[idx_sort]
+
+        # def split(a, n):
+        #     k, m = divmod(len(a), n)
+        #     return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
+
+        # individualpos = split(pos, 9)
+        axes = []
+
+        individualpos = []
+        for _i in range(len(levels)-1):
+            pos = np.where(
+                (levels[_i] < self.ndepth_in_m/1000.0)
+                & (self.ndepth_in_m/1000.0 < levels[_i+1])
+            )
+            if len(pos[0]) != 0:
+                individualpos.append(pos[0])
+
+        if parameter == 'location':
+            # 2D histogram
+            ddeg = 5.0
+            latbins = np.arange(-90, 90 + ddeg, ddeg)
+            lonbins = np.arange(-180, 180 + ddeg, ddeg)
+            clat = latbins[:-1] + 0.5 * np.diff(latbins)
+            clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+            mlat, mlon = np.meshgrid(clat, clon)
+
+        for _i, pos in enumerate(individualpos):
+
+            # Get the eq's that are in the certain range
+            dmin = np.min(self.ndepth_in_m[pos]/1000.0)
+            dmax = np.max(self.ndepth_in_m[pos]/1000.0)
+
+            # Create axes
+            axes.append(plt.subplot(3, 3, _i + 1))
+            axes[_i].set_title(
+                f"{int(np.round(dmin)):3d} - {int(np.round(dmax)):3d} km",)
+            # y=0.925)
+            axes[_i].axis('off')
+
+            # Create subaaxes
+            mapinset = lplt.axes_from_axes(
+                axes[_i], _i, [0.0, 0.2, 1.0, 0.8],
+                projection=Mollweide(central_longitude=self.central_longitude))
+            mapinset.set_global()
+
+            # Plot map
+            lmap.plot_map(ax=mapinset, outline=False, borders=False)
+
+            # DO scatter stuff
+            if parameter == 'location':
+
+                # set displayed arrow length for longest arrow
+                displayed_arrow_length = 25.0
+
+                # calculate scale factor for quiver
+                scale_factor = np.max(dparam)/displayed_arrow_length
+
+                # Get locatl relocation
+                dx = dparam[pos] * np.sin(np.radians(b[pos]))
+                dy = dparam[pos] * np.cos(np.radians(b[pos]))
+
+                dx_hist, _, _ = np.histogram2d(
+                    self.olongitude[pos], self.olatitude[pos], weights=dx,
+                    bins=[lonbins, latbins])
+                dy_hist, _, _ = np.histogram2d(
+                    self.olongitude[pos], self.olatitude[pos], weights=dy,
+                    bins=[lonbins, latbins])
+                counts, _, _ = np.histogram2d(
+                    self.olongitude[pos], self.olatitude[pos],
+                    bins=[lonbins, latbins])
+                dx_hist = np.where(counts >= 2, dx_hist, np.nan)
+                dy_hist = np.where(counts >= 2, dy_hist, np.nan)
+                counts = np.where(counts >= 2, counts, 1)
+
+                dx_mean = dx_hist/counts
+                dy_mean = dy_hist/counts
+
+                npos = np.where(~np.isnan(dx_mean.flatten()))[0]
+                angle = np.arctan2(dx_mean, dy_mean)
+                epi = np.sqrt(dx_mean**2 + dy_mean**2)
+                nlat, nlon = lmap.reckon(
+                    mlat, mlon, epi/6371/np.pi*180, angle/np.pi*180)
+
+                Q = mapinset.quiver(
+                    mlon.flatten()[npos],  mlat.flatten()[npos],
+                    nlon.flatten()[npos] - mlon.flatten()[npos],
+                    nlat.flatten()[npos] - mlat.flatten()[npos],
+                    epi.flatten()[npos],
+                    angles=90-angle.flatten()[npos]/np.pi*180,
+                    pivot='tail', cmap=cmap, norm=norm, scale=2.0,
+                    transform=PlateCarree(),  # units='xy', width=100,
+                    width=0.005, linewidth=0.1, edgecolor='k')
+
+                # Q = mapinset.quiver(
+                #     self.olongitude[pos], self.olatitude[pos],
+                #     dlon[pos], dlat[pos], dparam[pos], angles=b[pos],
+                #     pivot='tail', cmap=cmap, norm=norm, scale=2.0,
+                #     transform=PlateCarree(),  # units='xy', width=100,
+                #     width=0.005, linewidth=0.1, edgecolor='k'
+                # )
+                quivers.append(Q)
+
+            else:
+                # Create histograms
+                lats, lons, vals = self.bin_geodata(
+                    self.nlatitude[pos], self.nlongitude[pos], dparam[pos], ddeg=5)
+
+                mapinset.scatter(
+                    lons, lats,
+                    s=10,
+                    c=vals,
+                    marker='o',
+                    transform=PlateCarree(),
+                    cmap=cmap, alpha=1.0, norm=norm, edgecolor='k',
+                    linewidth=0.175, zorder=10)
+
+            if extent is not None:
+                mapinset.set_extent(extent)
+
+            # Histogram axis
+            inset = lplt.axes_from_axes(
+                axes[_i], _i, [0.2, 0.05, 0.6, 0.1])
+            inset.spines['right'].set_visible(False)
+            inset.spines['top'].set_visible(False)
+            inset.spines['left'].set_visible(False)
+            inset.tick_params(top=False, left=False,
+                              right=False, labelleft=False)
+            inset.minorticks_off()
+
+            # Eps nu
+            if parameter == "eps_nu":
+                xlim = [vmin, vmax]
+            elif parameter == "omega":
+                xlim = [0, 50]
+            else:
+                xlim = [np.min(dparam[pos]), np.max(dparam[pos])]
+            inset.set_xlim(xlim)
+
+            # Plot histogram
+            bins = np.linspace(xlim[0], xlim[1], 50)
+            self.plot_histogram(
+                dparam[pos], bins, facecolor='darkgray', outline=False,
+                ax=inset, stats=False)
+
+            # Automatically set eight of the histograms and plot corresponding
+            # Vertical line at zero
+            ylim = inset.get_ylim()
+            inset.plot([0, 0], ylim, 'k', lw=1.0)
+            inset.plot(xlim, [0, 0], 'k', lw=1.0)
+            lplt.plot_label(
+                inset, f"#: {len(pos)}",
+                fontdict=dict(fontsize="x-small"), box=False, dist=0.0,
+                location=6)
+
+        plt.subplots_adjust(
+            left=0.01, right=0.99, bottom=0.175, top=0.95,
+            hspace=0.25, wspace=0.02)
+
+        # Parameter is location use the normal colorbar
+        if parameter == 'location':
+            # qk = mapinset.quiverkey(
+            #     Q, 0.5, .5, 10.0, r'10 km', labelpos='N',
+            #     coordinates="figure")
+
+            cax = axes[-2].inset_axes([-0.5, -0.175, 2.0, 0.05])
+            cbar = plt.colorbar(
+                cax=cax, mappable=ScalarMappable(norm=norm, cmap=cmap),
+                orientation='horizontal')
+
+            cbar.set_label(f"Change in {self.labeldict[parameter]}")
+
+        else:
+
+            cbar = fig.colorbar(
+                ScalarMappable(cmap=cmap, norm=norm),
+                ax=axes, orientation='horizontal',
+                shrink=0.5, fraction=0.05, pad=0.05, aspect=40)
+
+            if parameter == "omega":
+                cbar.set_label(f"{self.labeldict[parameter]}")
+            else:
+                cbar.set_label(f"Change in {self.labeldict[parameter]}")
+
+        if outfile is not None:
+            plt.savefig(outfile)
+            plt.close(fig)
+            plt.switch_backend(backend)
+
+    def get_parameter_change(self, parameter):
+
+        # Placeholder
+        b = None
+        dlat = None
+        dlon = None
+
+        if parameter == 'location':
+
+            # Get data for parameter in question
+            olat = copy(self.olatitude)
+            nlat = copy(self.nlatitude)
+            olon = copy(self.olongitude)
+            nlon = copy(self.nlongitude)
+            dlat = nlat - olat
+            dlon = nlon - olon
+            dparam = lmap.haversine(olon, olat, nlon, nlat)
+            b = lmap.bearing(olon, olat, nlon, nlat)
+
+        elif parameter == 'omega':
+            dparam = self.omega_angle()
+        else:
+            # Get data for parameter in question
+            oparam = copy(getattr(self, "o" + parameter))
+            nparam = copy(getattr(self, "n" + parameter))
+            dparam = nparam - oparam
+
+        if parameter == "eps_nu":
+            oparam = oparam[:, 0]
+            nparam = nparam[:, 0]
+            dparam = dparam[:, 0]
+
+        if parameter == 'depth_in_m':
+            oparam /= 1000.0
+            nparam /= 1000.0
+            dparam /= 1000.0
+
+        if parameter in ["M0"]:
+            dparam /= oparam
+            dparam *= 100.0
+
+        # Can min/max ranges
+        if parameter == "eps_nu":
+            vmin, vmax = -0.2, 0.2
+        elif parameter == "omega":
+            vmin, vmax = 0, 50
+        elif parameter == "location":
+            vmin, vmax = 0, np.quantile(dparam, 0.95)
+        else:
+            dparam_absmax = np.max(np.abs(
+                [np.quantile(dparam, 0.05),
+                 np.quantile(dparam, 0.95)]))
+
+            vmin = -dparam_absmax
+            vmax = dparam_absmax
+
+        # Get norm and cmap depending on the parameter
+        if parameter == 'location':
+            norm = Normalize(vmin=vmin, vmax=vmax)
+            cmap = plt.get_cmap('inferno')
+        elif parameter in ['omega']:
+            norm = Normalize(vmin=0, vmax=50)
+            cmap = plt.get_cmap('Greys')
+        else:
+            vcenter = 0
+            norm = lplt.MidpointNormalize(
+                vmin=vmin, midpoint=vcenter, vmax=vmax)
+            cmap = plt.get_cmap('seismic')
+
+        return dparam, b, dlat, dlon, norm, cmap, vmin, vmax
+
+    @staticmethod
+    def digitize2D(latbins, lonbins, latitudes, longitudes):
+        """Digitizes 2D scattered data. Useful for computing specific things in 
+        bins."""
+        # Digitizing latitude and longitude
+        bins = [latbins, lonbins]
+        values = np.vstack((latitudes, longitudes)).T
+        asort = []
+        for i in range(len(bins)):
+            asort.append(np.searchsorted(bins[i], values[:, i])-1)
+        asort = np.vstack(asort).T
+
+        return asort
+
+    @staticmethod
+    def correlate_by_bin(latbins, lonbins, asort, param1, param2, mincount=3):
+
+        ilat = []
+        ilon = []
+        r = []
+
+        for i in range(len(latbins)):
+            for j in range(len(lonbins)):
+                # Find all lats and lons in a bin
+                pos = np.where((asort[:, 0] == i) & (asort[:, 1] == j))[0]
+
+                if len(pos) <= 3:
+                    continue
+                ilat.append(i)
+                ilon.append(j)
+
+                r.append(np.corrcoef(param1[pos], param2[pos])[0, 1])
+
+        # Find the centers
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+        return clat[ilat], clon[ilon], r
+
+    def plot_spatial_correlation_binned(
+            self, parameter1: str, parameter2: str, outfile: Optional[str] = None,
+            extent=None):
+        """Plots a 3x3 plots of distributions of changes at different depth
+        ranges for a provided parameter.
+
+        Parameters
+        ----------
+        parameter : str
+            parameter to plot the changes of
+        outfile : Optional[str], optional
+            outputfile, by default None
+        extent : Iterable, optional
+            arraylike of 4 elements describing the map bounds. Just an input
+            for cartopy's ax.set_extent, by default None, which makes the map
+            a global map.
+        """
+
+        # Change backend if output is pdf
+        if outfile is not None:
+            backend = plt.get_backend()
+            plt.switch_backend('pdf')
+
+        aspect = 9.0/9.0
+        size = 9
+        fig = plt.figure(figsize=(size*aspect, size))
+
+        # Define levels on where to loo
+        levels = [0.0, 10.0, 12.5, 15.0, 20.0, 30.0, 70.0, 120.0,
+                  300.0, 800.0]
+
+        # 2D histogram
+        ddeg = 5.0
+        latbins = np.arange(-90, 90 + ddeg, ddeg)
+        lonbins = np.arange(-180, 180 + ddeg, ddeg)
+        clat = latbins[:-1] + 0.5 * np.diff(latbins)
+        clon = lonbins[:-1] + 0.5 * np.diff(lonbins)
+
+        # Get parameters and changes
+        dparam1, b1, dlat1, dlon1, _, _, _, _ = \
+            self.get_parameter_change(parameter1)
+        dparam2, b2, dlat2, dlon2, _, _, _, _ = \
+            self.get_parameter_change(parameter2)
+
+        # Digitize the the latitudes and longitudes
+        asort = self.digitize2D(
+            latbins, lonbins, self.olatitude, self.olongitude)
+
+        # Get parameters change
+        axes = []
+
+        individualpos = []
+        for _i in range(len(levels)-1):
+            pos = np.where(
+                (levels[_i] < self.ndepth_in_m/1000.0)
+                & (self.ndepth_in_m/1000.0 < levels[_i+1])
+            )
+            if len(pos[0]) != 0:
+                individualpos.append(pos[0])
+
+        for _i, pos in enumerate(individualpos):
+
+            # Get the eq's that are in the certain range
+            dmin = np.min(self.ndepth_in_m[pos]/1000.0)
+            dmax = np.max(self.ndepth_in_m[pos]/1000.0)
+
+            # Correlate the
+            lats, lons, r = self.correlate_by_bin(
+                latbins, lonbins, asort[pos, :], dparam1[pos], dparam2[pos], mincount=3)
+
+            # Create axes
+            axes.append(plt.subplot(3, 3, _i + 1))
+            axes[_i].set_title(
+                f"{int(np.round(dmin)):3d} - {int(np.round(dmax)):3d} km",)
+            # y=0.925)
+            axes[_i].axis('off')
+
+            # Create subaaxes
+            mapinset = lplt.axes_from_axes(
+                axes[_i], _i, [0.0, 0.2, 1.0, 0.8],
+                projection=Mollweide(central_longitude=self.central_longitude))
+            mapinset.set_global()
+
+            # Plot map
+            lmap.plot_map(ax=mapinset, outline=False, borders=False)
+
+            # Plot the correlation
+            mapinset.scatter(
+                lons, lats,
+                s=10,
+                c=r,
+                marker='o',
+                transform=PlateCarree(),
+                cmap='seismic', alpha=1.0, norm=Normalize(vmin=-1, vmax=1),
+                edgecolor='k', linewidth=0.175, zorder=10)
+
+            if extent is not None:
+                mapinset.set_extent(extent)
+
+            # Histogram axis
+            inset = lplt.axes_from_axes(
+                axes[_i], _i, [0.2, 0.05, 0.6, 0.1])
+            inset.spines['right'].set_visible(False)
+            inset.spines['top'].set_visible(False)
+            inset.spines['left'].set_visible(False)
+            inset.tick_params(top=False, left=False,
+                              right=False, labelleft=False)
+            inset.minorticks_off()
+
+            # Set inset axis limits
+            xlim = [-1, 1]
+            inset.set_xlim(xlim)
+
+            # Plot histogram
+            bins = np.linspace(xlim[0], xlim[1], 50)
+            self.plot_histogram(
+                r, bins, facecolor='darkgray', outline=False,
+                ax=inset, stats=False)
+
+            # Automatically set eight of the histograms and plot corresponding
+            # Vertical line at zero
+            ylim = inset.get_ylim()
+            inset.plot([0, 0], ylim, 'k', lw=1.0)
+            inset.plot(xlim, [0, 0], 'k', lw=1.0)
+            lplt.plot_label(
+                inset, f"#: {len(pos)}",
+                fontdict=dict(fontsize="x-small"), box=False, dist=0.0,
+                location=6)
+
+        plt.subplots_adjust(
+            left=0.01, right=0.99, bottom=0.175, top=0.95,
+            hspace=0.25, wspace=0.02)
+
+        # Colorbar
+        cbar = fig.colorbar(
+            ScalarMappable(cmap='seismic', norm=Normalize(vmin=-1, vmax=1)),
+            ax=axes, orientation='horizontal',
+            shrink=0.5, fraction=0.05, pad=0.05, aspect=40)
+
+        cbar.set_label(
+            f"R between change in {self.labeldict[parameter1]} & {self.labeldict[parameter2]}")
+
+        # # Axes for the scatter legend
+        # cax = lplt.axes_from_axes(axes[-2], 100, [-0.25, -0.15, 1.5, 0.05])
+        # cax.axis('off')
+
+        # # Boundaries
+        # boundaries = np.linspace(vmin, vmax, 9)
+
+        # # Legend done
+        # legend = lplt.scatterlegend(
+        #     boundaries, cmap=cmap, norm=norm,
+        #     sizefunc=sizefunc, loc='upper center', frameon=False,
+        #     title=f"Change in {self.labeldict[parameter]}",
+        #     title_fontsize='small',
+        #     fontsize='x-small',
+        #     lkw=dict(marker='o', markeredgewidth=0.175,
+        #              markeredgecolor='k'),
+        #     yoffset=-12.5 if outfile is not None else -50  # For PDF output!
+        # )
+
+        if outfile is not None:
+            plt.savefig(outfile)
+            plt.close(fig)
+            plt.switch_backend(backend)
+
     def plot_summary(self, outfile: Optional[str] = None):
 
         if outfile is not None:
@@ -573,7 +1658,7 @@ class CompareCatalogs:
         # Plot eps_nu change
         ax = fig.add_subplot(GS[0, 2])
         self.plot_eps_nu()
-        lplt.plot_label(ax, 'b)', location=17, box=False)
+        lplt.plot_label(ax, 'b)', location=18, box=False)
 
         # Plot Depth v dDepth
         ax = fig.add_subplot(GS[1, 2])
@@ -647,15 +1732,104 @@ class CompareCatalogs:
                 o_out = (n - o)/o
             else:
                 o_out = (n - o)
-            n_out = o_out
+            n_out = deepcopy(o_out)
 
         else:
             o_out = o
             n_out = n
         return o_out, n_out
 
+    def plot_beachballs(self, pdfmode=False):
+
+        nrows = 14
+        ncols = 5
+
+        # Get sorted indeces
+        np.random.seed(4334)
+        indeces = np.random.randint(
+            0, len(self.old), size=(nrows, ncols), dtype=int)
+        shp = indeces.shape
+        indeces = np.sort(indeces.flatten())
+        indeces = indeces.reshape(shp)
+
+        fig, axes = plt.subplots(nrows, ncols, figsize=(2*5, 3*5))
+
+        plt.subplots_adjust(left=0.02, right=1.01, bottom=0.005,
+                            top=0.99, hspace=0.0, wspace=0)
+
+        abc = 'abcdefghijklmnopqrst'
+        for i in range(nrows):
+            for j in range(ncols):
+                idx = indeces[i, j]
+                self.compare_beaches(
+                    axes[i, j], self.old[int(idx)], self.new[int(idx)],
+                    pdfmode)
+
+                if j == 0:
+                    lplt.plot_label(
+                        axes[i, j], f'{i+1}', location=12, box=False,
+                        family='monospace', fontsize='xx-small')
+
+                if i == 0:
+                    lplt.plot_label(
+                        axes[i, j], f'{abc[j]})', location=6, box=False, dist=0.0,
+                        family='monospace', fontsize='xx-small')
+
+    @ staticmethod
+    def compare_beaches(ax, cmt0: CMTSource, cmt1: CMTSource, pdfmode=False):
+        lplt.plot_label(
+            ax,
+            f'{cmt0.eventname}\n'
+            f'Lat: {cmt0.latitude:.0f} Lon: {cmt0.longitude:.0f} '
+            f'Z: {cmt0.depth_in_m/1000.0:.2f}km\n'
+            f'Mw: {cmt0.moment_magnitude:.1f}',
+            location=1, box=False, fontsize='xx-small', family='monospace')
+
+        # Adjust beach width
+        widthperdpi = 70/140
+
+        if pdfmode:
+            beachwidth = widthperdpi * 72
+        else:
+            beachwidth = widthperdpi*rcParams['figure.dpi']
+
+        linewidth = 0.75
+        # plot beaches in the axes anyways
+        cmt0.axbeach(
+            ax, 0.4, 0.5, beachwidth, facecolor=(0.8, 0.2, 0.2),
+            clip_on=False, linewidth=linewidth)
+        cmt1.axbeach(
+            ax, 0.8, 0.5, beachwidth, facecolor=(0.2, 0.2, 0.8),
+            clip_on=False, linewidth=linewidth)
+        plt.plot([0, 0], [0, 0.95], 'k', lw=0.75,
+                 transform=ax.transAxes, clip_on=False)
+        plt.plot([0, 0.9], [0, 0], 'k', lw=0.75,
+                 transform=ax.transAxes, clip_on=False)
+
+        # Get changes
+        ddep = (cmt1.depth_in_m-cmt0.depth_in_m)/1000.0
+        dlat = cmt1.latitude-cmt0.latitude
+        dlon = cmt1.longitude-cmt0.longitude
+        dM0 = (cmt1.M0-cmt0.M0)/cmt0.M0
+        n1 = np.sqrt(np.sum(cmt1.fulltensor**2))
+        n0 = np.sqrt(np.sum(cmt0.fulltensor**2))
+        angle = np.arccos(
+            np.sum(cmt1.fulltensor*cmt0.fulltensor)/(n1*n0))/np.pi*180
+
+        # Plot Label of changes
+        lplt.plot_label(
+            ax,
+            f'{"<"}: {angle:5.1f}\n'
+            f'dlat: {dlat:5.2f}  dz:    {ddep:5.2f}km\n'
+            f'dlon: {dlon:5.2f}  dlnM0: {dM0:5.2f}',
+            fontsize='xx-small', box=False,
+            family='monospace', location=3)
+        ax.axis('off')
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+
     def plot_2D_scatter(
-            self, param1="depth", param2="M0",
+            self, param1="depth_in_m", param2="M0",
             d1: bool = True,
             d2: bool = True,
             f1: bool = False,
@@ -715,7 +1889,8 @@ class CompareCatalogs:
                 label=label,
                 histc=(0.4, 0.4, 1.0),
                 fraction=0.85,
-                mult=False)
+                mult=False,
+                xlog=xlog, ylog=ylog)
 
         elif (d1 and not d2) or (not d1 and d2):
             label = " "
@@ -726,7 +1901,8 @@ class CompareCatalogs:
                 label=label,
                 histc=(0.4, 0.4, 1.0),
                 fraction=0.85,
-                mult=False)
+                mult=False,
+                xlog=xlog, ylog=ylog)
 
         else:
             labels = ["O", "N"]
@@ -737,7 +1913,8 @@ class CompareCatalogs:
                 label=labels,
                 histc=[(0.3, 0.3, 0.9), (0.9, 0.3, 0.3)],
                 fraction=0.85,
-                mult=True)
+                mult=True,
+                xlog=xlog, ylog=ylog)
 
         # Possibly do stuff with axes
         if d1 and not d2:
@@ -757,10 +1934,10 @@ class CompareCatalogs:
         axscatter.set_xlabel(xlabel)
         axscatter.set_ylabel(ylabel)
 
-        if ylog:
-            axscatter.set_yscale('log')
-        if xlog:
-            axscatter.set_xscale('log')
+        # if ylog:
+        #     axscatter.set_yscale('log')
+        # if xlog:
+        #     axscatter.set_xscale('log')
 
         if xrange is not None:
             axscatter.set_xlim(xrange)
@@ -1139,7 +2316,6 @@ def bin():
         ncat.save(os.path.join(args.outdir, args.newlabel + ".pkl"))
 
     # Compare Catalog
-
     CC = CompareCatalogs(old=ocat, new=ncat,
                          oldlabel=args.oldlabel, newlabel=args.newlabel,
                          nbins=25)

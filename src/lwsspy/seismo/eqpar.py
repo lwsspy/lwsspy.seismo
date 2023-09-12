@@ -17,8 +17,8 @@ def eqpar(fmomin):
         rlam(2)     output 'rake' angles
         eivals(3)   output eigenvalues (t-axis,inter.,p-axis)
         eivecs(3,3) output: columns are normalized principal axes
-        plungs(3)   output plunges of principal axes
-        azims(3)    output azimuths of principal axes
+        plungs(3)   output plunges of principal axes [T,B,P]
+        azims(3)    output azimuths of principal axes [T,B,P]
 
     Notes
     -----

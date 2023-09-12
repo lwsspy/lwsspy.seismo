@@ -7,7 +7,7 @@ def dev(M1, M2, M3):
     Parameters
     ----------
     M1 : arraylike
-        Largese eigenvalue
+        Largest eigenvalue
     M2 : arraylike
         middle eigenvalue
     M3 : arraylike
@@ -64,6 +64,15 @@ def iso_clvd_dc_norm(M1, M2, M3):
 
     return Miso/M, Mclvd/M, Mdc/M
 
+
+#############################################################
+# Tape & Tape 2012 - A geometric setting for moment tensors #
+#############################################################
+
+def gamma(M1, M2, M3):
+    """Returns the gamma angle to distinguish between DC and CLVD."""
+
+    return np.arctan((np.sqrt(3)*M2)/(M1-M3))
 
 ########################
 # hexagonal bi‐pyramid #
@@ -129,6 +138,3 @@ def eps_nu(M1, M2, M3):
         nu = nu[0]
 
     return epsilon, nu
-
-
-#

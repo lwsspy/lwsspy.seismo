@@ -10,6 +10,7 @@ def download_data(origintime: UTCDateTime, duration: float = 7200,
                   channel: Union[str, None] = "BH*",
                   starttimeoffset: float = 0.0,
                   endtimeoffset: float = 0.0, dtype='both',
+                  client: str = "IRIS",
                   ) -> Tuple[Stream, Inventory]:
     """Function to download data for a seismic section
 

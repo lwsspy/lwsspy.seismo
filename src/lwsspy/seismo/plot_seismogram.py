@@ -1154,6 +1154,9 @@ def plot_seismogram_by_station(
                 fontfamily='monospace')
 
         if _i == 0:
+            # Define station location
+            slat = None
+            slon = None
 
             if (latitude is not None) and (longitude is not None):
                 slat = latitude
@@ -1163,17 +1166,13 @@ def plot_seismogram_by_station(
                         and hasattr(obstrace.stats, 'longitude'):
                     slat = obstrace.stats.latitude
                     slon = obstrace.stats.longitude
-            else:
-                slat = None
-                slon = None
 
             # cmtheader returns raw-string
             header = cmtheader(
                 network=network, station=station, slat=slat, slon=slon,
                 stationdetails=stationdetails,
                 instrumentdetails=instrumentdetails, inventory=inventory,
-                cmt=infocmt, periodrange=periodrange, flinn=flinn,
-            )
+                cmt=infocmt, periodrange=periodrange, flinn=flinn)
 
             # Get fontsize dependent on label line number
             if len(header.split("\n")) > 4:

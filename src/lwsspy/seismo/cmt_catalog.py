@@ -31,10 +31,10 @@ class CMTCatalog:
     attributes += [
         a for a, _ in inspect.getmembers(
             CMTSource, lambda x: not inspect.isroutine(x)) if "__" not in a]
-    specialpropertylist: list = ['tbp', 'tbp_norm']
+    specialpropertylist: list = []
 
     # Just for printing
-    uniqueatt = set(attributes + specialpropertylist)
+    uniqueatt = set(attributes)
 
     # Get possible decomposition types
     dtypes = [func for func, _ in inspect.getmembers(
@@ -98,7 +98,7 @@ class CMTCatalog:
             print("\nFiles can't be found.\n")
             print(file)
             raise ValueError()
-                
+
         cmtlist = []
         for _cmtfile in cmtfilelist:
             cmtlist.append(CMTSource.from_CMTSOLUTION_file(_cmtfile))
@@ -282,9 +282,12 @@ class CMTCatalog:
         depth = self.getvals("depth_in_m")/1000.0
         N = len(depth)
 
+        # Scatter sizefunc
+        def sizefunc(x): return np.pi*(0.25*(x-np.min(moment)) /
+                                       (np.max(moment)-np.min(moment)) + 1)**8
         # Plot events
         scatter, ax, l1, l2 = plot_quakes(
-            latitude, longitude, depth, moment,
+            latitude, longitude, depth, moment, sizefunc=sizefunc, cmap='rainbow_r',
             ax=ax, yoffsetlegend2=0.02)
         ax.set_global()
         plot_label(ax, f"N: {N}", location=2, box=False, dist=0.0)

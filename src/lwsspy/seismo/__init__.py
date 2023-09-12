@@ -13,9 +13,6 @@ from .download_gcmt_catalog import download_gcmt_catalog  # noqa
 from .download_waveforms_cmt2storage import download_waveforms_cmt2storage  # noqa
 from .download_waveforms_to_storage import download_waveforms_to_storage  # noqa
 from .filterstationxml import filterstationxml  # noqa
-from .gaussiant import gaussiani  # noqa
-from .gaussiant import gaussiant  # noqa
-from .gaussiant import dgaussiant  # noqa
 from .get_inv_aspect_extent import get_inv_aspect_extent  # noqa
 from .inv2geoloc import inv2geoloc  # noqa
 from .inv2net_sta import inv2net_sta  # noqa
